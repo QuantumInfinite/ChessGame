@@ -115,6 +115,8 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i ) % 8 == 0) break;
                 }
+                for (int i = 1; i < board.Length; i++)
+                    UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Bishop:
                 initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
@@ -139,6 +141,8 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
+                for (int i = 1; i < board.Length; i++)
+                    UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Knight:
                 initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
@@ -301,8 +305,20 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
+                for (int i = 1; i < board.Length; i++)
+                    UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.King:
+                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
+
+                MarkMove(initPos + 1);
+                MarkMove(initPos - 1);
+                MarkMove(initPos + 7);
+                MarkMove(initPos - 7);
+                MarkMove(initPos + 8);
+                MarkMove(initPos - 8);
+                MarkMove(initPos + 9);
+                MarkMove(initPos - 9);
                 break;
         }
         ApplyHighlight();
@@ -313,6 +329,14 @@ public class MovableScript : MonoBehaviour {
         if (index >= 0 && index < board.Length)
         {
             validMoves.Add(board[index]);
+        }
+    }
+
+    void UnmarkMove(int index)
+    {
+        if (index >= 0 && index < board.Length)
+        {
+            validMoves.Remove(board[index]);
         }
     }
 
