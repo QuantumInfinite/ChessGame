@@ -13,13 +13,28 @@ public class PieceScript : MonoBehaviour {
         Queen,
         King
     }
-    public Vector3 homePosition;
-
-
     public PieceType pieceType;
+
+    private bool hasMoved = false;
+
+    Vector2 lastValidPosition;
+    public Vector2 LastValidPosition {
+        get {
+            return lastValidPosition;
+        }
+
+        set {
+            lastValidPosition = value;
+            hasMoved = true;
+        }
+    }
+
+    public bool HasMoved() {
+        return hasMoved;
+    }
 
     private void Start()
     {
-        homePosition = transform.position;
+        lastValidPosition = transform.position;
     }
 }

@@ -2,18 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class MovableScript : MonoBehaviour {
-    GameObject heldPiece;
-    Vector2 heldPiecePrevPos;
-    public GameObject[] board;
-	void Update () {
+    [System.Serializable]
+    public struct BoardMaterials
+    {
+        public Material white;
+        public Material black;
+        public Material highlight;
+    }
+    public BoardMaterials boardMaterials;
 
+    List<BoardSpace> validMoves = new List<BoardSpace>();
+
+    PieceScript heldPiece;
+
+    public BoardSpace[] board;
+
+	void Update () {
+        print(heldPiece == null);
 		if (!heldPiece && Input.GetAxis("Fire1") != 0)
         {
             TryPickup();
         }
         else if (heldPiece)
         {
+
             MoveToCursor();
+
+            if (Input.GetAxis("Fire1") == 0)//Not Holding
+            {
+                Vector3 newPos = new Vector3(
+                    Mathf.RoundToInt(heldPiece.transform.position.x),
+                    Mathf.RoundToInt(heldPiece.transform.position.y),
+                    heldPiece.transform.position.z
+                );
+
+                if (MoveIsValid(newPos))
+                {
+                    heldPiece.transform.position = newPos;
+                    heldPiece.LastValidPosition = newPos;
+                }
+                else
+                {
+                    heldPiece.transform.position = heldPiece.LastValidPosition;
+                }
+
+                heldPiece = null;
+                ClearValidMoves();
+            }
         }
 	}
 
@@ -24,40 +59,41 @@ public class MovableScript : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
         {
-            heldPiece = hit.transform.gameObject;
-            heldPiecePrevPos = heldPiece.transform.position;
-            HighlightValidMoves();
+            heldPiece = hit.transform.GetComponent<PieceScript>();
+            MarkValidMoves();
         }
     }
 
+    bool MoveIsValid(Vector2 newPos)
+    {
+        foreach (BoardSpace item in validMoves)
+        {
+            if (item.position == newPos)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     void MoveToCursor()
     {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         heldPiece.transform.position = new Vector3(newPos.x, newPos.y, heldPiece.transform.position.z);
-
-        if (Input.GetAxis("Fire1") == 0)
-        {
-            heldPiece.transform.position = new Vector3(
-                Mathf.RoundToInt(heldPiece.transform.position.x),
-                Mathf.RoundToInt(heldPiece.transform.position.y),
-                heldPiece.transform.position.z
-            );
-            heldPiece = null;
-        }
     }
 
-    void HighlightValidMoves()
+    void MarkValidMoves()
     {
-        PieceScript pieceScript = heldPiece.GetComponent<PieceScript>();
-        switch (pieceScript.pieceType)
+        switch (heldPiece.pieceType)
         {
             case PieceScript.PieceType.Pawn:
-                int initPos = (int) ((heldPiecePrevPos.y - 1) * 8 + (heldPiecePrevPos.x - 1));
-                HighlightPos(initPos + 8);
-                if ()
-                {
+                int initPos = (int) ((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
+                MarkMove(initPos + 8);
+
+                if (!heldPiece.HasMoved())
+                {
+                    MarkMove(initPos + 16);
                 }
                 break;
             case PieceScript.PieceType.Rook:
@@ -71,12 +107,31 @@ public class MovableScript : MonoBehaviour {
             case PieceScript.PieceType.King:
                 break;
         }
+        ApplyHighlight();
     }
-    void HighlightPos(int index)
+    
+    void MarkMove(int index)
     {
         if (index >= 0 && index < board.Length)
         {
-            //highlight
+            validMoves.Add(board[index]);
         }
+    }
+
+    void ApplyHighlight()
+    {
+        foreach (BoardSpace index in validMoves)
+        {
+            index.SetMaterial(boardMaterials.highlight);
+        }        
+    }
+
+    void ClearValidMoves()
+    {
+        foreach (BoardSpace index in validMoves)
+        {
+            index.ResetMaterial();
+        }
+        validMoves.Clear();
     }
 }
