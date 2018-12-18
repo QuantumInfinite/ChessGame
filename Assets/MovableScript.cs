@@ -264,6 +264,43 @@ public class MovableScript : MonoBehaviour {
                 }
                 break;
             case PieceScript.PieceType.Queen:
+                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
+
+                for (int i = 0; i < board.Length; i = i + 8)
+                {
+                    MarkMove(initPos + i);
+                    MarkMove(initPos - i);
+                }
+                for (int i = 1; i < board.Length; i++)
+                {
+                    MarkMove(initPos + i);
+                    if ((initPos + i + 1) % 8 == 0) break;
+                }
+                for (int i = 1; i < board.Length; i++)
+                {
+                    MarkMove(initPos - i);
+                    if ((initPos - i) % 8 == 0) break;
+                }
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    if ((initPos + i + 1) % 8 == 0) break;
+                    MarkMove(initPos + i);
+                }
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    MarkMove(initPos - i);
+                    if ((initPos - i + 1) % 8 == 0) break;
+                }
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    MarkMove(initPos + i);
+                    if ((initPos + i + 1) % 8 == 0) break;
+                }
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    MarkMove(initPos - i);
+                    if ((initPos - i) % 8 == 0) break;
+                }
                 break;
             case PieceScript.PieceType.King:
                 break;
