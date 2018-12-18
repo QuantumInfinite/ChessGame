@@ -29,6 +29,20 @@ public class PieceScript : MonoBehaviour {
         }
     }
 
+    public void MoveToPosition(Vector2 newPos)
+    {
+        transform.position = new Vector3(
+            newPos.x,
+            newPos.y,
+            transform.position.z
+        );
+        if (lastValidPosition != newPos)
+        {
+            LastValidPosition = newPos;
+
+        }
+    }
+
     public bool HasMoved() {
         return hasMoved;
     }

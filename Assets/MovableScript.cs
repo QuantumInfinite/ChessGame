@@ -38,12 +38,11 @@ public class MovableScript : MonoBehaviour {
 
                 if (MoveIsValid(newPos))
                 {
-                    heldPiece.transform.position = newPos;
-                    heldPiece.LastValidPosition = newPos;
+                    heldPiece.MoveToPosition(newPos);
                 }
                 else
                 {
-                    heldPiece.transform.position = heldPiece.LastValidPosition;
+                    heldPiece.MoveToPosition(heldPiece.LastValidPosition);
                 }
 
                 heldPiece = null;
@@ -54,11 +53,13 @@ public class MovableScript : MonoBehaviour {
 
     void TryPickup()
     {
+        print("attempting PIckup");
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
         {
+            print("Pickup successful");
             heldPiece = hit.transform.GetComponent<PieceScript>();
             MarkValidMoves();
         }
