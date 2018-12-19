@@ -13,21 +13,20 @@ public class TurnManager : MonoBehaviour {
             return instance;
         }
     }
-
     
-
     int turnCounter;
-    bool playerTurn;
+    bool isPlayerTurn;
 
-    public bool PlayerTurn {
+    public bool IsPlayerTurn {
         get {
-            return playerTurn;
+            return isPlayerTurn;
         }
     }
 
     public void EndTurn()
     {
-        playerTurn = !playerTurn;
+        turnCounter++;
+        isPlayerTurn = !isPlayerTurn;
     }
 
     private void Awake()
