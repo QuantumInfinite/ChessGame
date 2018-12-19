@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class MovableScript : MonoBehaviour {
-    [System.Serializable]
-    public struct BoardMaterials
-    {
-        public Material white;
-        public Material black;
-        public Material highlight;
-    }
-    public BoardMaterials boardMaterials;
-
+    
     List<BoardSpace> validMoves = new List<BoardSpace>();
 
     PieceScript heldPiece;
 
-    public BoardSpace[] board;
+    BoardSpace[] board;
 
-	void Update () {
+    private void Start()
+    {
+        board = GameManager.Instance.board;
+    }
+
+    void Update () {
 		if (!heldPiece && Input.GetAxis("Fire1") != 0)
         {
             TryPickup();
@@ -95,7 +92,6 @@ public class MovableScript : MonoBehaviour {
                 }
                 break;
             case PieceScript.PieceType.Rook:
-
                 for (int i = 0; i < board.Length; i = i + 8)
                 {
                     MarkMove(initPos + i);
@@ -111,8 +107,6 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i ) % 8 == 0) break;
                 }
-               // for (int i = 1; i < board.Length; i++)
-                 //   UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Bishop:
 
@@ -136,8 +130,7 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
-                //for (int i = 1; i < board.Length; i++)
-                   // UnmarkMove(initPos);
+                UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Knight:
                 int rowsThrough = 0;
@@ -298,11 +291,9 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
-                //for (int i = 1; i < board.Length; i++)
-                    UnmarkMove(initPos);
+                UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.King:
-
                 MarkMove(initPos + 1);
                 MarkMove(initPos - 1);
                 MarkMove(initPos + 7);
@@ -318,7 +309,7 @@ public class MovableScript : MonoBehaviour {
     
     void MarkMove(int index)
     {
-        if (index >= 0 && index < board.Length)
+        if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
         {
             validMoves.Add(board[index]);
         }
@@ -336,7 +327,7 @@ public class MovableScript : MonoBehaviour {
     {
         foreach (BoardSpace index in validMoves)
         {
-            index.SetMaterial(boardMaterials.highlight);
+            index.SetMaterial(GameManager.Instance.boardMaterials.highlight);
         }        
     }
 

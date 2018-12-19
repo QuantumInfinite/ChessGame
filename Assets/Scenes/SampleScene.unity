@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -318,6 +318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 49494336}
   - component: {fileID: 49494335}
+  - component: {fileID: 49494337}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -334,6 +335,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9f7cd2de9d68584397e910567afdd3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &49494336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 49494334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &49494337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 49494334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c60a463df920d1149a9136018de17ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boardMaterials:
@@ -405,19 +430,6 @@ MonoBehaviour:
   - {fileID: 22783522}
   - {fileID: 2110890396}
   - {fileID: 580536989}
---- !u!4 &49494336
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 49494334}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86299392
 GameObject:
   m_ObjectHideFlags: 0
@@ -2321,7 +2333,7 @@ Transform:
   - {fileID: 2110890392}
   - {fileID: 580536985}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &587554216
 GameObject:
@@ -3107,7 +3119,7 @@ Transform:
   - {fileID: 1663395907}
   - {fileID: 86299393}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &835469097
 GameObject:
@@ -3588,7 +3600,7 @@ RectTransform:
   m_Children:
   - {fileID: 90240573}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4035,11 +4047,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f7cd2de9d68584397e910567afdd3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardMaterials:
-    white: {fileID: 0}
-    black: {fileID: 0}
-    highlight: {fileID: 0}
-  board: []
 --- !u!114 &1223466069
 MonoBehaviour:
   m_ObjectHideFlags: 0
