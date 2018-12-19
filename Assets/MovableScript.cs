@@ -33,19 +33,16 @@ public class MovableScript : MonoBehaviour {
     void DropPiece()
     {
         Vector3 newPos = new Vector3(
-                    Mathf.RoundToInt(heldPiece.transform.position.x),
-                    Mathf.RoundToInt(heldPiece.transform.position.y),
-                    heldPiece.transform.position.z
-                );
+            Mathf.RoundToInt(heldPiece.transform.position.x),
+            Mathf.RoundToInt(heldPiece.transform.position.y),
+            heldPiece.transform.position.z
+        );
 
-        if (MoveIsValid(newPos))
-        {
-            heldPiece.MoveToPosition(newPos);
-        }
-        else
-        {
-            heldPiece.MoveToPosition(heldPiece.LastValidPosition);
-        }
+        //Actually move
+        BoardSpace newSquare = GetBoardPiece(newPos);
+        newSquare.SetPiece(heldPiece);
+        //heldPiece.SetSquare(newSquare);
+        heldPiece.MoveToSquare(newSquare);
 
         heldPiece = null;
         ClearValidMoves();
@@ -67,6 +64,20 @@ public class MovableScript : MonoBehaviour {
     bool MoveIsValid(Vector2 newPos)
     {
         return validMoves.Find(item => item.position == newPos) != null;
+    }
+
+    BoardSpace GetBoardPiece(Vector2 position)
+    {
+        int indexOfThisMove = (int)((position.y - 1) * 8 + (position.x - 1));
+        int indexOfLastMove = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
+        if (validMoves.Contains(board[indexOfThisMove])) //Move is valid
+        {
+            return board[indexOfThisMove];
+        }
+        else //Not valid, return to last position
+        {
+            return board[indexOfLastMove];
+        }
     }
 
     void MoveToCursor()

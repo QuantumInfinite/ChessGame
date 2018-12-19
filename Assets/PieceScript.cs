@@ -22,6 +22,15 @@ public class PieceScript : MonoBehaviour {
     }
     public Team team;
 
+    [SerializeField][ReadOnly]
+    BoardSpace currentSquare;
+
+    public BoardSpace CurrentSquare {
+        get {
+            return currentSquare;
+        }
+    }
+
     private bool hasMoved = false;
 
     Renderer rend;
@@ -51,7 +60,20 @@ public class PieceScript : MonoBehaviour {
             hasMoved = true;
         }
     }
-    
+    public void MoveToSquare(BoardSpace square)
+    {
+        transform.position = new Vector3(
+            square.position.x,
+            square.position.y,
+            transform.position.z
+        );
+        if (lastValidPosition != square.position)
+        {
+            lastValidPosition = square.position;
+            hasMoved = true;
+        }
+    }
+
     public bool HasMoved() {
         return hasMoved;
     }
@@ -60,6 +82,25 @@ public class PieceScript : MonoBehaviour {
     {
 
         rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
+    }
+
+    public void SetSquare(BoardSpace square)
+    {
+        if (square == null)
+        {
+            currentSquare = null;
+            return;
+        }
+        if (currentSquare != null)
+        {
+            currentSquare.SetPiece(null);
+        }
+        currentSquare = square;
+
+        if (currentSquare.CurrentPiece != this)
+        {
+            currentSquare.SetPiece(this);
+        }
     }
 
     private void Awake()

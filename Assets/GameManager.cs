@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour {
 
         public Material GetMaterial(PieceScript.PieceType pieceType, PieceScript.Team team)
         {
-            print("test");
             switch (pieceType)
             {
                 case PieceScript.PieceType.Pawn:

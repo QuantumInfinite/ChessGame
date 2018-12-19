@@ -14,6 +14,7 @@ public class BoardSpace : MonoBehaviour {
     [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.Team startingPieceTeam;
 
+    [SerializeField][ReadOnly]
     PieceScript currentPiece;
     
     public PieceScript CurrentPiece {
@@ -35,6 +36,7 @@ public class BoardSpace : MonoBehaviour {
         {
             GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
             currentPiece = startingPiece.GetComponent<PieceScript>();
+            currentPiece.SetSquare(this);
             currentPiece.pieceType = startingPieceType;
             currentPiece.team = startingPieceTeam;
             currentPiece.SetMaterial(startingPieceType, startingPieceTeam);
@@ -43,7 +45,22 @@ public class BoardSpace : MonoBehaviour {
 
     public void SetPiece(PieceScript piece)
     {
+        if (piece == null)
+        {
+            currentPiece = null;
+            return;
+        }
+        if (currentPiece != null)
+        {
+            currentPiece.SetSquare(null);
+        }
         currentPiece = piece;
+
+        if (currentPiece.CurrentSquare != this)
+        {
+            currentPiece.SetSquare(this);
+        }
+
     }
     
 	
