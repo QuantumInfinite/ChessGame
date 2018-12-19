@@ -48,17 +48,17 @@ public class MoveValidator : MonoBehaviour {
 
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if ((initPos + i + 1) % 8 == 0) break;
-                    MarkMove(validMoves, board,initPos + i);
-                }
-                for (int i = 0; i < board.Length; i = i + 7)
-                {
                     MarkMove(validMoves, board, initPos + i);
                     if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
                     {
                         UnmarkMove(validMoves, board, initPos + i);
                         break;
                     }
+                }
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    MarkMove(validMoves, board,initPos - i);
+                    if ((initPos - i + 1) % 8 == 0) break;
                 }
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
