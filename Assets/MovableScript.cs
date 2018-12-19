@@ -25,26 +25,31 @@ public class MovableScript : MonoBehaviour {
 
             if (Input.GetAxis("Fire1") == 0)//Not Holding
             {
-                Vector3 newPos = new Vector3(
+                DropPiece();
+            }
+        }
+	}
+
+    void DropPiece()
+    {
+        Vector3 newPos = new Vector3(
                     Mathf.RoundToInt(heldPiece.transform.position.x),
                     Mathf.RoundToInt(heldPiece.transform.position.y),
                     heldPiece.transform.position.z
                 );
 
-                if (MoveIsValid(newPos))
-                {
-                    heldPiece.MoveToPosition(newPos);
-                }
-                else
-                {
-                    heldPiece.MoveToPosition(heldPiece.LastValidPosition);
-                }
-
-                heldPiece = null;
-                ClearValidMoves();
-            }
+        if (MoveIsValid(newPos))
+        {
+            heldPiece.MoveToPosition(newPos);
         }
-	}
+        else
+        {
+            heldPiece.MoveToPosition(heldPiece.LastValidPosition);
+        }
+
+        heldPiece = null;
+        ClearValidMoves();
+    }
 
     void TryPickup()
     {
@@ -54,7 +59,6 @@ public class MovableScript : MonoBehaviour {
         if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
         {
             heldPiece = hit.transform.GetComponent<PieceScript>();
-
             validMoves = MoveValidator.MarkValidMoves(heldPiece);
             ApplyHighlight();
         }
@@ -68,11 +72,8 @@ public class MovableScript : MonoBehaviour {
     void MoveToCursor()
     {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
         heldPiece.transform.position = new Vector3(newPos.x, newPos.y, heldPiece.transform.position.z);
     }
-
-    
     
     void MarkMove(int index)
     {

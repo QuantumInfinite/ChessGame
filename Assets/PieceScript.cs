@@ -48,12 +48,10 @@ public class PieceScript : MonoBehaviour {
         if (lastValidPosition != newPos)
         {
             lastValidPosition = newPos;
+            hasMoved = true;
         }
-        hasMoved = true;
     }
-
-
-
+    
     public bool HasMoved() {
         return hasMoved;
     }

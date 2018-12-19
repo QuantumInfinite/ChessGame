@@ -5,9 +5,27 @@ using UnityEngine;
 public class BoardSpace : MonoBehaviour {
     Material baseMaterial;
     Renderer Renderer;
+    
     public Vector2 position;
-	// Use this for initialization
-	void Start () {
+
+    public bool spawnPieceAtStart;
+    public PieceScript.PieceType startingPieceType;
+    public PieceScript.Team startingPieceTeam;
+
+    PieceScript currentPiece;
+
+    public PieceScript CurrentPiece {
+        get {
+            return currentPiece;
+        }
+    }
+
+    public void SetPiece(PieceScript piece)
+    {
+        currentPiece = piece;
+    }
+    
+    void Start () {
         Renderer = GetComponent<Renderer>();
         baseMaterial = Renderer.material;
         position = transform.position;
@@ -22,4 +40,5 @@ public class BoardSpace : MonoBehaviour {
     {
         Renderer.material = baseMaterial;
     }
+    
 }
