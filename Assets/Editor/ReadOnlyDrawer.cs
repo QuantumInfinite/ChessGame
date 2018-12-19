@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//From http://answers.unity.com/answers/1477354/view.html
+using UnityEngine;
 using UnityEditor;
 
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]

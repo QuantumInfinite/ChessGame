@@ -6,10 +6,12 @@ public class BoardSpace : MonoBehaviour {
     Material baseMaterial;
     Renderer Renderer;
     
-    public Vector2 position;
-
+    [ReadOnly] public Vector2 position;
+    
     public bool spawnPieceAtStart;
+    [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.PieceType startingPieceType;
+    [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.Team startingPieceTeam;
 
     PieceScript currentPiece;

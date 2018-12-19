@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//From http://answers.unity.com/answers/1477354/view.html
+using UnityEngine;
 
 /// <summary>
 /// Display a field as read-only in the inspector.
