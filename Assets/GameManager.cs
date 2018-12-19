@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+
     [System.Serializable]
     public struct BoardMaterials
     {
@@ -59,12 +60,11 @@ public class GameManager : MonoBehaviour {
                     return null;
             }
         }
-
     }
     public PieceMaterials pieceMaterials;
 
     public BoardSpace[] board;
-
+       
     private void Awake()
     {
         if (instance == null)
@@ -72,6 +72,4 @@ public class GameManager : MonoBehaviour {
             instance = this;
         }
     }
-
-
 }
