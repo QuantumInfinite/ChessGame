@@ -15,9 +15,19 @@ public class PieceScript : MonoBehaviour {
     }
     public PieceType pieceType;
 
+    public enum Team
+    {
+        White, 
+        Black
+    }
+    public Team team;
+
     private bool hasMoved = false;
 
+    Renderer rend;
+
     Vector2 lastValidPosition;
+    
     public Vector2 LastValidPosition {
         get {
             return lastValidPosition;
@@ -25,7 +35,6 @@ public class PieceScript : MonoBehaviour {
 
         set {
             lastValidPosition = value;
-            hasMoved = true;
         }
     }
 
@@ -38,17 +47,29 @@ public class PieceScript : MonoBehaviour {
         );
         if (lastValidPosition != newPos)
         {
-            LastValidPosition = newPos;
-
+            lastValidPosition = newPos;
         }
+        hasMoved = true;
     }
+
+
 
     public bool HasMoved() {
         return hasMoved;
     }
 
+    void SetMaterial(PieceType pieceType, Team team)
+    {
+        rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
+    }
+
     private void Start()
     {
         lastValidPosition = transform.position;
+        rend = GetComponent<Renderer>();
+
+        SetMaterial(pieceType, team);
+
+
     }
 }

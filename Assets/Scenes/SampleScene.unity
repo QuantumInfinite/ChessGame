@@ -365,6 +365,19 @@ MonoBehaviour:
     white: {fileID: 2100000, guid: 219904f6a561e3245a7ea59a62ddb409, type: 2}
     black: {fileID: 2100000, guid: 552994c47a192e64c9940efa73641b1f, type: 2}
     highlight: {fileID: 2100000, guid: 3ae283206ea0a4b4abc00007fea79229, type: 2}
+  pieceMaterials:
+    white_pawn: {fileID: 2100000, guid: ff7e6065821aba9458e4143e17dc14e7, type: 2}
+    white_rook: {fileID: 2100000, guid: 5a65394d5a66ecb42bb4a317db4fdbfd, type: 2}
+    white_bishop: {fileID: 2100000, guid: 30e4f9c81a6ba244095df3b33b5c7301, type: 2}
+    white_knight: {fileID: 2100000, guid: cc6864cc5d7c0be4899139d8eda5e916, type: 2}
+    white_queen: {fileID: 2100000, guid: 6a7740155a8a89f438e06eca7a951eeb, type: 2}
+    white_king: {fileID: 2100000, guid: adb9e5294d23a864e8816a045650552b, type: 2}
+    black_pawn: {fileID: 0}
+    black_rook: {fileID: 0}
+    black_bishop: {fileID: 0}
+    black_knight: {fileID: 0}
+    black_queen: {fileID: 0}
+    black_king: {fileID: 0}
   board:
   - {fileID: 409248423}
   - {fileID: 1671251396}
@@ -474,6 +487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 5
+  team: 0
 --- !u!65 &86299395
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1895,6 +1909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 3
+  team: 0
 --- !u!65 &454294943
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2445,6 +2460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 2
+  team: 0
 --- !u!65 &660266114
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5466,6 +5482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
+  team: 0
 --- !u!1 &1552213421
 GameObject:
   m_ObjectHideFlags: 0
@@ -5768,6 +5785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 4
+  team: 0
 --- !u!65 &1663395909
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6062,6 +6080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 1
+  team: 0
 --- !u!65 &1752777022
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -21,7 +21,6 @@ public class MovableScript : MonoBehaviour {
         }
         else if (heldPiece)
         {
-
             MoveToCursor();
 
             if (Input.GetAxis("Fire1") == 0)//Not Holding
@@ -70,6 +69,7 @@ public class MovableScript : MonoBehaviour {
         }
         return false;
     }
+
     void MoveToCursor()
     {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
