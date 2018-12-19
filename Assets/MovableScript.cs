@@ -18,7 +18,6 @@ public class MovableScript : MonoBehaviour {
     public BoardSpace[] board;
 
 	void Update () {
-        print(heldPiece == null);
 		if (!heldPiece && Input.GetAxis("Fire1") != 0)
         {
             TryPickup();
@@ -53,13 +52,11 @@ public class MovableScript : MonoBehaviour {
 
     void TryPickup()
     {
-        print("attempting PIckup");
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
         {
-            print("Pickup successful");
             heldPiece = hit.transform.GetComponent<PieceScript>();
             MarkValidMoves();
         }
@@ -85,10 +82,10 @@ public class MovableScript : MonoBehaviour {
 
     void MarkValidMoves()
     {
+        int initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
         switch (heldPiece.pieceType)
         {
             case PieceScript.PieceType.Pawn:
-                int initPos = (int) ((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
                 MarkMove(initPos + 8);
 
@@ -98,7 +95,6 @@ public class MovableScript : MonoBehaviour {
                 }
                 break;
             case PieceScript.PieceType.Rook:
-                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
                 for (int i = 0; i < board.Length; i = i + 8)
                 {
@@ -115,11 +111,10 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i ) % 8 == 0) break;
                 }
-                for (int i = 1; i < board.Length; i++)
-                    UnmarkMove(initPos);
+               // for (int i = 1; i < board.Length; i++)
+                 //   UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Bishop:
-                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
                 for (int i = 0; i < board.Length; i = i + 7) 
                 {
@@ -141,11 +136,10 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
-                for (int i = 1; i < board.Length; i++)
-                    UnmarkMove(initPos);
+                //for (int i = 1; i < board.Length; i++)
+                   // UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.Knight:
-                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
                 int rowsThrough = 0;
 
                 for (int i=0; i<6; i++)
@@ -268,7 +262,6 @@ public class MovableScript : MonoBehaviour {
                 }
                 break;
             case PieceScript.PieceType.Queen:
-                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
                 for (int i = 0; i < board.Length; i = i + 8)
                 {
@@ -305,11 +298,10 @@ public class MovableScript : MonoBehaviour {
                     MarkMove(initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
-                for (int i = 1; i < board.Length; i++)
+                //for (int i = 1; i < board.Length; i++)
                     UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.King:
-                initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
 
                 MarkMove(initPos + 1);
                 MarkMove(initPos - 1);
@@ -336,7 +328,7 @@ public class MovableScript : MonoBehaviour {
     {
         if (index >= 0 && index < board.Length)
         {
-            validMoves.Remove(board[index]);
+            validMoves.RemoveAll(x => x.position == board[index].position);
         }
     }
 
