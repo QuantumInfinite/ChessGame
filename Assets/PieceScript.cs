@@ -56,18 +56,15 @@ public class PieceScript : MonoBehaviour {
         return hasMoved;
     }
 
-    void SetMaterial(PieceType pieceType, Team team)
+    public void SetMaterial(PieceType pieceType, Team team)
     {
+
         rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
     }
 
-    private void Start()
+    private void Awake()
     {
         lastValidPosition = transform.position;
         rend = GetComponent<Renderer>();
-
-        SetMaterial(pieceType, team);
-
-
     }
 }

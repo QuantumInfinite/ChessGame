@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoardSpace : MonoBehaviour {
     Material baseMaterial;
-    Renderer Renderer;
+    Renderer rend;
     
     [ReadOnly] public Vector2 position;
     
@@ -15,10 +15,29 @@ public class BoardSpace : MonoBehaviour {
     public PieceScript.Team startingPieceTeam;
 
     PieceScript currentPiece;
-
+    
     public PieceScript CurrentPiece {
         get {
             return currentPiece;
+        }
+    }
+    
+    void Awake()
+    {
+        rend = GetComponent<Renderer>();
+        baseMaterial = rend.material;
+        position = transform.position;
+    }
+
+    private void Start()
+    {
+        if (spawnPieceAtStart)
+        {
+            GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
+            currentPiece = startingPiece.GetComponent<PieceScript>();
+            currentPiece.pieceType = startingPieceType;
+            currentPiece.team = startingPieceTeam;
+            currentPiece.SetMaterial(startingPieceType, startingPieceTeam);
         }
     }
 
@@ -27,20 +46,15 @@ public class BoardSpace : MonoBehaviour {
         currentPiece = piece;
     }
     
-    void Start () {
-        Renderer = GetComponent<Renderer>();
-        baseMaterial = Renderer.material;
-        position = transform.position;
-	}
 	
 	public void SetMaterial(Material mat)
     {
-        Renderer.material = mat;
+        rend.material = mat;
     }
 
     public void ResetMaterial()
     {
-        Renderer.material = baseMaterial;
+        rend.material = baseMaterial;
     }
     
 }

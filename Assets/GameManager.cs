@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public GameObject basePiecePrefab;
 
     [System.Serializable]
     public struct BoardMaterials
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour {
 
         public Material GetMaterial(PieceScript.PieceType pieceType, PieceScript.Team team)
         {
+            print("test");
             switch (pieceType)
             {
                 case PieceScript.PieceType.Pawn:
