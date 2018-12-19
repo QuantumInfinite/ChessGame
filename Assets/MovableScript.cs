@@ -21,6 +21,7 @@ public class MovableScript : MonoBehaviour {
         }
         else if (heldPiece)
         {
+
             MoveToCursor();
 
             if (Input.GetAxis("Fire1") == 0)//Not Holding
@@ -69,7 +70,6 @@ public class MovableScript : MonoBehaviour {
         }
         return false;
     }
-
     void MoveToCursor()
     {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -210,6 +210,11 @@ public class MovableScript : MonoBehaviour {
                         MarkMove(initPos + 15);
                     }
                 }
+                for (int j = 1; j < board.Length; j = j + 8)
+                {
+                    if (initPos == j)
+                        MarkMove(initPos + 15);
+                }
                 for (int i = 0; i < 15; i++)
                 {
                     if (i == 0)
@@ -263,18 +268,28 @@ public class MovableScript : MonoBehaviour {
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(initPos + i);
-                    if ((initPos + i + 1) % 8 == 0) break;
+                    if ((initPos+1) % 8 !=0)
+                    {
+                        MarkMove(initPos + i);
+                        if ((initPos + i + 1) % 8 == 0) break;
+                    }
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(initPos - i);
-                    if ((initPos - i) % 8 == 0) break;
+                    if (initPos % 8 != 0)
+                    {
+                        MarkMove(initPos - i);
+                        if ((initPos - i) % 8 == 0) break;
+                    }
                 }
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if ((initPos + i + 1) % 8 == 0) break;
                     MarkMove(initPos + i);
+                    if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
+                    {
+                        UnmarkMove(initPos + i);
+                        break;
+                    }
                 }
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
@@ -294,14 +309,20 @@ public class MovableScript : MonoBehaviour {
                 UnmarkMove(initPos);
                 break;
             case PieceScript.PieceType.King:
-                MarkMove(initPos + 1);
-                MarkMove(initPos - 1);
-                MarkMove(initPos + 7);
-                MarkMove(initPos - 7);
+                if (initPos % 8 != 0)
+                {
+                    MarkMove(initPos - 1);
+                    MarkMove(initPos + 7);
+                    MarkMove(initPos - 9);
+                }
+                if ((initPos + 1) % 8 != 0)
+                {
+                    MarkMove(initPos + 1);
+                    MarkMove(initPos - 7);
+                    MarkMove(initPos + 9);
+                }
                 MarkMove(initPos + 8);
                 MarkMove(initPos - 8);
-                MarkMove(initPos + 9);
-                MarkMove(initPos - 9);
                 break;
         }
         ApplyHighlight();
