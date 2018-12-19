@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveValidator : MonoBehaviour {
+
     public static List<BoardSpace> MarkValidMoves(PieceScript heldPiece)
     {
+
         List<BoardSpace> validMoves = new List<BoardSpace>();
         BoardSpace[] board = GameManager.Instance.board;
 
         int initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
-
         switch (heldPiece.pieceType)
         {
             case PieceScript.PieceType.Pawn:
-
-                MarkMove(validMoves, board, initPos + 8);
+                MarkMove(validMoves, board,initPos + 8);
 
                 if (!heldPiece.HasMoved())
                 {
-                    MarkMove(validMoves, board, initPos + 16);
+                    MarkMove(validMoves, board,initPos + 16);
                 }
                 break;
             case PieceScript.PieceType.Rook:
                 for (int i = 0; i < board.Length; i = i + 8)
                 {
-                    MarkMove(validMoves, board, initPos + i);
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos + i);
+                    MarkMove(validMoves, board,initPos - i);
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board,initPos + i);
                     if ((initPos + i + 1) % 8 == 0) break;
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
                 break;
@@ -43,21 +43,21 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
                     if ((initPos + i + 1) % 8 == 0) break;
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board,initPos + i);
                 }
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos - i);
                     if ((initPos - i + 1) % 8 == 0) break;
                 }
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board,initPos + i);
                     if ((initPos + i + 1) % 8 == 0) break;
                 }
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
                 UnmarkMove(validMoves, board, initPos);
@@ -77,7 +77,7 @@ public class MoveValidator : MonoBehaviour {
                     {
                         if (initPos % 8 == 0)
                             rowsThrough++;
-                        MarkMove(validMoves, board, initPos - 6);
+                        MarkMove(validMoves, board,initPos - 6);
                     }
                 }
                 for (int i = 0; i < 6; i++)
@@ -90,7 +90,7 @@ public class MoveValidator : MonoBehaviour {
                     }
                     if (i == 5 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board, initPos + 6);
+                        MarkMove(validMoves, board,initPos + 6);
                     }
                 }
                 for (int i = 0; i < 10; i++)
@@ -107,7 +107,7 @@ public class MoveValidator : MonoBehaviour {
                         rowsThrough = 1;
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board, initPos + 10);
+                        MarkMove(validMoves, board,initPos + 10);
                     }
                 }
                 for (int i = 0; i < 10; i++)
@@ -122,7 +122,7 @@ public class MoveValidator : MonoBehaviour {
                         rowsThrough = 1;
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board, initPos - 10);
+                        MarkMove(validMoves, board,initPos - 10);
                     }
                 }
                 for (int i = 0; i < 15; i++)
@@ -137,8 +137,13 @@ public class MoveValidator : MonoBehaviour {
                         rowsThrough = 1;
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board, initPos + 15);
+                        MarkMove(validMoves, board,initPos + 15);
                     }
+                }
+                for (int j = 1; j < board.Length; j = j + 8)
+                {
+                    if (initPos == j)
+                        MarkMove(validMoves, board,initPos + 15);
                 }
                 for (int i = 0; i < 15; i++)
                 {
@@ -150,7 +155,7 @@ public class MoveValidator : MonoBehaviour {
                     }
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board, initPos - 15);
+                        MarkMove(validMoves, board,initPos - 15);
                     }
                 }
                 for (int i = 0; i < 17; i++)
@@ -167,7 +172,7 @@ public class MoveValidator : MonoBehaviour {
                         rowsThrough = 2;
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board, initPos + 17);
+                        MarkMove(validMoves, board,initPos + 17);
                     }
                 }
                 for (int i = 0; i < 17; i++)
@@ -180,7 +185,7 @@ public class MoveValidator : MonoBehaviour {
                     }
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board, initPos - 17);
+                        MarkMove(validMoves, board,initPos - 17);
                     }
                 }
                 break;
@@ -188,50 +193,66 @@ public class MoveValidator : MonoBehaviour {
 
                 for (int i = 0; i < board.Length; i = i + 8)
                 {
-                    MarkMove(validMoves, board, initPos + i);
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos + i);
+                    MarkMove(validMoves, board,initPos - i);
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(validMoves, board, initPos + i);
-                    if ((initPos + i + 1) % 8 == 0) break;
+                    if ((initPos + 1) % 8 != 0)
+                    {
+                        MarkMove(validMoves, board,initPos + i);
+                        if ((initPos + i + 1) % 8 == 0) break;
+                    }
                 }
                 for (int i = 1; i < board.Length; i++)
                 {
-                    MarkMove(validMoves, board, initPos - i);
-                    if ((initPos - i) % 8 == 0) break;
+                    if (initPos % 8 != 0)
+                    {
+                        MarkMove(validMoves, board,initPos - i);
+                        if ((initPos - i) % 8 == 0) break;
+                    }
                 }
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if ((initPos + i + 1) % 8 == 0) break;
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board,initPos + i);
+                    if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
+                    {
+                        UnmarkMove(validMoves, board, initPos + i);
+                        break;
+                    }
                 }
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos - i);
                     if ((initPos - i + 1) % 8 == 0) break;
                 }
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board,initPos + i);
                     if ((initPos + i + 1) % 8 == 0) break;
                 }
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board,initPos - i);
                     if ((initPos - i) % 8 == 0) break;
                 }
                 UnmarkMove(validMoves, board, initPos);
                 break;
             case PieceScript.PieceType.King:
-                MarkMove(validMoves, board, initPos + 1);
-                MarkMove(validMoves, board, initPos - 1);
-                MarkMove(validMoves, board, initPos + 7);
-                MarkMove(validMoves, board, initPos - 7);
-                MarkMove(validMoves, board, initPos + 8);
-                MarkMove(validMoves, board, initPos - 8);
-                MarkMove(validMoves, board, initPos + 9);
-                MarkMove(validMoves, board, initPos - 9);
+                if (initPos % 8 != 0)
+                {
+                    MarkMove(validMoves, board,initPos - 1);
+                    MarkMove(validMoves, board,initPos + 7);
+                    MarkMove(validMoves, board,initPos - 9);
+                }
+                if ((initPos + 1) % 8 != 0)
+                {
+                    MarkMove(validMoves, board,initPos + 1);
+                    MarkMove(validMoves, board,initPos - 7);
+                    MarkMove(validMoves, board,initPos + 9);
+                }
+                MarkMove(validMoves, board,initPos + 8);
+                MarkMove(validMoves, board,initPos - 8);
                 break;
         }
         return validMoves;
