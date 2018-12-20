@@ -31,12 +31,13 @@ public class PieceScript : MonoBehaviour {
         }
     }
 
-    private bool hasMoved = false;
+    int moves = 0;
 
     Renderer rend;
 
+    Vector2 startingPosition;
+
     Vector2 lastValidPosition;
-    
     public Vector2 LastValidPosition {
         get {
             return lastValidPosition;
@@ -57,7 +58,7 @@ public class PieceScript : MonoBehaviour {
         if (lastValidPosition != square.position) //Actually moved
         {
             lastValidPosition = square.position;
-            hasMoved = true;
+            moves++;
 
             if (square.LinkedPiece != null)//Had an occupent
             {
@@ -69,7 +70,7 @@ public class PieceScript : MonoBehaviour {
     }
 
     public bool HasMoved() {
-        return hasMoved;
+        return moves != 0;
     }
 
     public void SetMaterial(PieceType pieceType, Team team)
@@ -90,9 +91,16 @@ public class PieceScript : MonoBehaviour {
         }
         linkedSquare = square;
     }
+
+    public bool EnpassentCheck()
+    {
+        return (pieceType == PieceType.Pawn && moves == 1 && Vector2.Distance(startingPosition, transform.position) == 2);
+    }
+
     private void Awake()
     {
         lastValidPosition = transform.position;
+        startingPosition = transform.position;
         rend = GetComponent<Renderer>();
     }
 }
