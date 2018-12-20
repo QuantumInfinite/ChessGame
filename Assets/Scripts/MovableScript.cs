@@ -70,7 +70,7 @@ public class MovableScript : MonoBehaviour {
     {
         int indexOfThisMove = (int)((position.y - 1) * 8 + (position.x - 1));
         int indexOfLastMove = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
-        if (validMoves.Contains(board[indexOfThisMove])) //Move is valid
+        if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
         {
             return board[indexOfThisMove];
         }
