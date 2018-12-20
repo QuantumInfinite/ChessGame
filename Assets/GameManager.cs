@@ -62,6 +62,25 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+
+    public List<PieceScript> removedWhitePieces;
+    public List<PieceScript> removedBlackPieces;
+
+    public void RemovePiece(PieceScript piece)
+    {
+        print(piece.team + " " + piece.pieceType + " Removed from play");
+        switch (piece.team)
+        {
+            case PieceScript.Team.White:
+                GameManager.Instance.removedWhitePieces.Add(piece);
+                break;
+            case PieceScript.Team.Black:
+                GameManager.Instance.removedBlackPieces.Add(piece);
+                break;
+        }
+        piece.gameObject.SetActive(false);
+    }
+
     public PieceMaterials pieceMaterials;
 
     public BoardSpace[] board;
@@ -72,5 +91,9 @@ public class GameManager : MonoBehaviour {
         {
             instance = this;
         }
+
+        removedBlackPieces = new List<PieceScript>();
+        removedWhitePieces = new List<PieceScript>();
+
     }
 }

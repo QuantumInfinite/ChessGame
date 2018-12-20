@@ -445,57 +445,23 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
 
-    public static List<BoardSpace> MarkMoveTwo(List<BoardSpace> validMoves, BoardSpace[] board, int index)
+    public static List<BoardSpace> MarkMove(List<BoardSpace> validMoves, BoardSpace[] board, int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
         {
-            validMoves.Add(board[index]);
-        }
-        return validMoves;
-    }
-
-    public static List<BoardSpace> MarkMove(List<BoardSpace> validMoves, BoardSpace[] board, int index)
-    {
-            if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
+            if (board[index].LinkedPiece == null)
             {
-                if (board[index].CurrentPiece == null)
-                {
-                    validMoves.Add(board[index]);
-                }
-
-                else if (board[index].CurrentPiece != null)
-                {
-                switch (board[index].CurrentPiece.team)
-                    {
-                        case PieceScript.Team.Black:
-                            switch (currentPiece.team)
-                            {
-                                case PieceScript.Team.White:
-                                    board[index].SetPiece(null);
-                                    validMoves.Add(board[index]);
-                                    canPlace = false;
-                                    break;
-                                case PieceScript.Team.Black:
-                                    canPlace = false;
-                                    break;
-                            }
-                            break;
-                        case PieceScript.Team.White:
-                            switch (currentPiece.team)
-                            {
-                                case PieceScript.Team.White:
-                                    canPlace = false;
-                                    break;
-                                case PieceScript.Team.Black:
-                                    board[index].SetPiece(null);
-                                    validMoves.Add(board[index]);
-                                    canPlace = false;
-                                    break;
-                            }
-                            break;
-                    }
-                }
+                validMoves.Add(board[index]);
             }
+            else
+            {
+                if (board[index].LinkedPiece.team != currentPiece.team)
+                {
+	                validMoves.Add(board[index]);
+                }
+                canPlace = false;
+            }
+        }
         return validMoves;
     }
                     

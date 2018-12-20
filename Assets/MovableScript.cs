@@ -40,8 +40,8 @@ public class MovableScript : MonoBehaviour {
 
         //Actually move
         BoardSpace newSquare = GetBoardPiece(newPos);
-        newSquare.SetPiece(heldPiece);
-        //heldPiece.SetSquare(newSquare);
+        
+        //newSquare.SetPiece(heldPiece);
         heldPiece.MoveToSquare(newSquare);
 
         heldPiece = null;

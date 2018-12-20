@@ -23,11 +23,11 @@ public class PieceScript : MonoBehaviour {
     public Team team;
 
     [SerializeField][ReadOnly]
-    BoardSpace currentSquare;
+    BoardSpace linkedSquare;
 
-    public BoardSpace CurrentSquare {
+    public BoardSpace LinkedSquare {
         get {
-            return currentSquare;
+            return linkedSquare;
         }
     }
 
@@ -47,19 +47,6 @@ public class PieceScript : MonoBehaviour {
         }
     }
 
-    public void MoveToPosition(Vector2 newPos)
-    {
-        transform.position = new Vector3(
-            newPos.x,
-            newPos.y,
-            transform.position.z
-        );
-        if (lastValidPosition != newPos)
-        {
-            lastValidPosition = newPos;
-            hasMoved = true;
-        }
-    }
     public void MoveToSquare(BoardSpace square)
     {
         transform.position = new Vector3(
@@ -67,10 +54,17 @@ public class PieceScript : MonoBehaviour {
             square.position.y,
             transform.position.z
         );
-        if (lastValidPosition != square.position)
+        if (lastValidPosition != square.position) //Actually moved
         {
             lastValidPosition = square.position;
             hasMoved = true;
+
+            if (square.LinkedPiece != null)//Had an occupent
+            {
+                GameManager.Instance.RemovePiece(square.LinkedPiece);
+            }
+            SetSquare(square);
+            square.SetPiece(this);
         }
     }
 
@@ -80,7 +74,6 @@ public class PieceScript : MonoBehaviour {
 
     public void SetMaterial(PieceType pieceType, Team team)
     {
-
         rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
     }
 
@@ -88,21 +81,15 @@ public class PieceScript : MonoBehaviour {
     {
         if (square == null)
         {
-            currentSquare = null;
+            linkedSquare = null;
             return;
         }
-        if (currentSquare != null)
+        if (linkedSquare != null && linkedSquare != square)
         {
-            currentSquare.SetPiece(null);
+            linkedSquare.SetPiece(null);
         }
-        currentSquare = square;
-
-        if (currentSquare.CurrentPiece != this)
-        {
-            currentSquare.SetPiece(this);
-        }
+        linkedSquare = square;
     }
-
     private void Awake()
     {
         lastValidPosition = transform.position;

@@ -214,6 +214,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &22783517
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,6 +316,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &49494334
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +377,8 @@ MonoBehaviour:
     white: {fileID: 2100000, guid: 219904f6a561e3245a7ea59a62ddb409, type: 2}
     black: {fileID: 2100000, guid: 552994c47a192e64c9940efa73641b1f, type: 2}
     highlight: {fileID: 2100000, guid: 3ae283206ea0a4b4abc00007fea79229, type: 2}
+  removedWhitePieces: []
+  removedBlackPieces: []
   pieceMaterials:
     white_pawn: {fileID: 2100000, guid: ff7e6065821aba9458e4143e17dc14e7, type: 2}
     white_rook: {fileID: 2100000, guid: 5a65394d5a66ecb42bb4a317db4fdbfd, type: 2}
@@ -576,6 +580,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &200925006
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +682,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &203429321
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,6 +784,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 4
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &209179142
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +886,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &227463559
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +988,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 5
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &237466920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,6 +1090,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &247682909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1192,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &303813617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1283,6 +1294,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &305067788
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,6 +1396,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &342254138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,6 +1575,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &391518613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,6 +1677,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &409248418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1764,6 +1779,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 1
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &464492682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,6 +1881,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &561312229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1966,6 +1983,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &580536984
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,6 +2085,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &585435577
 GameObject:
   m_ObjectHideFlags: 0
@@ -2326,6 +2345,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &751035713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2427,6 +2447,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &753921869
 GameObject:
   m_ObjectHideFlags: 0
@@ -2528,6 +2549,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &783927739
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,6 +2651,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &799444016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2730,6 +2753,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &809082078
 GameObject:
   m_ObjectHideFlags: 0
@@ -2831,6 +2855,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &822989623
 GameObject:
   m_ObjectHideFlags: 0
@@ -2960,6 +2985,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &895665599
 GameObject:
   m_ObjectHideFlags: 0
@@ -3061,6 +3087,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &943029660
 GameObject:
   m_ObjectHideFlags: 0
@@ -3162,6 +3189,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 2
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1010822378
 GameObject:
   m_ObjectHideFlags: 0
@@ -3263,6 +3291,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1033363891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3364,6 +3393,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1053313145
 GameObject:
   m_ObjectHideFlags: 0
@@ -3465,6 +3495,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 3
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1075785540
 GameObject:
   m_ObjectHideFlags: 0
@@ -3566,6 +3597,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1129206973
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,6 +3699,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1229029157
 GameObject:
   m_ObjectHideFlags: 0
@@ -3768,6 +3801,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1232640875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3869,6 +3903,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1272996317
 GameObject:
   m_ObjectHideFlags: 0
@@ -3970,6 +4005,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1273185651
 GameObject:
   m_ObjectHideFlags: 0
@@ -4071,6 +4107,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1344828788
 GameObject:
   m_ObjectHideFlags: 0
@@ -4172,6 +4209,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1345921103
 GameObject:
   m_ObjectHideFlags: 0
@@ -4273,6 +4311,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1353204057
 GameObject:
   m_ObjectHideFlags: 0
@@ -4374,6 +4413,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1373397570
 GameObject:
   m_ObjectHideFlags: 0
@@ -4475,6 +4515,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1433397203
 GameObject:
   m_ObjectHideFlags: 0
@@ -4576,6 +4617,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1439323395
 GameObject:
   m_ObjectHideFlags: 0
@@ -4677,6 +4719,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1465742843
 GameObject:
   m_ObjectHideFlags: 0
@@ -4778,6 +4821,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1498772621
 GameObject:
   m_ObjectHideFlags: 0
@@ -4879,6 +4923,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1530614405
 GameObject:
   m_ObjectHideFlags: 0
@@ -4980,6 +5025,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 1
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1552213421
 GameObject:
   m_ObjectHideFlags: 0
@@ -5143,6 +5189,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1625619378
 GameObject:
   m_ObjectHideFlags: 0
@@ -5244,6 +5291,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1671251391
 GameObject:
   m_ObjectHideFlags: 0
@@ -5345,6 +5393,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 3
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1691443424
 GameObject:
   m_ObjectHideFlags: 0
@@ -5446,6 +5495,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1812916636
 GameObject:
   m_ObjectHideFlags: 0
@@ -5547,6 +5597,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1850860747
 GameObject:
   m_ObjectHideFlags: 0
@@ -5648,6 +5699,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1868043407
 GameObject:
   m_ObjectHideFlags: 0
@@ -5749,6 +5801,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1884753844
 GameObject:
   m_ObjectHideFlags: 0
@@ -5850,6 +5903,7 @@ MonoBehaviour:
   spawnPieceAtStart: 1
   startingPieceType: 2
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1950622161
 GameObject:
   m_ObjectHideFlags: 0
@@ -5951,6 +6005,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &1986090922
 GameObject:
   m_ObjectHideFlags: 0
@@ -6052,6 +6107,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2009151673
 GameObject:
   m_ObjectHideFlags: 0
@@ -6153,6 +6209,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2045402692
 GameObject:
   m_ObjectHideFlags: 0
@@ -6254,6 +6311,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2058947877
 GameObject:
   m_ObjectHideFlags: 0
@@ -6355,6 +6413,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2060670082
 GameObject:
   m_ObjectHideFlags: 0
@@ -6456,6 +6515,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2067128198
 GameObject:
   m_ObjectHideFlags: 0
@@ -6554,9 +6614,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 0
-  startingPieceTeam: 0
+  startingPieceTeam: 1
+  linkedSquare: {fileID: 0}
 --- !u!1 &2068285987
 GameObject:
   m_ObjectHideFlags: 0
@@ -6658,6 +6719,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2073327027
 GameObject:
   m_ObjectHideFlags: 0
@@ -6759,6 +6821,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2087798131
 GameObject:
   m_ObjectHideFlags: 0
@@ -6860,6 +6923,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2110890391
 GameObject:
   m_ObjectHideFlags: 0
@@ -6961,6 +7025,7 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
 --- !u!1 &2128383538
 GameObject:
   m_ObjectHideFlags: 0
@@ -7062,3 +7127,4 @@ MonoBehaviour:
   spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
+  linkedSquare: {fileID: 0}
