@@ -94,6 +94,7 @@ public class PieceScript : MonoBehaviour {
 
     public bool EnpassentCheck()
     {
+        //Actually needs another check, this move can only occour immediatly after the double step forward. 
         return (pieceType == PieceType.Pawn && moves == 1 && Vector2.Distance(startingPosition, transform.position) == 2);
     }
 
