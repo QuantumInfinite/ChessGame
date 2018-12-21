@@ -14,8 +14,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public GameObject basePiecePrefab;
-
     [System.Serializable]
     public struct BoardMaterials
     {
@@ -23,8 +21,6 @@ public class GameManager : MonoBehaviour {
         public Material black;
         public Material highlight;
     }
-    public BoardMaterials boardMaterials;
-
     [System.Serializable]
     public struct PieceMaterials
     {
@@ -63,9 +59,27 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    [Header("Materials")]
+    public BoardMaterials boardMaterials;
+    public PieceMaterials pieceMaterials;
+    public GameObject basePiecePrefab;
+
+
+    [Header("Board Stuff")]
+    public SquareScript[] board;
     public List<PieceScript> removedWhitePieces;
     public List<PieceScript> removedBlackPieces;
 
+    [Header("Game Options")]
+    public PieceScript.Team playerTeam;
+    public bool playerOnlyTurns = false;
+    //Static Functions
+    public static int PositionToBoardIndex(Vector2 position)
+    {
+        return (int)((position.y - 1) * 8 + (position.x - 1));
+    }
+
+    //Public Functions
     public void RemovePiece(PieceScript piece)
     {
         print(piece.team + " " + piece.pieceType + " Removed from play");
@@ -81,17 +95,9 @@ public class GameManager : MonoBehaviour {
         piece.gameObject.SetActive(false);
     }
 
-    public PieceMaterials pieceMaterials;
+    //Private functions
 
-    public SquareScript[] board;
-
-    public readonly PieceScript.Team playerTeam;
-
-    public static int PositionToBoardIndex(Vector2 position)
-    {
-        return (int)((position.y - 1) * 8 + (position.x - 1));
-    }
-
+    //Keyword functions
     private void Awake()
     {
         if (instance == null)

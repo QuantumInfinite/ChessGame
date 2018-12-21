@@ -14,18 +14,22 @@ public class MovableScript : MonoBehaviour {
         board = GameManager.Instance.board;
     }
 
-    void Update () {
-		if (!heldPiece && Input.GetAxis("Fire1") != 0)
+    void Update ()
+    {
+        if (TurnManager.Instance.IsPlayerTurn() || GameManager.Instance.playerOnlyTurns)
         {
-            TryPickup();
-        }
-        else if (heldPiece)
-        {
-            MoveToCursor();
-
-            if (Input.GetAxis("Fire1") == 0)//Not Holding
+            if (!heldPiece && Input.GetAxis("Fire1") != 0)
             {
-                DropPiece();
+                TryPickup();
+            }
+            else if (heldPiece)
+            {
+                MoveToCursor();
+
+                if (Input.GetAxis("Fire1") == 0)//Not Holding
+                {
+                    DropPiece();
+                }
             }
         }
 	}
@@ -44,6 +48,7 @@ public class MovableScript : MonoBehaviour {
         if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
         {
             heldPiece.MoveToSquare(board[indexOfThisMove]);
+            TurnManager.Instance.EndTurn();
         }
         else //Not valid, return to last position
         {
@@ -57,6 +62,7 @@ public class MovableScript : MonoBehaviour {
 
     void TryPickup()
     {
+        
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -73,6 +79,7 @@ public class MovableScript : MonoBehaviour {
                 heldPiece = null;
             }
         }
+        
     }
 
     bool MoveIsValid(Vector2 newPos)
