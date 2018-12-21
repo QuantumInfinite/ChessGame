@@ -10,60 +10,60 @@ public class AIBrainScript : MonoBehaviour {
     List<PieceScript> myPieces;
 
 
-    public int maxThinks = 1;
-    public int minThinks = 1;
+    public int thinkDepth;
     int numThinks = 0;
 	// Use this for initialization
 	void Start () {
         movesQueue = new List<Move>();
     }
 
-	
-
+    bool thinking = false;
 	// Update is called once per frame
 	void Update () {
-		//Thinking
-        if (numThinks < maxThinks)
+        if (TurnManager.Instance.IsPlayerTurn())
         {
-            //For now until we figure out static variables
-            //if (!TurnManager.Instance.IsPlayerTurn())
+            if (!thinking)
             {
-                myPieces = GameManager.Instance.ActiveAIPieces();
-                numThinks++;
-                foreach (PieceScript piece in myPieces)
-                {
-                    List<SquareScript> possibleMoves = MoveValidator.FindValidMoves(piece);
-                    if (possibleMoves.Count > 0)
-                    {
-                        foreach (SquareScript square in possibleMoves)
-                        {
-                            movesQueue.Add(new Move(GameManager.Instance.board.ToList(), piece, square));
-                        }
-                    }
-                }
-                Prioritize();
-                //print("AI has " + movesQueue.Count + " possible moves");
+                Think();
             }
         }
-
-        //Acting
-        if (!TurnManager.Instance.IsPlayerTurn())
+        else
         {
-            if (numThinks >= minThinks)
-            {
-                if (movesQueue.Count > 0)
-                {
-                    MakeMove(movesQueue[0]);
-                }
-                numThinks = 0;
-                TurnManager.Instance.EndTurn();
-            }
+            Act();
         }
 	}
-
+    void Think()
+    {
+        thinking = true;
+        myPieces = GameManager.Instance.ActiveAIPieces();
+        foreach (PieceScript piece in myPieces)
+        {
+            List<SquareScript> possibleMoves = MoveValidator.FindValidMoves(piece, GameManager.Instance.board);
+            if (possibleMoves.Count > 0)
+            {
+                foreach (SquareScript square in possibleMoves)
+                {
+                    movesQueue.Add(new Move(GameManager.Instance.board.ToList(), piece, square));
+                }
+            }
+        }
+        Prioritize();
+    }
+    void Act()
+    {
+        if (movesQueue.Count > 0)
+        {
+            //print("AI has " + movesQueue.Count + " possible moves");
+            MakeMove(movesQueue[0]);
+        }
+        numThinks = 0;
+        thinking = false;
+        movesQueue.Clear();
+        TurnManager.Instance.EndTurn();
+    }
     void Prioritize()
     {
-        movesQueue.Sort((x, y) => x.postMoveFitness.CompareTo(y.postMoveFitness));
+        movesQueue.Sort((x, y) => x.fitness.CompareTo(y.fitness));
     }
 
     void MakeMove(Move nextMove)
@@ -75,8 +75,7 @@ public class AIBrainScript : MonoBehaviour {
 
 internal class Move
 {
-    public float preMoveFitness = float.MinValue;
-    public float postMoveFitness = float.MinValue;
+    public float fitness = float.MinValue;
 
     List<SquareScript> oldBoard;
     List<SquareScript> newBoard;
@@ -90,5 +89,7 @@ internal class Move
         this.oldBoard = oldBoard;
         piece = pieceToMove;
         square = squareToMoveTo;
+
+
     }
 }
