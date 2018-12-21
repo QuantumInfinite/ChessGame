@@ -23,19 +23,27 @@ public class MoveValidator : MonoBehaviour {
                         //one space forward
                         MarkMove(validMoves, board, initPos - 8);
                         //two spaces if first turn
-                        if (!piece.HasMoved() && board[initPos - 8] == null)
+                        if (!piece.HasMoved() && board[initPos - 16].LinkedPiece == null)
                         {
-                            MarkMove(validMoves, board, initPos - 16);
+                            if (board[initPos - 8].LinkedPiece == null)
+                            {
+                                MarkMove(validMoves, board, initPos - 16);
+                            }
                         }
                         break;
                     case PieceScript.Team.White:
                         //one space forward
                         MarkMove(validMoves, board, initPos + 8);
                         //two spaces if first turn
-                        if (!piece.HasMoved() && board[initPos+8] == null)
+                        if (!piece.HasMoved() && board[initPos + 16].LinkedPiece == null)
                         {
-                            MarkMove(validMoves, board, initPos + 16);
+                            if (board[initPos + 8].LinkedPiece == null)
+                            {
+                                MarkMove(validMoves, board, initPos + 16);
+                            }
                         }
+                        else
+                            Debug.Log(board[initPos + 16]);
                         break;
                 }
                 canPlace = true;
