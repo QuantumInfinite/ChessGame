@@ -23,9 +23,9 @@ public class PieceScript : MonoBehaviour {
     public Team team;
 
     [SerializeField][ReadOnly]
-    BoardSpace linkedSquare;
+    SquareScript linkedSquare;
 
-    public BoardSpace LinkedSquare {
+    public SquareScript LinkedSquare {
         get {
             return linkedSquare;
         }
@@ -35,29 +35,32 @@ public class PieceScript : MonoBehaviour {
 
     Renderer rend;
 
-    Vector2 startingPosition;
+    SquareScript startingSquare;
 
-    Vector2 lastValidPosition;
-    public Vector2 LastValidPosition {
+    SquareScript lastValidSquare;
+    public SquareScript LastValidSquare {
         get {
-            return lastValidPosition;
+            return lastValidSquare;
         }
 
         set {
-            lastValidPosition = value;
+            lastValidSquare = value;
         }
     }
-
-    public void MoveToSquare(BoardSpace square)
+    public void ResetToLast()
+    {
+        MoveToSquare(lastValidSquare);
+    }
+    public void MoveToSquare(SquareScript square)
     {
         transform.position = new Vector3(
             square.position.x,
             square.position.y,
             transform.position.z
         );
-        if (lastValidPosition != square.position) //Actually moved
+        if (lastValidSquare != square) //Actually moved
         {
-            lastValidPosition = square.position;
+            lastValidSquare = square;
             moves++;
 
             if (square.LinkedPiece != null)//Had an occupent
@@ -78,7 +81,7 @@ public class PieceScript : MonoBehaviour {
         rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
     }
 
-    public void SetSquare(BoardSpace square)
+    public void SetSquare(SquareScript square)
     {
         if (square == null)
         {
@@ -95,13 +98,13 @@ public class PieceScript : MonoBehaviour {
     public bool EnpassentCheck()
     {
         //Actually needs another check, this move can only occour immediatly after the double step forward. 
-        return (pieceType == PieceType.Pawn && moves == 1 && Vector2.Distance(startingPosition, transform.position) == 2);
+        return (pieceType == PieceType.Pawn && moves == 1 && Vector2.Distance(startingSquare.position, transform.position) == 2);
     }
 
     private void Awake()
     {
-        lastValidPosition = transform.position;
-        startingPosition = transform.position;
+        lastValidSquare = GameManager.Instance.board[GameManager.PositionToBoardIndex(transform.position)];
+        startingSquare = lastValidSquare;
         rend = GetComponent<Renderer>();
     }
 }

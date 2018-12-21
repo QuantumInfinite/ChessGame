@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 public class MovableScript : MonoBehaviour {
     
-    List<BoardSpace> validMoves = new List<BoardSpace>();
+    List<SquareScript> validMoves = new List<SquareScript>();
 
     PieceScript heldPiece;
 
-    BoardSpace[] board;
+    SquareScript[] board;
 
     private void Start()
     {
@@ -39,11 +39,18 @@ public class MovableScript : MonoBehaviour {
         );
 
         //Actually move
-        BoardSpace newSquare = GetBoardPiece(newPos);
-        
-        //newSquare.SetPiece(heldPiece);
-        heldPiece.MoveToSquare(newSquare);
 
+        int indexOfThisMove = GameManager.PositionToBoardIndex(newPos);
+        if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
+        {
+            heldPiece.MoveToSquare(board[indexOfThisMove]);
+        }
+        else //Not valid, return to last position
+        {
+            heldPiece.ResetToLast();
+        }
+
+        
         heldPiece = null;
         ClearValidMoves();
     }
@@ -56,28 +63,21 @@ public class MovableScript : MonoBehaviour {
         if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
         {
             heldPiece = hit.transform.GetComponent<PieceScript>();
-            validMoves = MoveValidator.MarkValidMoves(heldPiece);
-            ApplyHighlight();
+            if (heldPiece.team == GameManager.Instance.playerTeam)
+            {
+                validMoves = MoveValidator.MarkValidMoves(heldPiece);
+                ApplyHighlight();
+            }
+            else
+            {
+                heldPiece = null;
+            }
         }
     }
 
     bool MoveIsValid(Vector2 newPos)
     {
         return validMoves.Find(item => item.position == newPos) != null;
-    }
-
-    BoardSpace GetBoardPiece(Vector2 position)
-    {
-        int indexOfThisMove = (int)((position.y - 1) * 8 + (position.x - 1));
-        int indexOfLastMove = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
-        if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
-        {
-            return board[indexOfThisMove];
-        }
-        else //Not valid, return to last position
-        {
-            return board[indexOfLastMove];
-        }
     }
 
     void MoveToCursor()
@@ -104,7 +104,7 @@ public class MovableScript : MonoBehaviour {
 
     void ApplyHighlight()
     {
-        foreach (BoardSpace space in validMoves)
+        foreach (SquareScript space in validMoves)
         {
             space.SetMaterial(GameManager.Instance.boardMaterials.highlight);
         }        
@@ -112,7 +112,7 @@ public class MovableScript : MonoBehaviour {
 
     void ClearValidMoves()
     {
-        foreach (BoardSpace index in validMoves)
+        foreach (SquareScript index in validMoves)
         {
             index.ResetMaterial();
         }

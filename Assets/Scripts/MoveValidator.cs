@@ -7,12 +7,13 @@ public class MoveValidator : MonoBehaviour {
     private static PieceScript currentPiece;
     private static bool canPlace = true;
 
-    public static List<BoardSpace> MarkValidMoves(PieceScript heldPiece)
+    public static List<SquareScript> MarkValidMoves(PieceScript heldPiece)
     {
-        List<BoardSpace> validMoves = new List<BoardSpace>();
-        BoardSpace[] board = GameManager.Instance.board;
+        List<SquareScript> validMoves = new List<SquareScript>();
+        SquareScript[] board = GameManager.Instance.board;
         currentPiece = heldPiece;
-        int initPos = (int)((heldPiece.LastValidPosition.y - 1) * 8 + (heldPiece.LastValidPosition.x - 1));
+
+        int initPos = GameManager.PositionToBoardIndex(heldPiece.LastValidSquare.position);
         switch (heldPiece.pieceType)
         {
             case PieceScript.PieceType.Pawn:
@@ -445,7 +446,7 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
 
-    public static List<BoardSpace> MarkMove(List<BoardSpace> validMoves, BoardSpace[] board, int index)
+    public static List<SquareScript> MarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
         {
@@ -466,7 +467,7 @@ public class MoveValidator : MonoBehaviour {
     }
                     
 
-    public static List<BoardSpace> UnmarkMove(List<BoardSpace> validMoves, BoardSpace[] board, int index)
+    public static List<SquareScript> UnmarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
     {
         if (index >= 0 && index < board.Length)
         {

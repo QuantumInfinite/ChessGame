@@ -13,20 +13,18 @@ public class TurnManager : MonoBehaviour {
             return instance;
         }
     }
-    
-    int turnCounter;
-    bool isPlayerTurn;
+    PieceScript.Team currentTurn;
 
-    public bool IsPlayerTurn {
-        get {
-            return isPlayerTurn;
-        }
+    int turnCounter;
+
+    public bool IsPlayerTurn() {
+        return GameManager.Instance.playerTeam == currentTurn;
     }
 
     public void EndTurn()
     {
         turnCounter++;
-        isPlayerTurn = !isPlayerTurn;
+        currentTurn = (currentTurn == PieceScript.Team.White) ? PieceScript.Team.Black : PieceScript.Team.White;
     }
 
     private void Awake()
@@ -35,5 +33,6 @@ public class TurnManager : MonoBehaviour {
         {
             instance = this;
         }
+        currentTurn = PieceScript.Team.White;
     }
 }

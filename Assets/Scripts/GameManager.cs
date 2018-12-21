@@ -83,8 +83,15 @@ public class GameManager : MonoBehaviour {
 
     public PieceMaterials pieceMaterials;
 
-    public BoardSpace[] board;
-       
+    public SquareScript[] board;
+
+    public readonly PieceScript.Team playerTeam;
+
+    public static int PositionToBoardIndex(Vector2 position)
+    {
+        return (int)((position.y - 1) * 8 + (position.x - 1));
+    }
+
     private void Awake()
     {
         if (instance == null)
@@ -94,6 +101,5 @@ public class GameManager : MonoBehaviour {
 
         removedBlackPieces = new List<PieceScript>();
         removedWhitePieces = new List<PieceScript>();
-
     }
 }

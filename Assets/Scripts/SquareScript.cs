@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardSpace : MonoBehaviour {
+public class SquareScript : MonoBehaviour {
     Material baseMaterial;
     Renderer rend;
     
@@ -15,11 +15,11 @@ public class BoardSpace : MonoBehaviour {
     public PieceScript.Team startingPieceTeam;
 
     [SerializeField][ReadOnly]
-    PieceScript linkedSquare;
+    PieceScript linkedPiece;
     
     public PieceScript LinkedPiece {
         get {
-            return linkedSquare;
+            return linkedPiece;
         }
     }
 
@@ -35,17 +35,17 @@ public class BoardSpace : MonoBehaviour {
         if (spawnPieceAtStart)
         {
             GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
-            linkedSquare = startingPiece.GetComponent<PieceScript>();
-            linkedSquare.SetSquare(this);
-            linkedSquare.pieceType = startingPieceType;
-            linkedSquare.team = startingPieceTeam;
-            linkedSquare.SetMaterial(startingPieceType, startingPieceTeam);
+            linkedPiece = startingPiece.GetComponent<PieceScript>();
+            linkedPiece.SetSquare(this);
+            linkedPiece.pieceType = startingPieceType;
+            linkedPiece.team = startingPieceTeam;
+            linkedPiece.SetMaterial(startingPieceType, startingPieceTeam);
         }
     }
 
     public void SetPiece(PieceScript piece)
     {
-        linkedSquare = piece;
+        linkedPiece = piece;
     }
     
 	
