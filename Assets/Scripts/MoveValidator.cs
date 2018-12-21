@@ -7,10 +7,10 @@ public class MoveValidator : MonoBehaviour {
     private static PieceScript currentPiece;
     private static bool canPlace = true;
 
-    public static List<SquareScript> FindValidMoves(PieceScript piece)
+    public static List<SquareScript> FindValidMoves(PieceScript piece, SquareScript[] board)
     {
         List<SquareScript> validMoves = new List<SquareScript>();
-        SquareScript[] board = GameManager.Instance.board;
+        //SquareScript[] currentBoard = GameManager.Instance.board;
         currentPiece = piece;
 
         int initPos = GameManager.PositionToBoardIndex(piece.LastValidSquare.position);
