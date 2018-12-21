@@ -21,7 +21,10 @@ public class MoveValidator : MonoBehaviour {
                 {
                     case PieceScript.Team.Black:
                         //one space forward
-                        MarkMove(validMoves, board, initPos - 8);
+                        if (board[initPos - 8].LinkedPiece == null)
+                        {
+                            MarkMove(validMoves, board, initPos - 8);
+                        }
                         //two spaces if first turn
                         if (!piece.HasMoved() && board[initPos - 16].LinkedPiece == null)
                         {
@@ -30,10 +33,21 @@ public class MoveValidator : MonoBehaviour {
                                 MarkMove(validMoves, board, initPos - 16);
                             }
                         }
+                        if (board[initPos - 7].LinkedPiece != null)
+                        {
+                            MarkMove(validMoves, board, initPos - 7);
+                        }
+                        if (board[initPos - 9].LinkedPiece != null)
+                        {
+                            MarkMove(validMoves, board, initPos - 9);
+                        }
                         break;
                     case PieceScript.Team.White:
                         //one space forward
-                        MarkMove(validMoves, board, initPos + 8);
+                        if (board[initPos + 8].LinkedPiece == null)
+                        {
+                            MarkMove(validMoves, board, initPos + 8);
+                        }
                         //two spaces if first turn
                         if (!piece.HasMoved() && board[initPos + 16].LinkedPiece == null)
                         {
@@ -42,8 +56,14 @@ public class MoveValidator : MonoBehaviour {
                                 MarkMove(validMoves, board, initPos + 16);
                             }
                         }
-                        else
-                            Debug.Log(board[initPos + 16]);
+                        if (board[initPos + 7].LinkedPiece != null)
+                        {
+                            MarkMove(validMoves, board, initPos + 7);
+                        }
+                        if (board[initPos + 9].LinkedPiece != null)
+                        {
+                            MarkMove(validMoves, board, initPos + 9);
+                        }
                         break;
                 }
                 canPlace = true;
