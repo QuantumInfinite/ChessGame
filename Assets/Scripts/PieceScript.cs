@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PieceScript : MonoBehaviour {
 
-    public enum PieceType
+    public enum Type
     {
         Pawn,
         Rook,
@@ -13,7 +13,7 @@ public class PieceScript : MonoBehaviour {
         Queen,
         King
     }
-    public PieceType pieceType;
+    public Type type;
 
     public enum Team
     {
@@ -76,7 +76,7 @@ public class PieceScript : MonoBehaviour {
         return moves != 0;
     }
 
-    public void SetMaterial(PieceType pieceType, Team team)
+    public void SetMaterial(Type pieceType, Team team)
     {
         rend.material = GameManager.Instance.pieceMaterials.GetMaterial(pieceType, team);
     }
@@ -98,7 +98,7 @@ public class PieceScript : MonoBehaviour {
     public bool EnpassentCheck()
     {
         //Actually needs another check, this move can only occour immediatly after the double step forward. 
-        return (pieceType == PieceType.Pawn && moves == 1 && Vector2.Distance(startingSquare.position, transform.position) == 2);
+        return (type == Type.Pawn && moves == 1 && Vector2.Distance(startingSquare.position, transform.position) == 2);
     }
 
     private void Awake()

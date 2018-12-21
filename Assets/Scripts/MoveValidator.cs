@@ -7,25 +7,25 @@ public class MoveValidator : MonoBehaviour {
     private static PieceScript currentPiece;
     private static bool canPlace = true;
 
-    public static List<SquareScript> MarkValidMoves(PieceScript heldPiece)
+    public static List<SquareScript> FindValidMoves(PieceScript piece)
     {
         List<SquareScript> validMoves = new List<SquareScript>();
         SquareScript[] board = GameManager.Instance.board;
-        currentPiece = heldPiece;
+        currentPiece = piece;
 
-        int initPos = GameManager.PositionToBoardIndex(heldPiece.LastValidSquare.position);
-        switch (heldPiece.pieceType)
+        int initPos = GameManager.PositionToBoardIndex(piece.LastValidSquare.position);
+        switch (piece.type)
         {
-            case PieceScript.PieceType.Pawn:
+            case PieceScript.Type.Pawn:
                 //one space forward
                 MarkMove(validMoves, board, initPos + 8);
                 //two spaces if first turn
-                if (!heldPiece.HasMoved())
+                if (!piece.HasMoved())
                 {
                     MarkMove(validMoves, board,initPos + 16);
                 }
                 break;
-            case PieceScript.PieceType.Rook:
+            case PieceScript.Type.Rook:
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
@@ -82,7 +82,7 @@ public class MoveValidator : MonoBehaviour {
                 UnmarkMove(validMoves, board, initPos);
                 canPlace = true;
                 break;
-            case PieceScript.PieceType.Bishop:
+            case PieceScript.Type.Bishop:
 
                 //up-left diagonal
                 for (int i = 0; i < board.Length; i = i + 7)
@@ -138,7 +138,7 @@ public class MoveValidator : MonoBehaviour {
                 canPlace = true;
                 UnmarkMove(validMoves, board, initPos);
                 break;
-            case PieceScript.PieceType.Knight:
+            case PieceScript.Type.Knight:
                 int rowsThrough = 0;
 
                 //one down two right
@@ -318,7 +318,7 @@ public class MoveValidator : MonoBehaviour {
                 }
                 canPlace = true;
                 break;
-            case PieceScript.PieceType.Queen:
+            case PieceScript.Type.Queen:
 
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
@@ -422,7 +422,7 @@ public class MoveValidator : MonoBehaviour {
                 UnmarkMove(validMoves, board, initPos);
                 canPlace = true;
                 break;
-            case PieceScript.PieceType.King:
+            case PieceScript.Type.King:
                 //left movement
                 if (initPos % 8 != 0)
                 {
@@ -446,7 +446,7 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
 
-    public static List<SquareScript> MarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<SquareScript> MarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
         {
@@ -467,7 +467,7 @@ public class MoveValidator : MonoBehaviour {
     }
                     
 
-    public static List<SquareScript> UnmarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<SquareScript> UnmarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
     {
         if (index >= 0 && index < board.Length)
         {

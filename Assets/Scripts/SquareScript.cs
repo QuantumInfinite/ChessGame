@@ -10,7 +10,7 @@ public class SquareScript : MonoBehaviour {
     
     public bool spawnPieceAtStart;
     [ConditionalHide("spawnPieceAtStart", true)]
-    public PieceScript.PieceType startingPieceType;
+    public PieceScript.Type startingPieceType;
     [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.Team startingPieceTeam;
 
@@ -37,9 +37,10 @@ public class SquareScript : MonoBehaviour {
             GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
             linkedPiece = startingPiece.GetComponent<PieceScript>();
             linkedPiece.SetSquare(this);
-            linkedPiece.pieceType = startingPieceType;
+            linkedPiece.type = startingPieceType;
             linkedPiece.team = startingPieceTeam;
             linkedPiece.SetMaterial(startingPieceType, startingPieceTeam);
+            GameManager.Instance.RegisterPiece(linkedPiece);
         }
     }
 

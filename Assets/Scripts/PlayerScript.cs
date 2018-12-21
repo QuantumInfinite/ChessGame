@@ -71,7 +71,7 @@ public class PlayerScript : MonoBehaviour {
             heldPiece = hit.transform.GetComponent<PieceScript>();
             if (heldPiece.team == GameManager.Instance.playerTeam)
             {
-                validMoves = MoveValidator.MarkValidMoves(heldPiece);
+                validMoves = MoveValidator.FindValidMoves(heldPiece);
                 ApplyHighlight();
             }
             else

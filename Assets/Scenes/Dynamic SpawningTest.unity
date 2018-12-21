@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 49494337}
   - component: {fileID: 49494338}
   - component: {fileID: 49494339}
+  - component: {fileID: 49494340}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -371,14 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60a463df920d1149a9136018de17ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basePiecePrefab: {fileID: 1414994646492900, guid: 6ee8855302b143840a2d0725c14c6f0d,
-    type: 2}
   boardMaterials:
     white: {fileID: 2100000, guid: 219904f6a561e3245a7ea59a62ddb409, type: 2}
     black: {fileID: 2100000, guid: 552994c47a192e64c9940efa73641b1f, type: 2}
     highlight: {fileID: 2100000, guid: 3ae283206ea0a4b4abc00007fea79229, type: 2}
-  removedWhitePieces: []
-  removedBlackPieces: []
   pieceMaterials:
     white_pawn: {fileID: 2100000, guid: ff7e6065821aba9458e4143e17dc14e7, type: 2}
     white_rook: {fileID: 2100000, guid: 5a65394d5a66ecb42bb4a317db4fdbfd, type: 2}
@@ -392,6 +389,8 @@ MonoBehaviour:
     black_knight: {fileID: 2100000, guid: 1dbc0c2dbb3c30541b2ae145c50f0592, type: 2}
     black_queen: {fileID: 2100000, guid: e6fd75dc07a9505489cfca6beb765568, type: 2}
     black_king: {fileID: 2100000, guid: 30c8c60a82e154c4394649ba94f57902, type: 2}
+  basePiecePrefab: {fileID: 1414994646492900, guid: 6ee8855302b143840a2d0725c14c6f0d,
+    type: 2}
   board:
   - {fileID: 409248423}
   - {fileID: 1671251396}
@@ -457,6 +456,12 @@ MonoBehaviour:
   - {fileID: 22783522}
   - {fileID: 2110890396}
   - {fileID: 580536989}
+  removedWhitePieces: []
+  removedBlackPieces: []
+  activeWhitePieces: []
+  activeBlackPieces: []
+  playerTeam: 0
+  playerOnlyTurns: 0
 --- !u!114 &49494338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +482,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2dd1e38ce00f19e44a6258ea6ef96eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &49494340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 49494334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1751d5eecce7abf4486436bea30d61e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &191517125
@@ -2856,34 +2872,6 @@ MonoBehaviour:
   startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
---- !u!1 &822989623
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 822989624}
-  m_Layer: 0
-  m_Name: Pieces
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &822989624
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 822989623}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &835469097
 GameObject:
   m_ObjectHideFlags: 0
