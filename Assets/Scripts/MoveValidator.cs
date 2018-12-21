@@ -17,12 +17,26 @@ public class MoveValidator : MonoBehaviour {
         switch (piece.type)
         {
             case PieceScript.Type.Pawn:
-                //one space forward
-                MarkMove(validMoves, board, initPos + 8);
-                //two spaces if first turn
-                if (!piece.HasMoved())
+                switch (piece.team)
                 {
-                    MarkMove(validMoves, board,initPos + 16);
+                    case PieceScript.Team.Black:
+                        //one space forward
+                        MarkMove(validMoves, board, initPos - 8);
+                        //two spaces if first turn
+                        if (!piece.HasMoved())
+                        {
+                            MarkMove(validMoves, board, initPos - 16);
+                        }
+                        break;
+                    case PieceScript.Team.White:
+                        //one space forward
+                        MarkMove(validMoves, board, initPos + 8);
+                        //two spaces if first turn
+                        if (!piece.HasMoved())
+                        {
+                            MarkMove(validMoves, board, initPos + 16);
+                        }
+                        break;
                 }
                 break;
             case PieceScript.Type.Rook:
