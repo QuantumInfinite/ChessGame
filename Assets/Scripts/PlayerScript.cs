@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class MovableScript : MonoBehaviour {
+public class PlayerScript : MonoBehaviour {
     
     List<SquareScript> validMoves = new List<SquareScript>();
 
