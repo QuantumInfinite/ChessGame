@@ -387,11 +387,11 @@ MonoBehaviour:
     white_queen: {fileID: 2100000, guid: 6a7740155a8a89f438e06eca7a951eeb, type: 2}
     white_king: {fileID: 2100000, guid: adb9e5294d23a864e8816a045650552b, type: 2}
     black_pawn: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
-    black_rook: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
-    black_bishop: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
-    black_knight: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
-    black_queen: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
-    black_king: {fileID: 2100000, guid: 1e75cd10778e20e4e9705c573efb0081, type: 2}
+    black_rook: {fileID: 2100000, guid: 9637c8d455f59314ab3a8ded64b88226, type: 2}
+    black_bishop: {fileID: 2100000, guid: 913f8dd2ccba7c54e9168c29a5e2e99d, type: 2}
+    black_knight: {fileID: 2100000, guid: 1dbc0c2dbb3c30541b2ae145c50f0592, type: 2}
+    black_queen: {fileID: 2100000, guid: e6fd75dc07a9505489cfca6beb765568, type: 2}
+    black_king: {fileID: 2100000, guid: 30c8c60a82e154c4394649ba94f57902, type: 2}
   board:
   - {fileID: 409248423}
   - {fileID: 1671251396}
