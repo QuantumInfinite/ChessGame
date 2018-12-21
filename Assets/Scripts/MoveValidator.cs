@@ -23,7 +23,7 @@ public class MoveValidator : MonoBehaviour {
                         //one space forward
                         MarkMove(validMoves, board, initPos - 8);
                         //two spaces if first turn
-                        if (!piece.HasMoved())
+                        if (!piece.HasMoved() && board[initPos - 8] == null)
                         {
                             MarkMove(validMoves, board, initPos - 16);
                         }
@@ -32,7 +32,7 @@ public class MoveValidator : MonoBehaviour {
                         //one space forward
                         MarkMove(validMoves, board, initPos + 8);
                         //two spaces if first turn
-                        if (!piece.HasMoved())
+                        if (!piece.HasMoved() && board[initPos+8] == null)
                         {
                             MarkMove(validMoves, board, initPos + 16);
                         }
