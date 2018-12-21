@@ -38,6 +38,7 @@ public class MoveValidator : MonoBehaviour {
                         }
                         break;
                 }
+                canPlace = true;
                 break;
             case PieceScript.Type.Rook:
                 for (int i = 8; i < board.Length; i = i + 8)
@@ -102,7 +103,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
                     if (canPlace == true && i != 0)
+                    {
                         MarkMove(validMoves, board, initPos + i);
+                    }
                     if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
                     {
                         UnmarkMove(validMoves, board, initPos + i);
@@ -118,9 +121,10 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
                     if (canPlace == true && i != 0)
-                        MarkMove(validMoves, board,initPos - i);
-                    if ((initPos - i + 1) % 8 == 0) break;
-                    if (canPlace == false)
+                    {
+                        MarkMove(validMoves, board, initPos - i);
+                    }
+                    if ((initPos - i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -129,10 +133,11 @@ public class MoveValidator : MonoBehaviour {
                 //up-right diagonal
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    if (canPlace == true && i!=0)
-                    MarkMove(validMoves, board,initPos + i);
-                    if ((initPos + i + 1) % 8 == 0) break;
-                    if (canPlace == false)
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos + i);
+                    }
+                    if ((initPos + i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -141,10 +146,11 @@ public class MoveValidator : MonoBehaviour {
                 //down-left diagonal
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    if (canPlace == true && i!=0)
-                        MarkMove(validMoves, board,initPos - i);
-                    if ((initPos - i) % 8 == 0) break;
-                    if (canPlace == false)
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos - i);
+                    }
+                    if ((initPos - i) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -159,7 +165,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 6; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos - i) % 8 == 0)
                     {
                         rowsThrough++;
@@ -167,7 +175,9 @@ public class MoveValidator : MonoBehaviour {
                     if (i == 5 && rowsThrough == 1)
                     {
                         if (initPos % 8 == 0)
+                        {
                             rowsThrough++;
+                        }
                         MarkMove(validMoves, board,initPos - 6);
                         if (canPlace == false)
                         {
@@ -180,7 +190,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 6; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos + i + 1) % 8 == 0)
                     {
                         rowsThrough++;
@@ -199,15 +211,21 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 10; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 9 && (initPos + 2) % 8 == 0)
+                    {
                         rowsThrough = rowsThrough + 6;
+                    }
                     else if (i == 9 && initPos % 8 == 0)
+                    {
                         rowsThrough = 1;
+                    }
                     if (i == 9 && rowsThrough == 1)
                     {
                         MarkMove(validMoves, board,initPos + 10);
@@ -222,13 +240,17 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 10; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos - i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 9 && (initPos + 1) % 8 == 0)
+                    {
                         rowsThrough = 1;
+                    }
                     if (i == 9 && rowsThrough == 1)
                     {
                         MarkMove(validMoves, board,initPos - 10);
@@ -243,13 +265,17 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 15; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 14 && initPos % 8 == 0)
+                    {
                         rowsThrough = 1;
+                    }
                     if (i == 14 && rowsThrough == 2)
                     {
                         MarkMove(validMoves, board,initPos + 15);
@@ -263,7 +289,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int j = 1; j < board.Length; j = j + 8)
                 {
                     if (initPos == j)
-                        MarkMove(validMoves, board,initPos + 15);
+                    {
+                        MarkMove(validMoves, board, initPos + 15);
+                    }
                     if (canPlace == false)
                     {
                         break;
@@ -274,7 +302,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 15; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos - i) % 8 == 0)
                     {
                         rowsThrough++;
@@ -293,15 +323,21 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 17; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 16 && (initPos + 1) % 8 == 0)
+                    {
                         rowsThrough = rowsThrough + 6;
+                    }
                     else if (i == 16 && initPos % 8 == 0)
+                    {
                         rowsThrough = 2;
+                    }
                     if (i == 16 && rowsThrough == 2)
                     {
                         MarkMove(validMoves, board,initPos + 17);
@@ -316,7 +352,9 @@ public class MoveValidator : MonoBehaviour {
                 for (int i = 0; i < 17; i++)
                 {
                     if (i == 0)
+                    {
                         rowsThrough = 0;
+                    }
                     if ((initPos - i) % 8 == 0)
                     {
                         rowsThrough++;
@@ -360,11 +398,14 @@ public class MoveValidator : MonoBehaviour {
                     if ((initPos + 1) % 8 != 0)
                     {
                         MarkMove(validMoves, board,initPos + i);
-                        if (canPlace == false)
+                        if ((initPos + i + 1) % 8 == 0)
                         {
                             break;
                         }
-                        if ((initPos + i + 1) % 8 == 0) break;
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
                     }
                 }
                 canPlace = true;
@@ -374,19 +415,24 @@ public class MoveValidator : MonoBehaviour {
                     if (initPos % 8 != 0)
                     {
                         MarkMove(validMoves, board,initPos - i);
-                        if (canPlace == false)
+                        if ((initPos - i) % 8 == 0)
                         {
                             break;
                         }
-                        if ((initPos - i) % 8 == 0) break;
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
                     }
                 }
                 canPlace = true;
                 //up left diagonal
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if (canPlace == true && i!= 0)
-                        MarkMove(validMoves, board,initPos + i);
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos + i);
+                    }
                     if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
                     {
                         UnmarkMove(validMoves, board, initPos + i);
@@ -401,10 +447,11 @@ public class MoveValidator : MonoBehaviour {
                 //down right diagonal
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if (canPlace == true && i!=0)
-                        MarkMove(validMoves, board,initPos - i);
-                    if ((initPos - i + 1) % 8 == 0) break;
-                    if (canPlace == false)
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos - i);
+                    }
+                    if ((initPos - i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -413,10 +460,11 @@ public class MoveValidator : MonoBehaviour {
                 //up right diagonal
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    if (canPlace == true && i!=0)
-                        MarkMove(validMoves, board,initPos + i);
-                    if ((initPos + i + 1) % 8 == 0) break;
-                    if (canPlace == false)
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos + i);
+                    }
+                    if ((initPos + i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -425,10 +473,11 @@ public class MoveValidator : MonoBehaviour {
                 //down left diagonal
                 for (int i = 0; i < board.Length; i = i + 9)
                 {
-                    if (canPlace == true && i!=0)
-                        MarkMove(validMoves, board,initPos - i);
-                    if ((initPos - i) % 8 == 0) break;
-                    if (canPlace == false)
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMove(validMoves, board, initPos - i);
+                    }
+                    if ((initPos - i) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -455,6 +504,7 @@ public class MoveValidator : MonoBehaviour {
                 MarkMove(validMoves, board,initPos + 8);
                 //one space down
                 MarkMove(validMoves, board,initPos - 8);
+                canPlace = true;
                 break;
         }
         return validMoves;
