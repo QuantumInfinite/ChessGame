@@ -66,6 +66,7 @@ public class PieceScript : MonoBehaviour {
             if (square.LinkedPiece != null)//Had an occupent
             {
                 GameManager.Instance.RemovePiece(square.LinkedPiece);
+                square.SetPiece(null);
             }
             SetSquare(square);
             square.SetPiece(this);
