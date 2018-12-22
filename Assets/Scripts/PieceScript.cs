@@ -31,6 +31,16 @@ public class PieceScript : MonoBehaviour {
         }
     }
 
+    private bool isVulnerable = false;
+    public bool IsVulnerable  {
+        get {
+            return isVulnerable;
+        }
+        set {
+            isVulnerable = value;
+        }
+    }    
+
     int moves = 0;
 
     Renderer rend;
