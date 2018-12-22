@@ -40,7 +40,7 @@ public class SquareScript : MonoBehaviour {
             linkedPiece.type = startingPieceType;
             linkedPiece.team = startingPieceTeam;
             linkedPiece.SetMaterial(startingPieceType, startingPieceTeam);
-            GameManager.Instance.RegisterPiece(linkedPiece);
+            BoardManager.Instance.RegisterPiece(linkedPiece);
         }
     }
 

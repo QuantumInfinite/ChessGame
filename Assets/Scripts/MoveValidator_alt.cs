@@ -2,73 +2,71 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveValidator : MonoBehaviour {
+public class MoveValidator_alt : MonoBehaviour {
 
-    private static PieceScript currentPiece;
+    private static int currentPiece;
     private static bool canPlace = true;
 
-    public static List<SquareScript> FindValidMoves(PieceScript piece, SquareScript[] board)
+    public static List<int> FindValidMoves(int pieceIndex, char[] board)
     {
-        List<SquareScript> validMoves = new List<SquareScript>();
+        List<int> validMoves = new List<int>();
         //SquareScript[] currentBoard = BoardManager.Instance.board;
-        currentPiece = piece;
-
-        int initPos = BoardManager.PositionToBoardIndex(piece.LastValidSquare.position);
-        switch (piece.type)
+        currentPiece = pieceIndex;
+        int initPos = pieceIndex;
+        switch (char.ToUpper(board[pieceIndex]))
         {
-            case PieceScript.Type.Pawn:
-                switch (piece.team)
+            case 'P':
+                if (char.IsLower(board[pieceIndex]))
                 {
-                    case PieceScript.Team.Black:
-                        //one space forward
-                        if (board[initPos - 8].LinkedPiece == null)
+                    //one space forward
+                    if (board[initPos - 8] == '\0')
+                    {
+                        MarkMove(validMoves, board, initPos - 8);
+                    }
+                    //two spaces if first turn
+                    if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[initPos - 16] == '\0')
+                    {
+                        if (board[initPos - 8] == '\0')
                         {
-                            MarkMove(validMoves, board, initPos - 8);
+                            MarkMove(validMoves, board, initPos - 16);
                         }
-                        //two spaces if first turn
-                        if (!piece.HasMoved() && board[initPos - 16].LinkedPiece == null)
+                    }
+                    if (board[initPos - 7] != '\0')
+                    {
+                        MarkMove(validMoves, board, initPos - 7);
+                    }
+                    if (board[initPos - 9] != '\0')
+                    {
+                        MarkMove(validMoves, board, initPos - 9);
+                    }
+                }
+                else
+                {
+                    //one space forward
+                    if (board[initPos + 8] == '\0')
+                    {
+                        MarkMove(validMoves, board, initPos + 8);
+                    }
+                    //two spaces if first turn
+                    if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[initPos + 16] == '\0')
+                    {
+                        if (board[initPos + 8] == '\0')
                         {
-                            if (board[initPos - 8].LinkedPiece == null)
-                            {
-                                MarkMove(validMoves, board, initPos - 16);
-                            }
+                            MarkMove(validMoves, board, initPos + 16);
                         }
-                        if (board[initPos - 7].LinkedPiece != null)
-                        {
-                            MarkMove(validMoves, board, initPos - 7);
-                        }
-                        if (board[initPos - 9].LinkedPiece != null)
-                        {
-                            MarkMove(validMoves, board, initPos - 9);
-                        }
-                        break;
-                    case PieceScript.Team.White:
-                        //one space forward
-                        if (board[initPos + 8].LinkedPiece == null)
-                        {
-                            MarkMove(validMoves, board, initPos + 8);
-                        }
-                        //two spaces if first turn
-                        if (!piece.HasMoved() && board[initPos + 16].LinkedPiece == null)
-                        {
-                            if (board[initPos + 8].LinkedPiece == null)
-                            {
-                                MarkMove(validMoves, board, initPos + 16);
-                            }
-                        }
-                        if (board[initPos + 7].LinkedPiece != null)
-                        {
-                            MarkMove(validMoves, board, initPos + 7);
-                        }
-                        if (board[initPos + 9].LinkedPiece != null)
-                        {
-                            MarkMove(validMoves, board, initPos + 9);
-                        }
-                        break;
+                    }
+                    if (board[initPos + 7] != '\0')
+                    {
+                        MarkMove(validMoves, board, initPos + 7);
+                    }
+                    if (board[initPos + 9] != '\0')
+                    {
+                        MarkMove(validMoves, board, initPos + 9);
+                    }
                 }
                 canPlace = true;
                 break;
-            case PieceScript.Type.Rook:
+            case 'R':
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
@@ -125,7 +123,7 @@ public class MoveValidator : MonoBehaviour {
                 UnmarkMove(validMoves, board, initPos);
                 canPlace = true;
                 break;
-            case PieceScript.Type.Bishop:
+            case 'B':
 
                 //up-left diagonal
                 for (int i = 0; i < board.Length; i = i + 7)
@@ -186,7 +184,7 @@ public class MoveValidator : MonoBehaviour {
                 canPlace = true;
                 UnmarkMove(validMoves, board, initPos);
                 break;
-            case PieceScript.Type.Knight:
+            case 'N':
                 int rowsThrough = 0;
 
                 //one down two right
@@ -398,7 +396,7 @@ public class MoveValidator : MonoBehaviour {
                 }
                 canPlace = true;
                 break;
-            case PieceScript.Type.Queen:
+            case 'Q':
 
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
@@ -513,7 +511,7 @@ public class MoveValidator : MonoBehaviour {
                 UnmarkMove(validMoves, board, initPos);
                 canPlace = true;
                 break;
-            case PieceScript.Type.King:
+            case 'K':
                 //left movement
                 if (initPos % 8 != 0)
                 {
@@ -538,19 +536,19 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
 
-    private static List<SquareScript> MarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<int> MarkMove(List<int> validMoves, char[] board, int index)
     {
-        if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
+        if (index >= 0 && index < board.Length && !validMoves.Contains(index))
         {
-            if (board[index].LinkedPiece == null)
+            if (board[index] == '\0')
             {
-                validMoves.Add(board[index]);
+                validMoves.Add(index);
             }
             else
             {
-                if (board[index].LinkedPiece.team != currentPiece.team)
+                if (!(char.IsUpper(board[index]) && char.IsUpper(board[currentPiece])))
                 {
-	                validMoves.Add(board[index]);
+	                validMoves.Add(index);
                 }
                 canPlace = false;
             }
@@ -559,11 +557,11 @@ public class MoveValidator : MonoBehaviour {
     }
                     
 
-    private static List<SquareScript> UnmarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<int> UnmarkMove(List<int> validMoves, char[] board, int index)
     {
         if (index >= 0 && index < board.Length)
         {
-            validMoves.RemoveAll(x => x.position == board[index].position);
+            validMoves.RemoveAll(item => item == index);
         }
         return validMoves;
     }

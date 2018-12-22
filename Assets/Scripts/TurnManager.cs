@@ -26,7 +26,13 @@ public class TurnManager : MonoBehaviour {
         turnCounter++;
         currentTurn = (currentTurn == PieceScript.Team.White) ? PieceScript.Team.Black : PieceScript.Team.White;
     }
+    /*
+    public void MakeMove(int fromIndex, int toIndex)
+    {
 
+        EndTurn();
+    }
+    */
     private void Awake()
     {
         if (instance == null)

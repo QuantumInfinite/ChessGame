@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour {
 
     private void Start()
     {
-        board = GameManager.Instance.board;
+        board = BoardManager.Instance.board;
     }
 
     void Update ()
@@ -31,6 +31,24 @@ public class PlayerScript : MonoBehaviour {
                     DropPiece();
                 }
             }
+            //Remove this after debugging
+            if (!heldPiece && Input.GetAxis("Fire2") != 0)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
+                {
+                    ClearValidMoves();
+                    List<int> moves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
+                    for (int i = 0; i < moves.Count; i++)
+                    {
+                        validMoves.Add(board[moves[i]]);
+                    }
+                    ApplyHighlight();
+                }
+            }
+            //END REMOVE
         }
 	}
 
@@ -44,7 +62,7 @@ public class PlayerScript : MonoBehaviour {
 
         //Actually move
 
-        int indexOfThisMove = GameManager.PositionToBoardIndex(newPos);
+        int indexOfThisMove = BoardManager.PositionToBoardIndex(newPos);
         if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
         {
             heldPiece.MoveToSquare(board[indexOfThisMove]);
@@ -71,6 +89,7 @@ public class PlayerScript : MonoBehaviour {
             heldPiece = hit.transform.GetComponent<PieceScript>();
             if (heldPiece.team == GameManager.Instance.playerTeam)
             {
+                ClearValidMoves();
                 validMoves = MoveValidator.FindValidMoves(heldPiece, board);
                 ApplyHighlight();
             }

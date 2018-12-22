@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class AIBrainScript : MonoBehaviour {
+public class AIBrainScript_alt : MonoBehaviour {
 
-    List<Move> movesQueue;
+    List<Move_alt> movesQueue;
 
     List<PieceScript> myPieces;
 
@@ -14,7 +14,7 @@ public class AIBrainScript : MonoBehaviour {
     int numThinks = 0;
 	// Use this for initialization
 	void Start () {
-        movesQueue = new List<Move>();
+        movesQueue = new List<Move_alt>();
     }
 
     enum ThinkingStage
@@ -45,12 +45,13 @@ public class AIBrainScript : MonoBehaviour {
         myPieces = BoardManager.Instance.ActiveAIPieces();
         foreach (PieceScript piece in myPieces)
         {
-            List<SquareScript> possibleMoves = MoveValidator.FindValidMoves(piece, BoardManager.Instance.board);
+            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(piece.position), BoardManager.BoardToCharArray(BoardManager.Instance.board));
+
             if (possibleMoves.Count > 0)
             {
-                foreach (SquareScript square in possibleMoves)
+                foreach (int move in possibleMoves)
                 {
-                    movesQueue.Add(new Move(BoardManager.Instance.board, piece, square));
+                    movesQueue.Add(new Move_alt(BoardManager.BoardToCharArray(BoardManager.Instance.board), BoardManager.PositionToBoardIndex(piece.position), move));
                 }
             }
         }
@@ -77,54 +78,51 @@ public class AIBrainScript : MonoBehaviour {
         movesQueue.Sort((x, y) => x.fitness.CompareTo(y.fitness));
     }
 
-    void MakeMove(Move nextMove)
+    void MakeMove(Move_alt nextMove)
     {
-        print("moving " + nextMove.piece.team + " " + nextMove.piece.type + " from " + nextMove.piece.LinkedSquare.name + " to " + nextMove.square.name);
 
         string t = "";
-        foreach (Move move in movesQueue)
+        foreach (Move_alt move in movesQueue)
         {
             t += " " + move.fitness; 
         }
         print(t);
-        nextMove.piece.MoveToSquare(nextMove.square);
+        BoardManager.Instance.board[nextMove.piece].LinkedPiece.MoveToSquare(BoardManager.Instance.board[nextMove.square]);
     }
 }
 
-internal class Move
+internal class Move_alt
 {
     public float fitness = 0;
 
-    SquareScript[] oldBoard;
+    char[] oldBoard;
     char[] newBoard;
 
-    public PieceScript piece;
+    public int piece;
 
-    public SquareScript square;
+    public int square;
 
-    public Move(SquareScript[] oldBoard, PieceScript pieceToMove, SquareScript squareToMoveTo)
+    public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
         this.oldBoard = oldBoard;
         piece = pieceToMove;
         square = squareToMoveTo;
-
-        int pieceIndex = BoardManager.PositionToBoardIndex(piece.LinkedSquare.position);
-        int squareIndex = BoardManager.PositionToBoardIndex(square.position);
+        
 
         newBoard = new char[oldBoard.Length];
         for (int i = 0; i < newBoard.Length; i++)
         {
-            if (i == squareIndex)
+            if (i == squareToMoveTo)
             {
-                newBoard[i] = ConvertToLetter(pieceToMove);
+                newBoard[i] = oldBoard[pieceToMove];
             }
-            else if (i == pieceIndex || oldBoard[i].LinkedPiece == null)
+            else if (i == pieceToMove || oldBoard[i] == '\0')
             {
                 newBoard[i] = '\0';
             }
             else
             {
-                newBoard[i] = ConvertToLetter(oldBoard[i].LinkedPiece);
+                newBoard[i] = oldBoard[i];
             }
         }
 

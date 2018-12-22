@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    
+
     [System.Serializable]
     public struct BoardMaterials
     {
@@ -64,66 +66,18 @@ public class GameManager : MonoBehaviour {
     public PieceMaterials pieceMaterials;
     public GameObject basePiecePrefab;
 
-
-    [Header("Board Stuff")]
-    public SquareScript[] board;
-    public List<PieceScript> removedWhitePieces;
-    public List<PieceScript> removedBlackPieces;
-    public List<PieceScript> activeWhitePieces;
-    public List<PieceScript> activeBlackPieces;
-
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
     public bool playerOnlyTurns = false;
+   
+
     //Static Functions
-    public static int PositionToBoardIndex(Vector2 position)
-    {
-        return (int)((position.y - 1) * 8 + (position.x - 1));
-    }
 
     //Public Functions
-    public List<PieceScript> ActiveAIPieces()
-    {
-        switch (playerTeam)
-        {
-            case PieceScript.Team.White:
-                return activeBlackPieces;
-            case PieceScript.Team.Black:
-                return activeWhitePieces;
-        }
-        return null;
-    }
-    public void RegisterPiece(PieceScript piece)
-    {
-        switch (piece.team)
-        {
-            case PieceScript.Team.White:
-                GameManager.Instance.activeWhitePieces.Add(piece);
-                break;
-            case PieceScript.Team.Black:
-                GameManager.Instance.activeBlackPieces.Add(piece);
-                break;
-        }
-    }
-    public void RemovePiece(PieceScript piece)
-    {
-        print(piece.team + " " + piece.type + " Removed from play");
-        switch (piece.team)
-        {
-            case PieceScript.Team.White:
-                GameManager.Instance.removedWhitePieces.Add(piece);
-                GameManager.Instance.activeWhitePieces.Remove(piece);
-                break;
-            case PieceScript.Team.Black:
-                GameManager.Instance.removedBlackPieces.Add(piece);
-                GameManager.Instance.activeBlackPieces.Remove(piece);
-                break;
-        }
-        piece.gameObject.SetActive(false);
-    }
+    
 
     //Private functions
-
+    
     //Keyword functions
     private void Awake()
     {
@@ -132,9 +86,5 @@ public class GameManager : MonoBehaviour {
             instance = this;
         }
 
-        removedBlackPieces = new List<PieceScript>();
-        removedWhitePieces = new List<PieceScript>();
-        activeBlackPieces = new List<PieceScript>();
-        activeWhitePieces = new List<PieceScript>();
     }
 }

@@ -39,8 +39,16 @@ public class PieceScript : MonoBehaviour {
         set {
             isVulnerable = value;
         }
-    }    
-
+    }
+    public Vector2 position {
+        get {
+            if (linkedSquare != null)
+            {
+                return linkedSquare.position;
+            }
+            return new Vector2();
+        }
+    }
     int moves = 0;
 
     Renderer rend;
@@ -75,7 +83,7 @@ public class PieceScript : MonoBehaviour {
 
             if (square.LinkedPiece != null)//Had an occupent
             {
-                GameManager.Instance.RemovePiece(square.LinkedPiece);
+                BoardManager.Instance.RemovePiece(square.LinkedPiece);
                 square.SetPiece(null);
             }
             SetSquare(square);
@@ -114,7 +122,7 @@ public class PieceScript : MonoBehaviour {
 
     private void Awake()
     {
-        lastValidSquare = GameManager.Instance.board[GameManager.PositionToBoardIndex(transform.position)];
+        lastValidSquare = BoardManager.Instance.board[BoardManager.PositionToBoardIndex(transform.position)];
         startingSquare = lastValidSquare;
         rend = GetComponent<Renderer>();
     }

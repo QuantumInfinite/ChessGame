@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class FitnessEvaluator : MonoBehaviour {
 
     public static float rawPieceValue = 1;
@@ -12,15 +12,60 @@ public class FitnessEvaluator : MonoBehaviour {
     public static float Evaluate(char[] board)
     {
         float score = 0;
-        foreach (char piece in board)
+        for (int i = 0; i < board.Length; i++)
         {
-            if (piece != '\0')
+            if (board[i] != '\0')
             {
-                score += (char.IsUpper(piece)) ? rawPieceValue : -rawPieceValue;               
+                score += GetValue(board[i]);             
             }
         }
-
         return score;
+    }
+
+    static int GetValue(char piece)
+    {
+        int val = 0;
+        switch (char.ToLower(piece))
+        {
+            case 'p':
+                val = pawn;
+                break;
+            case 'r':
+                val = rook;
+                break;
+            case 'b':
+                val = bishop;
+                break;
+            case 'n':
+                val = knight;
+                break;
+            case 'q':
+                val = queen;
+                break;
+            case 'k':
+                val = king;
+                break;
+        }
+        return char.IsUpper(piece) ? val : -val;
+    }
+    static char GetChar(PieceScript.Type piece)
+    {
+        switch (piece)
+        {
+            case PieceScript.Type.Pawn:
+                return  'p';
+            case PieceScript.Type.Rook:
+                return  'r';
+            case PieceScript.Type.Bishop:
+                return  'b';
+            case PieceScript.Type.Knight:
+                return  'n';
+            case PieceScript.Type.Queen:
+                return  'q';
+            case PieceScript.Type.King:
+                return  'k';
+        }
+        return '\0';
     }
 
     private void Awake()
