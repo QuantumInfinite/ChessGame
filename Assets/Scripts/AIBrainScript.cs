@@ -27,18 +27,18 @@ public class AIBrainScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (TurnManager.Instance.IsPlayerTurn())
+        if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
             {
                 Think();
             }
+            else if (thinkingStage == ThinkingStage.Done)
+            {
+                Act();
+            }
         }
-        else
-        {
-            Act();
-        }
-	}
+    }
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;

@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 49494338}
   - component: {fileID: 49494339}
   - component: {fileID: 49494340}
+  - component: {fileID: 49494341}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -496,6 +497,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thinkDepth: 0
+--- !u!114 &49494341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 49494334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07ed6b139e52d7c4ea0ebffd9ec102c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pawnValue: 10
+  knightValue: 30
+  bishopValue: 30
+  rookValue: 50
+  queenValue: 90
+  kingValue: 900
 --- !u!1 &191517125
 GameObject:
   m_ObjectHideFlags: 0
