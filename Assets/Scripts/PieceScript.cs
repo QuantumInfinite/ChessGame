@@ -49,6 +49,13 @@ public class PieceScript : MonoBehaviour {
             return new Vector2();
         }
     }
+
+    public int index {
+        get {
+            return BoardManager.PositionToBoardIndex(position);
+        }
+    }
+
     int moves = 0;
 
     Renderer rend;

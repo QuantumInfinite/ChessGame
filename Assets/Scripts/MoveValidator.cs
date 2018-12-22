@@ -33,11 +33,13 @@ public class MoveValidator : MonoBehaviour {
                                 MarkMove(validMoves, board, initPos - 16);
                             }
                         }
-                        if (board[initPos - 7].LinkedPiece != null)
+                        //Attack left
+                        if ((initPos + 1) % 8 != 0 && board[initPos - 7].LinkedPiece != null)
                         {
                             MarkMove(validMoves, board, initPos - 7);
                         }
-                        if (board[initPos - 9].LinkedPiece != null)
+                        //Attack right
+                        if (initPos % 8 != 0 && board[initPos - 9].LinkedPiece != null)
                         {
                             MarkMove(validMoves, board, initPos - 9);
                         }
@@ -56,11 +58,13 @@ public class MoveValidator : MonoBehaviour {
                                 MarkMove(validMoves, board, initPos + 16);
                             }
                         }
-                        if (board[initPos + 7].LinkedPiece != null)
+                        //Attack left
+                        if (initPos % 8 != 0 && board[initPos + 7].LinkedPiece != null)
                         {
                             MarkMove(validMoves, board, initPos + 7);
                         }
-                        if (board[initPos + 9].LinkedPiece != null)
+                        //Attack Right
+                        if ((initPos + 1) % 8 != 0 && board[initPos + 9].LinkedPiece != null)
                         {
                             MarkMove(validMoves, board, initPos + 9);
                         }

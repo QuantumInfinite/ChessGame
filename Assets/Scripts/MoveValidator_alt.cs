@@ -31,11 +31,13 @@ public class MoveValidator_alt : MonoBehaviour {
                             MarkMove(validMoves, board, initPos - 16);
                         }
                     }
-                    if (board[initPos - 7] != '\0')
+                    //attack right 
+                    if ((initPos + 1) % 8 != 0 && board[initPos - 7] != '\0')
                     {
                         MarkMove(validMoves, board, initPos - 7);
                     }
-                    if (board[initPos - 9] != '\0')
+                    //attack left
+                    if (initPos % 8 != 0 && board[initPos - 9] != '\0')
                     {
                         MarkMove(validMoves, board, initPos - 9);
                     }
@@ -55,11 +57,13 @@ public class MoveValidator_alt : MonoBehaviour {
                             MarkMove(validMoves, board, initPos + 16);
                         }
                     }
-                    if (board[initPos + 7] != '\0')
+                    //attack left
+                    if (initPos % 8 != 0 && board[initPos + 7] != '\0')
                     {
                         MarkMove(validMoves, board, initPos + 7);
                     }
-                    if (board[initPos + 9] != '\0')
+                    //attack right
+                    if ((initPos+1) % 8 != 0 && board[initPos + 9] != '\0')
                     {
                         MarkMove(validMoves, board, initPos + 9);
                     }
@@ -546,7 +550,7 @@ public class MoveValidator_alt : MonoBehaviour {
             }
             else
             {
-                if (!(char.IsUpper(board[index]) && char.IsUpper(board[currentPiece])))
+                if (!(char.IsUpper(board[index]) == char.IsUpper(board[currentPiece])))
                 {
 	                validMoves.Add(index);
                 }

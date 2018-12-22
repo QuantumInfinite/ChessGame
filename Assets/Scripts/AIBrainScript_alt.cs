@@ -7,7 +7,7 @@ public class AIBrainScript_alt : MonoBehaviour {
 
     List<Move_alt> movesQueue;
 
-    List<PieceScript> myPieces;
+    List<int> myPieces;
 
 
     public int thinkDepth;
@@ -42,16 +42,24 @@ public class AIBrainScript_alt : MonoBehaviour {
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        myPieces = BoardManager.Instance.ActiveAIPieces();
-        foreach (PieceScript piece in myPieces)
+        myPieces = new List<int>();
+        char[] currentBoard = BoardManager.Instance.boardChars;
+        for (int i = 0; i < currentBoard.Length; i++)
         {
-            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(piece.position), BoardManager.BoardToCharArray(BoardManager.Instance.board));
+            if (char.IsLower(currentBoard[i])){
+                myPieces.Add(i);
+            }
+        }
+        
+        foreach (int pieceIndex in myPieces)
+        {
+            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, BoardManager.Instance.boardChars);
 
             if (possibleMoves.Count > 0)
             {
                 foreach (int move in possibleMoves)
                 {
-                    movesQueue.Add(new Move_alt(BoardManager.BoardToCharArray(BoardManager.Instance.board), BoardManager.PositionToBoardIndex(piece.position), move));
+                    movesQueue.Add(new Move_alt(currentBoard,pieceIndex, move));
                 }
             }
         }
@@ -65,12 +73,19 @@ public class AIBrainScript_alt : MonoBehaviour {
             if (movesQueue.Count > 0)
             {
                 //print("AI has " + movesQueue.Count + " possible moves");
+
+                string t = "";
+                foreach (Move_alt move in movesQueue)
+                {
+                    t += " " + move.fitness;
+                }
+                print(t);
+
                 MakeMove(movesQueue[0]);
             }
             numThinks = 0;
             thinkingStage = ThinkingStage.Not;
             movesQueue.Clear();
-            TurnManager.Instance.EndTurn();
         }
     }
     void Prioritize()
@@ -80,14 +95,7 @@ public class AIBrainScript_alt : MonoBehaviour {
 
     void MakeMove(Move_alt nextMove)
     {
-
-        string t = "";
-        foreach (Move_alt move in movesQueue)
-        {
-            t += " " + move.fitness; 
-        }
-        print(t);
-        BoardManager.Instance.board[nextMove.piece].LinkedPiece.MoveToSquare(BoardManager.Instance.board[nextMove.square]);
+        BoardManager.Instance.MakeMove(nextMove.piece, nextMove.square);
     }
 }
 

@@ -5,6 +5,19 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public SquareScript[] board;
+    char[] boardAsChars;
+    public char[] boardChars {
+        get {
+            if (boardAsChars == null)
+            {
+                boardAsChars = BoardToCharArray(board);
+            }
+            return boardAsChars;
+        }
+        set {
+            boardAsChars = value;
+        }
+    }
     public List<PieceScript> removedWhitePieces;
     public List<PieceScript> removedBlackPieces;
     public List<PieceScript> activeWhitePieces;
@@ -31,8 +44,8 @@ public class BoardManager : MonoBehaviour
             return initialBoard;
         }
     }
-
-    public List<PieceScript> ActiveAIPieces()
+    //public functions
+    public List<PieceScript> GetActiveAIPieces()
     {
         switch (GameManager.Instance.playerTeam)
         {
@@ -43,6 +56,30 @@ public class BoardManager : MonoBehaviour
         }
         return null;
     }
+    public List<int> GetActiveAIPiecesIndex()
+    {
+        List<int> pieces = new List<int>();
+        switch (GameManager.Instance.playerTeam)
+        {
+            case PieceScript.Team.White:
+                for (int i = 0; i < activeBlackPieces.Count; i++)
+                {
+                    pieces.Add(activeBlackPieces[i].index);
+                }
+                break;
+            case PieceScript.Team.Black:
+                for (int i = 0; i < activeWhitePieces.Count; i++)
+                {
+                    pieces.Add(activeWhitePieces[i].index);
+                }
+                break;
+        }
+        return pieces;
+    }
+    /// <summary>
+    /// Add a game piece to the board
+    /// </summary>
+    /// <param name="piece">piece to add</param>
     public void RegisterPiece(PieceScript piece)
     {
         switch (piece.team)
@@ -55,6 +92,10 @@ public class BoardManager : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// Remove a game piece from play
+    /// </summary>
+    /// <param name="piece">piece to remove</param>
     public void RemovePiece(PieceScript piece)
     {
         print(piece.team + " " + piece.type + " Removed from play");
@@ -72,9 +113,30 @@ public class BoardManager : MonoBehaviour
         piece.gameObject.SetActive(false);
     }
 
+    public void MakeMove(int from, int to)
+    {        
+        if (from >= 0 && from < board.Length && to >= 0 && to < board.Length) 
+        {
+            //Physical
+            print("moving from " + board[from].name + " to " + board[to].name);
+            board[from].LinkedPiece.MoveToSquare(board[to]);
+
+            //Virtual
+            boardChars[to] = boardChars[from];
+            boardChars[from] = '\0';
+
+            TurnManager.Instance.EndTurn();
+        }
+    }
+
+    //Public static Functions
     public static int PositionToBoardIndex(Vector2 position)
     {
         return (int)((position.y - 1) * 8 + (position.x - 1));
+    }
+    public static Vector2 BoardIndexToPosition(int index)
+    {
+        return new Vector2((index % 8) + 1, (index / 8) + 1);
     }
 
     public static char[] BoardToCharArray(SquareScript[] b)
@@ -88,41 +150,36 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                newB[i] = ConvertToLetter(b[i].LinkedPiece);
+                switch (b[i].LinkedPiece.type)
+                {
+                    case PieceScript.Type.Pawn:
+                        newB[i] = 'p';
+                        break;
+                    case PieceScript.Type.Rook:
+                        newB[i] = 'r';
+                        break;
+                    case PieceScript.Type.Bishop:
+                        newB[i] = 'b';
+                        break;
+                    case PieceScript.Type.Knight:
+                        newB[i] = 'n';
+                        break;
+                    case PieceScript.Type.Queen:
+                        newB[i] = 'q';
+                        break;
+                    case PieceScript.Type.King:
+                        newB[i] = 'k';
+                        break;
+                }
+                if (b[i].LinkedPiece.team == GameManager.Instance.playerTeam)
+                {
+                    newB[i] = char.ToUpper(newB[i]);
+                }
             }
         }
         return newB;
     }
-    private static char ConvertToLetter(PieceScript piece)
-    {
-        char letter = new char();
-        switch (piece.type)
-        {
-            case PieceScript.Type.Pawn:
-                letter = 'p';
-                break;
-            case PieceScript.Type.Rook:
-                letter = 'r';
-                break;
-            case PieceScript.Type.Bishop:
-                letter = 'b';
-                break;
-            case PieceScript.Type.Knight:
-                letter = 'n';
-                break;
-            case PieceScript.Type.Queen:
-                letter = 'q';
-                break;
-            case PieceScript.Type.King:
-                letter = 'k';
-                break;
-        }
-        if (piece.team == GameManager.Instance.playerTeam)
-        {
-            letter = char.ToUpper(letter);
-        }
-        return letter;
-    }
+    
     private void Awake()
     {
         if (instance == null)
@@ -135,4 +192,6 @@ public class BoardManager : MonoBehaviour
         activeBlackPieces = new List<PieceScript>();
         activeWhitePieces = new List<PieceScript>();
     }
+
+    
 }

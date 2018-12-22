@@ -54,6 +54,7 @@ public class PlayerScript : MonoBehaviour {
 
     void DropPiece()
     {
+        /*
         Vector3 newPos = new Vector3(
             Mathf.RoundToInt(heldPiece.transform.position.x),
             Mathf.RoundToInt(heldPiece.transform.position.y),
@@ -72,8 +73,25 @@ public class PlayerScript : MonoBehaviour {
         {
             heldPiece.ResetToLast();
         }
+        */
+        Vector3 newPos = new Vector3(
+            Mathf.RoundToInt(heldPiece.transform.position.x),
+            Mathf.RoundToInt(heldPiece.transform.position.y),
+            heldPiece.transform.position.z
+        );
 
-        
+        //Actually move
+
+        int indexOfThisMove = BoardManager.PositionToBoardIndex(newPos);
+        if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
+        {
+            BoardManager.Instance.MakeMove(heldPiece.index, indexOfThisMove);
+        }
+        else //Not valid, return to last position
+        {
+            heldPiece.ResetToLast();
+        }
+
         heldPiece = null;
         ClearValidMoves();
     }

@@ -42,7 +42,7 @@ public class AIBrainScript : MonoBehaviour {
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        myPieces = BoardManager.Instance.ActiveAIPieces();
+        myPieces = BoardManager.Instance.GetActiveAIPieces();
         foreach (PieceScript piece in myPieces)
         {
             List<SquareScript> possibleMoves = MoveValidator.FindValidMoves(piece, BoardManager.Instance.board);
@@ -79,7 +79,7 @@ public class AIBrainScript : MonoBehaviour {
 
     void MakeMove(Move nextMove)
     {
-        print("moving " + nextMove.piece.team + " " + nextMove.piece.type + " from " + nextMove.piece.LinkedSquare.name + " to " + nextMove.square.name);
+        //print("moving " + nextMove.piece.team + " " + nextMove.piece.type + " from " + nextMove.piece.LinkedSquare.name + " to " + nextMove.square.name);
 
         string t = "";
         foreach (Move move in movesQueue)
