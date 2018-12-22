@@ -74,7 +74,7 @@ public class AIBrainScript : MonoBehaviour {
     }
     void Prioritize()
     {
-        movesQueue.Sort((x, y) => y.fitness.CompareTo(x.fitness));
+        movesQueue.Sort((x, y) => x.fitness.CompareTo(y.fitness));
     }
 
     void MakeMove(Move nextMove)

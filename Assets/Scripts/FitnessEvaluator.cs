@@ -11,9 +11,17 @@ public class FitnessEvaluator : MonoBehaviour {
         float score = 0;
         foreach (char piece in board)
         {
-            if (piece == '\0')
+            if (piece != '\0')
             {
-                score += (char.IsUpper(piece)) ? -rawPieceValue : rawPieceValue;
+                //score += (char.IsUpper(piece)) ? -rawPieceValue : rawPieceValue;
+                if (char.IsUpper(piece))
+                {
+                    score++;
+                }
+                else
+                {
+                    score--;
+                }
             }
         }
 

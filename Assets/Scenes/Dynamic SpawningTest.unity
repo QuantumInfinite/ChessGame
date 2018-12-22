@@ -4168,7 +4168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
