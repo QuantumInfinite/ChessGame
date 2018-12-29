@@ -46,7 +46,7 @@ public class FitnessEvaluator : MonoBehaviour {
                 val = king;
                 break;
         }
-        return char.IsUpper(piece) ? val : -val;
+        return char.IsLower(piece) ? val : -val;
     }
     static char GetChar(PieceScript.Type piece)
     {

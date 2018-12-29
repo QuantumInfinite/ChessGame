@@ -396,6 +396,8 @@ MonoBehaviour:
     type: 2}
   playerTeam: 0
   playerOnlyTurns: 0
+  aiTeam: 0
+  movesAheadToSimulate: 1
 --- !u!114 &49494338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,7 +460,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32cf16cc1226c144fa5b00a9c6c7058d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thinkDepth: 0
 --- !u!114 &49494343
 MonoBehaviour:
   m_ObjectHideFlags: 0

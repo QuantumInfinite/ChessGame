@@ -67,8 +67,12 @@ public class GameManager : MonoBehaviour {
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
     public bool playerOnlyTurns = false;
+
     [HideInInspector]
     public PieceScript.Team aiTeam;
+
+    [Header("AI Settings")]
+    public int movesAheadToSimulate = 0;
 
     //Static Functions
 

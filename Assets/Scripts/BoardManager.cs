@@ -56,23 +56,23 @@ public class BoardManager : MonoBehaviour
         }
         return null;
     }
-    public List<int> GetTeamPieceIndexes(PieceScript.Team team)
+    public static List<int> GetTeamPieceIndexes(char[] board, PieceScript.Team team)
     {
         List<int> pieces = new List<int>();
-        switch (team)
+        for (int i = 0; i < board.Length; i++)
         {
-            case PieceScript.Team.White:
-                for (int i = 0; i < activeWhitePieces.Count; i++)
-                {
-                    pieces.Add(activeWhitePieces[i].index);
-                }
-                break;
-            case PieceScript.Team.Black:
-                for (int i = 0; i < activeBlackPieces.Count; i++)
-                {
-                    pieces.Add(activeBlackPieces[i].index);
-                }
-                break;
+            if (board[i] == '\0')
+            {
+                continue;
+            }
+
+            char c = board[i];
+
+            if ((team == GameManager.Instance.playerTeam && char.IsUpper(board[i])) ||
+                (team == GameManager.Instance.aiTeam && char.IsLower(board[i])))
+            {
+                pieces.Add(i);
+            }
         }
         return pieces;
     }
@@ -138,7 +138,10 @@ public class BoardManager : MonoBehaviour
     {
         return new Vector2((index % 8) + 1, (index / 8) + 1);
     }
-
+    public static string BoardIndexToCoordinate(int index)
+    {
+        return "" + (char)(65 + index % 8) + (index / 8 + 1);
+    }
     public static char[] BoardToCharArray(SquareScript[] b)
     {
         char[] newB = new char[b.Length];

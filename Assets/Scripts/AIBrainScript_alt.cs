@@ -5,18 +5,12 @@ using System.Linq;
 
 public class AIBrainScript_alt : MonoBehaviour {
 
-    List<Move_alt> movesQueue;
-
-    List<int> myPieces;
+    //List<Move_alt> movesQueue;
 
 
-    public int thinkDepth;
-    int numThinks = 0;
-	// Use this for initialization
-	void Start () {
-        movesQueue = new List<Move_alt>();
-    }
 
+    int maxThinkDepth;
+    int numThinks;
     enum ThinkingStage
     {
         Not, 
@@ -24,9 +18,15 @@ public class AIBrainScript_alt : MonoBehaviour {
         Done
     }
     ThinkingStage thinkingStage = ThinkingStage.Not;
-
-	// Update is called once per frame
-	void Update () {
+    List<Move_alt> topMoveQueue;
+    private void Start()
+    {
+        topMoveQueue = new List<Move_alt>();
+        maxThinkDepth = GameManager.Instance.movesAheadToSimulate;
+    }
+    // Update is called once per frame
+    void Update () {
+        List<Move_alt> movesQueue = topMoveQueue;
         if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
@@ -35,32 +35,68 @@ public class AIBrainScript_alt : MonoBehaviour {
             }
             else if (thinkingStage == ThinkingStage.Done)
             {
-                Act();
+                Act(movesQueue);
             }
         }
     }
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        myPieces = BoardManager.Instance.GetTeamPieceIndexes(GameManager.Instance.aiTeam);
+        numThinks = 0;
         char[] currentBoard = BoardManager.Instance.boardChars;
+
+        List<Move_alt> movesQueue = DeepThink(currentBoard, 0, true);
         
+        topMoveQueue = Prioritize(movesQueue, true);
+        thinkingStage = ThinkingStage.Done;
+    }
+
+    List<Move_alt> DeepThink( char[] currentBoard, int thinkIndex, bool AiTurn)
+    {
+        List<Move_alt> movesQueue = new List<Move_alt>();
+
+        List<int> myPieces;
+        if (AiTurn)
+        {
+            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.aiTeam);
+        }
+        else
+        {
+            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.playerTeam);
+        }
+
         foreach (int pieceIndex in myPieces)
         {
-            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, BoardManager.Instance.boardChars);
-
+            numThinks++;
+            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, currentBoard);
+            
             if (possibleMoves.Count > 0)
             {
                 foreach (int move in possibleMoves)
                 {
-                    movesQueue.Add(new Move_alt(currentBoard,pieceIndex, move));
+                    movesQueue.Add(new Move_alt(currentBoard, pieceIndex, move));
                 }
             }
         }
-        Prioritize();
-        thinkingStage = ThinkingStage.Done;
+        movesQueue = Prioritize(movesQueue, AiTurn);
+
+        if (thinkIndex >= maxThinkDepth)
+        {
+            return movesQueue;
+        }
+
+        //Recursive part
+        foreach (Move_alt move in movesQueue)
+        {
+            List<Move_alt> nextMoves = DeepThink(move.newBoard, thinkIndex + 1, !AiTurn);
+            
+            move.totalFitness = nextMoves[0].totalFitness;
+        }
+        return movesQueue;
     }
-    void Act()
+
+
+    void Act(List<Move_alt> movesQueue)
     {
         if (thinkingStage == ThinkingStage.Done)
         {
@@ -68,53 +104,62 @@ public class AIBrainScript_alt : MonoBehaviour {
             {
                 //print("AI has " + movesQueue.Count + " possible moves");
 
-                string t = "";
+                string t = numThinks + "\n";
                 foreach (Move_alt move in movesQueue)
                 {
-                    t += " " + move.fitness;
+                    t += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " " + move.self_fitness + " " + move.totalFitness + "\n";
                 }
                 print(t);
-
+                
                 MakeMove(movesQueue[0]);
             }
-            numThinks = 0;
+            else
+            {
+                Debug.LogAssertion("AI has no valid moves");
+            }
             thinkingStage = ThinkingStage.Not;
+            
             movesQueue.Clear();
+        }
+    }
+
+    List<Move_alt> Prioritize(List<Move_alt> list, bool maximise)
+    {
+        if (maximise)
+        {
+            list.Sort((y, x) => x.totalFitness.CompareTo(y.totalFitness));
         }
         else
         {
-            Debug.LogAssertion("AI has no valid moves");
+            list.Sort((x, y) => x.totalFitness.CompareTo(y.totalFitness));
         }
-    }
-    void Prioritize()
-    {
-        movesQueue.Sort((x, y) => x.fitness.CompareTo(y.fitness));
+        return list;
     }
 
     void MakeMove(Move_alt nextMove)
     {
-        BoardManager.Instance.MakeMove(nextMove.piece, nextMove.square);
+        BoardManager.Instance.MakeMove(nextMove.from, nextMove.to);
     }
 }
 
 internal class Move_alt
 {
-    public float fitness = 0;
+    public float self_fitness = 0;
+    public float totalFitness = 0;
 
-    char[] oldBoard;
-    char[] newBoard;
+    public char[] oldBoard;
+    public char[] newBoard;
 
-    public int piece;
+    public int from;
 
-    public int square;
+    public int to;
 
     public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
         this.oldBoard = oldBoard;
-        piece = pieceToMove;
-        square = squareToMoveTo;
+        from = pieceToMove;
+        to = squareToMoveTo;
         
-
         newBoard = new char[oldBoard.Length];
         for (int i = 0; i < newBoard.Length; i++)
         {
@@ -133,7 +178,10 @@ internal class Move_alt
         //Remove old piece
         newBoard[pieceToMove] = '\0';
 
-        fitness = FitnessEvaluator.Evaluate(newBoard);
+        //Set Self Fitness
+        self_fitness = FitnessEvaluator.Evaluate(newBoard);
+
+        totalFitness = self_fitness;
     }
 
     public char ConvertToLetter(PieceScript piece)
