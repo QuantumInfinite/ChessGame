@@ -56,21 +56,21 @@ public class BoardManager : MonoBehaviour
         }
         return null;
     }
-    public List<int> GetActiveAIPiecesIndex()
+    public List<int> GetTeamPieceIndexes(PieceScript.Team team)
     {
         List<int> pieces = new List<int>();
-        switch (GameManager.Instance.playerTeam)
+        switch (team)
         {
             case PieceScript.Team.White:
-                for (int i = 0; i < activeBlackPieces.Count; i++)
-                {
-                    pieces.Add(activeBlackPieces[i].index);
-                }
-                break;
-            case PieceScript.Team.Black:
                 for (int i = 0; i < activeWhitePieces.Count; i++)
                 {
                     pieces.Add(activeWhitePieces[i].index);
+                }
+                break;
+            case PieceScript.Team.Black:
+                for (int i = 0; i < activeBlackPieces.Count; i++)
+                {
+                    pieces.Add(activeBlackPieces[i].index);
                 }
                 break;
         }
@@ -98,7 +98,6 @@ public class BoardManager : MonoBehaviour
     /// <param name="piece">piece to remove</param>
     public void RemovePiece(PieceScript piece)
     {
-        print(piece.team + " " + piece.type + " Removed from play");
         switch (piece.team)
         {
             case PieceScript.Team.White:
@@ -122,6 +121,7 @@ public class BoardManager : MonoBehaviour
             board[from].LinkedPiece.MoveToSquare(board[to]);
 
             //Virtual
+            int x = boardChars.Length;
             boardChars[to] = boardChars[from];
             boardChars[from] = '\0';
 
@@ -193,5 +193,17 @@ public class BoardManager : MonoBehaviour
         activeWhitePieces = new List<PieceScript>();
     }
 
-    
+    private void Update()
+    {
+        if (initialBoard == null)
+        {
+            initialBoard = BoardToCharArray(board);
+        }
+        if (boardAsChars == null)
+        {
+            boardAsChars = BoardToCharArray(board);
+        }
+        
+    }
+
 }

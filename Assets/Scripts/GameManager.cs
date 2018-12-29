@@ -14,8 +14,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    
-
     [System.Serializable]
     public struct BoardMaterials
     {
@@ -69,15 +67,16 @@ public class GameManager : MonoBehaviour {
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
     public bool playerOnlyTurns = false;
-   
+    [HideInInspector]
+    public PieceScript.Team aiTeam;
 
     //Static Functions
 
     //Public Functions
-    
+
 
     //Private functions
-    
+
     //Keyword functions
     private void Awake()
     {
@@ -85,6 +84,14 @@ public class GameManager : MonoBehaviour {
         {
             instance = this;
         }
-
+        switch (playerTeam)
+        {
+            case PieceScript.Team.White:
+                aiTeam = PieceScript.Team.Black;
+                break;
+            case PieceScript.Team.Black:
+                aiTeam = PieceScript.Team.White;
+                break;
+        }
     }
 }

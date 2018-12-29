@@ -42,14 +42,8 @@ public class AIBrainScript_alt : MonoBehaviour {
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        myPieces = new List<int>();
+        myPieces = BoardManager.Instance.GetTeamPieceIndexes(GameManager.Instance.aiTeam);
         char[] currentBoard = BoardManager.Instance.boardChars;
-        for (int i = 0; i < currentBoard.Length; i++)
-        {
-            if (char.IsLower(currentBoard[i])){
-                myPieces.Add(i);
-            }
-        }
         
         foreach (int pieceIndex in myPieces)
         {
@@ -87,6 +81,10 @@ public class AIBrainScript_alt : MonoBehaviour {
             thinkingStage = ThinkingStage.Not;
             movesQueue.Clear();
         }
+        else
+        {
+            Debug.LogAssertion("AI has no valid moves");
+        }
     }
     void Prioritize()
     {
@@ -122,17 +120,18 @@ internal class Move_alt
         {
             if (i == squareToMoveTo)
             {
+                //moves piece to new place
                 newBoard[i] = oldBoard[pieceToMove];
-            }
-            else if (i == pieceToMove || oldBoard[i] == '\0')
-            {
-                newBoard[i] = '\0';
             }
             else
             {
+                //Just copy it over
                 newBoard[i] = oldBoard[i];
             }
         }
+
+        //Remove old piece
+        newBoard[pieceToMove] = '\0';
 
         fitness = FitnessEvaluator.Evaluate(newBoard);
     }
