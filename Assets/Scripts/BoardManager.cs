@@ -117,7 +117,7 @@ public class BoardManager : MonoBehaviour
         if (from >= 0 && from < board.Length && to >= 0 && to < board.Length) 
         {
             //Physical
-            print("moving from " + board[from].name + " to " + board[to].name);
+            GameManager.Instance.Output(board[from].name + "->" + board[to].name);
             board[from].LinkedPiece.MoveToSquare(board[to]);
 
             //Virtual
@@ -172,6 +172,9 @@ public class BoardManager : MonoBehaviour
                         break;
                     case PieceScript.Type.King:
                         newB[i] = 'k';
+                        break;
+                    case PieceScript.Type.BLOCK:
+                        newB[i] = 'X';
                         break;
                 }
                 if (b[i].LinkedPiece.team == GameManager.Instance.playerTeam)

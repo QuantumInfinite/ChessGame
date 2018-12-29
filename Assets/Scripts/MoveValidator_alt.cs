@@ -9,63 +9,66 @@ public class MoveValidator_alt : MonoBehaviour {
 
     public static List<int> FindValidMoves(int pieceIndex, char[] board)
     {
+        if (pieceIndex >= board.Length)
+        {
+            Debug.LogError("Piece Index Out of Range");
+        }
         List<int> validMoves = new List<int>();
         //SquareScript[] currentBoard = BoardManager.Instance.board;
         currentPiece = pieceIndex;
-        int initPos = pieceIndex;
         switch (char.ToUpper(board[pieceIndex]))
         {
             case 'P':
                 if (char.IsLower(board[pieceIndex]))
                 {
                     //one space forward
-                    if (board[initPos - 8] == '\0')
+                    if (pieceIndex - 8 > 0 && board[pieceIndex - 8] == '\0')
                     {
-                        MarkMove(validMoves, board, initPos - 8);
+                        MarkMove(validMoves, board, pieceIndex - 8);
                     }
                     //two spaces if first turn
-                    if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[initPos - 16] == '\0')
+                    if (pieceIndex - 16 > 0 && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex - 16] == '\0')
                     {
-                        if (board[initPos - 8] == '\0')
+                        if (board[pieceIndex - 8] == '\0')
                         {
-                            MarkMove(validMoves, board, initPos - 16);
+                            MarkMove(validMoves, board, pieceIndex - 16);
                         }
                     }
                     //attack right 
-                    if ((initPos + 1) % 8 != 0 && board[initPos - 7] != '\0')
+                    if (pieceIndex - 7 < board.Length && (pieceIndex + 1) % 8 != 0 && board[pieceIndex - 7] != '\0')
                     {
-                        MarkMove(validMoves, board, initPos - 7);
+                        MarkMove(validMoves, board, pieceIndex - 7);
                     }
                     //attack left
-                    if (initPos % 8 != 0 && board[initPos - 9] != '\0')
+                    if (pieceIndex - 9 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex - 9] != '\0')
                     {
-                        MarkMove(validMoves, board, initPos - 9);
+                        MarkMove(validMoves, board, pieceIndex - 9);
                     }
                 }
                 else
                 {
                     //one space forward
-                    if (board[initPos + 8] == '\0')
+                    if (pieceIndex + 8 < board.Length && board[pieceIndex + 8] == '\0')
                     {
-                        MarkMove(validMoves, board, initPos + 8);
+                        MarkMove(validMoves, board, pieceIndex + 8);
                     }
                     //two spaces if first turn
-                    if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[initPos + 16] == '\0')
+                    if (pieceIndex + 16 < board.Length && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex + 16] == '\0')
                     {
-                        if (board[initPos + 8] == '\0')
+                        if (board[pieceIndex + 8] == '\0')
                         {
-                            MarkMove(validMoves, board, initPos + 16);
+                            MarkMove(validMoves, board, pieceIndex + 16);
                         }
                     }
                     //attack left
-                    if (initPos % 8 != 0 && board[initPos + 7] != '\0')
+                    if (pieceIndex + 7 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex + 7] != '\0')
                     {
-                        MarkMove(validMoves, board, initPos + 7);
+                        MarkMove(validMoves, board, pieceIndex + 7);
                     }
                     //attack right
-                    if ((initPos+1) % 8 != 0 && board[initPos + 9] != '\0')
+                    if (pieceIndex + 9 < board.Length && (pieceIndex+1) % 8 != 0 && board[pieceIndex + 9] != '\0')
                     {
-                        MarkMove(validMoves, board, initPos + 9);
+                        MarkMove(validMoves, board, pieceIndex + 9);
                     }
                 }
                 canPlace = true;
@@ -74,7 +77,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
-                    MarkMove(validMoves, board,initPos + i);
+                    MarkMove(validMoves, board,pieceIndex + i);
                     if (canPlace == false)
                     {
                         break;
@@ -84,7 +87,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //backward column
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board, pieceIndex - i);
                     if (canPlace == false)
                     {
                         break;
@@ -94,10 +97,10 @@ public class MoveValidator_alt : MonoBehaviour {
                 //right row
                 for (int i = 1; i < board.Length; i++)
                 {
-                    if ((initPos + 1) % 8 != 0)
+                    if ((pieceIndex + 1) % 8 != 0)
                     {
-                        MarkMove(validMoves, board, initPos + i);
-                        if ((initPos + i + 1) % 8 == 0)
+                        MarkMove(validMoves, board, pieceIndex + i);
+                        if ((pieceIndex + i + 1) % 8 == 0)
                         {
                             break;
                         }
@@ -111,10 +114,10 @@ public class MoveValidator_alt : MonoBehaviour {
                 //left row
                 for (int i = 1; i < board.Length; i++)
                 {
-                    if (initPos % 8 != 0)
+                    if (pieceIndex % 8 != 0)
                     {
-                        MarkMove(validMoves, board, initPos - i);
-                        if ((initPos - i) % 8 == 0)
+                        MarkMove(validMoves, board, pieceIndex - i);
+                        if ((pieceIndex - i) % 8 == 0)
                         {
                             break;
                         }
@@ -124,7 +127,7 @@ public class MoveValidator_alt : MonoBehaviour {
                         break;
                     }
                 }
-                UnmarkMove(validMoves, board, initPos);
+                UnmarkMove(validMoves, board, pieceIndex);
                 canPlace = true;
                 break;
             case 'B':
@@ -134,11 +137,11 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos + i);
+                        MarkMove(validMoves, board, pieceIndex + i);
                     }
-                    if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
+                    if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
                     {
-                        UnmarkMove(validMoves, board, initPos + i);
+                        UnmarkMove(validMoves, board, pieceIndex + i);
                         break;
                     }
                     if (canPlace == false)
@@ -152,9 +155,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos - i);
+                        MarkMove(validMoves, board, pieceIndex - i);
                     }
-                    if ((initPos - i + 1) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -165,9 +168,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos + i);
+                        MarkMove(validMoves, board, pieceIndex + i);
                     }
-                    if ((initPos + i + 1) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -178,15 +181,15 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos - i);
+                        MarkMove(validMoves, board, pieceIndex - i);
                     }
-                    if ((initPos - i) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex - i) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
                 }
                 canPlace = true;
-                UnmarkMove(validMoves, board, initPos);
+                UnmarkMove(validMoves, board, pieceIndex);
                 break;
             case 'N':
                 int rowsThrough = 0;
@@ -198,17 +201,17 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos - i) % 8 == 0)
+                    if ((pieceIndex - i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 5 && rowsThrough == 1)
                     {
-                        if (initPos % 8 == 0)
+                        if (pieceIndex % 8 == 0)
                         {
                             rowsThrough++;
                         }
-                        MarkMove(validMoves, board,initPos - 6);
+                        MarkMove(validMoves, board,pieceIndex - 6);
                         if (canPlace == false)
                         {
                             break;
@@ -223,13 +226,13 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos + i + 1) % 8 == 0)
+                    if ((pieceIndex + i + 1) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 5 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,initPos + 6);
+                        MarkMove(validMoves, board,pieceIndex + 6);
                         if (canPlace == false)
                         {
                             break;
@@ -244,21 +247,21 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos + i) % 8 == 0)
+                    if ((pieceIndex + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
-                    if (i == 9 && (initPos + 2) % 8 == 0)
+                    if (i == 9 && (pieceIndex + 2) % 8 == 0)
                     {
                         rowsThrough = rowsThrough + 6;
                     }
-                    else if (i == 9 && initPos % 8 == 0)
+                    else if (i == 9 && pieceIndex % 8 == 0)
                     {
                         rowsThrough = 1;
                     }
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,initPos + 10);
+                        MarkMove(validMoves, board,pieceIndex + 10);
                         if (canPlace == false)
                         {
                             break;
@@ -273,17 +276,17 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos - i) % 8 == 0)
+                    if ((pieceIndex - i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
-                    if (i == 9 && (initPos + 1) % 8 == 0)
+                    if (i == 9 && (pieceIndex + 1) % 8 == 0)
                     {
                         rowsThrough = 1;
                     }
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,initPos - 10);
+                        MarkMove(validMoves, board,pieceIndex - 10);
                         if (canPlace == false)
                         {
                             break;
@@ -298,17 +301,17 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos + i) % 8 == 0)
+                    if ((pieceIndex + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
-                    if (i == 14 && initPos % 8 == 0)
+                    if (i == 14 && pieceIndex % 8 == 0)
                     {
                         rowsThrough = 1;
                     }
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,initPos + 15);
+                        MarkMove(validMoves, board,pieceIndex + 15);
                         if (canPlace == false)
                         {
                             break;
@@ -318,9 +321,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 canPlace = true;
                 for (int j = 1; j < board.Length; j = j + 8)
                 {
-                    if (initPos == j)
+                    if (pieceIndex == j)
                     {
-                        MarkMove(validMoves, board, initPos + 15);
+                        MarkMove(validMoves, board, pieceIndex + 15);
                     }
                     if (canPlace == false)
                     {
@@ -335,13 +338,13 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos - i) % 8 == 0)
+                    if ((pieceIndex - i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,initPos - 15);
+                        MarkMove(validMoves, board,pieceIndex - 15);
                         if (canPlace == false)
                         {
                             break;
@@ -356,21 +359,21 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos + i) % 8 == 0)
+                    if ((pieceIndex + i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
-                    if (i == 16 && (initPos + 1) % 8 == 0)
+                    if (i == 16 && (pieceIndex + 1) % 8 == 0)
                     {
                         rowsThrough = rowsThrough + 6;
                     }
-                    else if (i == 16 && initPos % 8 == 0)
+                    else if (i == 16 && pieceIndex % 8 == 0)
                     {
                         rowsThrough = 2;
                     }
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,initPos + 17);
+                        MarkMove(validMoves, board,pieceIndex + 17);
                         if (canPlace == false)
                         {
                             break;
@@ -385,13 +388,13 @@ public class MoveValidator_alt : MonoBehaviour {
                     {
                         rowsThrough = 0;
                     }
-                    if ((initPos - i) % 8 == 0)
+                    if ((pieceIndex - i) % 8 == 0)
                     {
                         rowsThrough++;
                     }
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,initPos - 17);
+                        MarkMove(validMoves, board,pieceIndex - 17);
                         if (canPlace == false)
                         {
                             break;
@@ -405,7 +408,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
-                    MarkMove(validMoves, board, initPos + i);
+                    MarkMove(validMoves, board, pieceIndex + i);
                     if (canPlace == false)
                     {
                         break;
@@ -415,7 +418,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //backward column
-                    MarkMove(validMoves, board, initPos - i);
+                    MarkMove(validMoves, board, pieceIndex - i);
                     if (canPlace == false)
                     {
                         break;
@@ -425,10 +428,10 @@ public class MoveValidator_alt : MonoBehaviour {
                 //right row
                 for (int i = 1; i < board.Length; i++)
                 {
-                    if ((initPos + 1) % 8 != 0)
+                    if ((pieceIndex + 1) % 8 != 0)
                     {
-                        MarkMove(validMoves, board,initPos + i);
-                        if ((initPos + i + 1) % 8 == 0)
+                        MarkMove(validMoves, board,pieceIndex + i);
+                        if ((pieceIndex + i + 1) % 8 == 0)
                         {
                             break;
                         }
@@ -442,10 +445,10 @@ public class MoveValidator_alt : MonoBehaviour {
                 //left row
                 for (int i = 1; i < board.Length; i++)
                 {
-                    if (initPos % 8 != 0)
+                    if (pieceIndex % 8 != 0)
                     {
-                        MarkMove(validMoves, board,initPos - i);
-                        if ((initPos - i) % 8 == 0)
+                        MarkMove(validMoves, board,pieceIndex - i);
+                        if ((pieceIndex - i) % 8 == 0)
                         {
                             break;
                         }
@@ -461,11 +464,11 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos + i);
+                        MarkMove(validMoves, board, pieceIndex + i);
                     }
-                    if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
+                    if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
                     {
-                        UnmarkMove(validMoves, board, initPos + i);
+                        UnmarkMove(validMoves, board, pieceIndex + i);
                         break;
                     }
                     if (canPlace == false)
@@ -479,9 +482,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos - i);
+                        MarkMove(validMoves, board, pieceIndex - i);
                     }
-                    if ((initPos - i + 1) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -492,9 +495,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos + i);
+                        MarkMove(validMoves, board, pieceIndex + i);
                     }
-                    if ((initPos + i + 1) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
@@ -505,35 +508,35 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, initPos - i);
+                        MarkMove(validMoves, board, pieceIndex - i);
                     }
-                    if ((initPos - i) % 8 == 0 || canPlace == false)
+                    if ((pieceIndex - i) % 8 == 0 || canPlace == false)
                     {
                         break;
                     }
                 }
-                UnmarkMove(validMoves, board, initPos);
+                UnmarkMove(validMoves, board, pieceIndex);
                 canPlace = true;
                 break;
             case 'K':
                 //left movement
-                if (initPos % 8 != 0)
+                if (pieceIndex % 8 != 0)
                 {
-                    MarkMove(validMoves, board,initPos - 1);
-                    MarkMove(validMoves, board,initPos + 7);
-                    MarkMove(validMoves, board,initPos - 9);
+                    MarkMove(validMoves, board,pieceIndex - 1);
+                    MarkMove(validMoves, board,pieceIndex + 7);
+                    MarkMove(validMoves, board,pieceIndex - 9);
                 }
                 //right movement
-                if ((initPos + 1) % 8 != 0)
+                if ((pieceIndex + 1) % 8 != 0)
                 {
-                    MarkMove(validMoves, board,initPos + 1);
-                    MarkMove(validMoves, board,initPos - 7);
-                    MarkMove(validMoves, board,initPos + 9);
+                    MarkMove(validMoves, board,pieceIndex + 1);
+                    MarkMove(validMoves, board,pieceIndex - 7);
+                    MarkMove(validMoves, board,pieceIndex + 9);
                 }
                 //one space up
-                MarkMove(validMoves, board,initPos + 8);
+                MarkMove(validMoves, board,pieceIndex + 8);
                 //one space down
-                MarkMove(validMoves, board,initPos - 8);
+                MarkMove(validMoves, board,pieceIndex - 8);
                 canPlace = true;
                 break;
         }
@@ -548,9 +551,12 @@ public class MoveValidator_alt : MonoBehaviour {
             {
                 validMoves.Add(index);
             }
-            else
             {
-                if (!(char.IsUpper(board[index]) == char.IsUpper(board[currentPiece])))
+                if (char.ToUpper(board[index]) == 'X')
+                {
+                    //Do nothing
+                }
+                else if (!(char.IsUpper(board[index]) == char.IsUpper(board[currentPiece])))
                 {
 	                validMoves.Add(index);
                 }

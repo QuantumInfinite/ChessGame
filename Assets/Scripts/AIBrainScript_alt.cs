@@ -18,15 +18,15 @@ public class AIBrainScript_alt : MonoBehaviour {
         Done
     }
     ThinkingStage thinkingStage = ThinkingStage.Not;
-    List<Move_alt> topMoveQueue;
+    List<Move_alt> rootMoves;
     private void Start()
     {
-        topMoveQueue = new List<Move_alt>();
+        rootMoves = new List<Move_alt>();
         maxThinkDepth = GameManager.Instance.movesAheadToSimulate;
     }
     // Update is called once per frame
     void Update () {
-        List<Move_alt> movesQueue = topMoveQueue;
+        List<Move_alt> movesQueue = rootMoves;
         if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
@@ -39,15 +39,23 @@ public class AIBrainScript_alt : MonoBehaviour {
             }
         }
     }
+    float thinkTime = 0.0f;
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
+
+        thinkTime = 0.0f;
         numThinks = 0;
+
+        float start = Time.realtimeSinceStartup;
+
         char[] currentBoard = BoardManager.Instance.boardChars;
 
         List<Move_alt> movesQueue = DeepThink(currentBoard, 0, true);
-        
-        topMoveQueue = Prioritize(movesQueue, true);
+        rootMoves = Prioritize(movesQueue, true);
+
+        thinkTime = Time.realtimeSinceStartup - start;
+
         thinkingStage = ThinkingStage.Done;
     }
 
@@ -80,6 +88,10 @@ public class AIBrainScript_alt : MonoBehaviour {
         }
         movesQueue = Prioritize(movesQueue, AiTurn);
 
+
+        //Do alpha-beta prune here
+
+
         if (thinkIndex >= maxThinkDepth)
         {
             return movesQueue;
@@ -89,8 +101,10 @@ public class AIBrainScript_alt : MonoBehaviour {
         foreach (Move_alt move in movesQueue)
         {
             List<Move_alt> nextMoves = DeepThink(move.newBoard, thinkIndex + 1, !AiTurn);
-            
-            move.totalFitness = nextMoves[0].totalFitness;
+            if (nextMoves.Count > 0)
+            {
+                move.totalFitness = nextMoves[0].totalFitness;
+            }
         }
         return movesQueue;
     }
@@ -104,7 +118,7 @@ public class AIBrainScript_alt : MonoBehaviour {
             {
                 //print("AI has " + movesQueue.Count + " possible moves");
 
-                string t = numThinks + "\n";
+                string t = numThinks + " moves analysed in " + thinkTime + " seconds \n";
                 foreach (Move_alt move in movesQueue)
                 {
                     t += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " " + move.self_fitness + " " + move.totalFitness + "\n";
@@ -127,11 +141,11 @@ public class AIBrainScript_alt : MonoBehaviour {
     {
         if (maximise)
         {
-            list.Sort((y, x) => x.totalFitness.CompareTo(y.totalFitness));
+            list.Sort((y, x) => (x.totalFitness + x.self_fitness).CompareTo(y.totalFitness + y.self_fitness));
         }
         else
         {
-            list.Sort((x, y) => x.totalFitness.CompareTo(y.totalFitness));
+            list.Sort((x, y) => (x.totalFitness - x.self_fitness).CompareTo(y.totalFitness - y.self_fitness));
         }
         return list;
     }

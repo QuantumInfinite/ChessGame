@@ -313,9 +313,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 2
-  startingPieceTeam: 1
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &49494334
 GameObject:
@@ -390,12 +390,13 @@ MonoBehaviour:
     black_knight: {fileID: 2100000, guid: 1dbc0c2dbb3c30541b2ae145c50f0592, type: 2}
     black_queen: {fileID: 2100000, guid: e6fd75dc07a9505489cfca6beb765568, type: 2}
     black_king: {fileID: 2100000, guid: 30c8c60a82e154c4394649ba94f57902, type: 2}
+    BLOCK: {fileID: 0}
   basePiecePrefab: {fileID: 1414994646492900, guid: 6ee8855302b143840a2d0725c14c6f0d,
     type: 2}
   playerTeam: 0
   playerOnlyTurns: 0
   aiTeam: 0
-  movesAheadToSimulate: 1
+  movesAheadToSimulate: 2
 --- !u!114 &49494338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,9 +614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 2
-  startingPieceTeam: 1
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &200925006
 GameObject:
@@ -715,7 +716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 5
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -919,9 +920,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 6
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &227463559
 GameObject:
@@ -1402,7 +1403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 1
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -1990,7 +1991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 0
-  startingPieceType: 0
+  startingPieceType: 2
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &561312229
@@ -2091,7 +2092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -2193,8 +2194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
-  startingPieceType: 1
+  spawnPieceAtStart: 0
+  startingPieceType: 5
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &585435577
@@ -2861,8 +2862,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
-  startingPieceType: 1
+  spawnPieceAtStart: 0
+  startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &809082078
@@ -2963,9 +2964,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 6
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &835469097
 GameObject:
@@ -3881,8 +3882,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1232640875
@@ -4595,7 +4596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -4799,9 +4800,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
-  startingPieceType: 0
-  startingPieceTeam: 1
+  spawnPieceAtStart: 0
+  startingPieceType: 1
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1465742843
 GameObject:
@@ -5105,7 +5106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 5
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -5371,7 +5372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -6262,7 +6263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 1
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -6874,9 +6875,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 4
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 2
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &2073327027
 GameObject:
@@ -6976,9 +6977,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 6
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &2087798131
 GameObject:
@@ -7078,9 +7079,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 6
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &2110890391
 GameObject:
@@ -7180,9 +7181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 3
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 2
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &2128383538
 GameObject:

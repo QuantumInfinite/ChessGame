@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
         public Material black_knight;
         public Material black_queen;
         public Material black_king;
+        public Material BLOCK;
 
         public Material GetMaterial(PieceScript.Type pieceType, PieceScript.Team team)
         {
@@ -53,6 +54,8 @@ public class GameManager : MonoBehaviour {
                     return team == PieceScript.Team.White ? white_queen : black_queen;
                 case PieceScript.Type.King:
                     return team == PieceScript.Team.White ? white_king : black_king;
+                case PieceScript.Type.BLOCK:
+                    return BLOCK;
                 default:
                     return null;
             }
@@ -74,14 +77,26 @@ public class GameManager : MonoBehaviour {
     [Header("AI Settings")]
     public int movesAheadToSimulate = 0;
 
+    [Header("Stuff ill move at some point")]
+    public TextMesh outputBox;
+    static TextMesh output;
+
     //Static Functions
 
     //Public Functions
-
+    public void Output(string s)
+    {
+        output.text += s + "\n";
+    }
 
     //Private functions
 
     //Keyword functions
+    private void Start()
+    {
+        output = outputBox;
+        output.text = "";
+    }
     private void Awake()
     {
         if (instance == null)
@@ -97,5 +112,6 @@ public class GameManager : MonoBehaviour {
                 aiTeam = PieceScript.Team.White;
                 break;
         }
+        
     }
 }

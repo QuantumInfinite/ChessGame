@@ -11,7 +11,8 @@ public class PieceScript : MonoBehaviour {
         Bishop,
         Knight,
         Queen,
-        King
+        King,
+        BLOCK
     }
     public Type type;
 
