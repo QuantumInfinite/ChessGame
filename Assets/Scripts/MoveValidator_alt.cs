@@ -551,7 +551,7 @@ public class MoveValidator_alt : MonoBehaviour {
             {
                 validMoves.Add(index);
             }
-            {
+            else {
                 if (char.ToUpper(board[index]) == 'X')
                 {
                     //Do nothing

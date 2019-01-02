@@ -5,11 +5,14 @@ using System.Linq;
 
 public class AIBrainScript_alt : MonoBehaviour {
 
-    //List<Move_alt> movesQueue;
+    //List<Move_alt> movesQueue;   
 
+    int maxThinkDepth {
+        get {
+            return GameManager.Instance.movesAheadToSimulate;
+        }
+    }
 
-
-    int maxThinkDepth;
     int numThinks;
     enum ThinkingStage
     {
@@ -22,7 +25,6 @@ public class AIBrainScript_alt : MonoBehaviour {
     private void Start()
     {
         rootMoves = new List<Move_alt>();
-        maxThinkDepth = GameManager.Instance.movesAheadToSimulate;
     }
     // Update is called once per frame
     void Update () {

@@ -98,7 +98,29 @@ public class PlayerScript : MonoBehaviour {
 
     void TryPickup()
     {
-        
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
+        {
+            heldPiece = hit.transform.GetComponent<PieceScript>();
+
+            if (heldPiece.team == GameManager.Instance.playerTeam)
+            {
+                ClearValidMoves();
+                List<int> moves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
+                for (int i = 0; i < moves.Count; i++)
+                {
+                    validMoves.Add(board[moves[i]]);
+                }
+                ApplyHighlight();
+            }
+            else
+            {
+                heldPiece = null;
+            }
+        }
+        /* non char based one
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -116,7 +138,7 @@ public class PlayerScript : MonoBehaviour {
                 heldPiece = null;
             }
         }
-        
+        */
     }
 
     bool MoveIsValid(Vector2 newPos)
