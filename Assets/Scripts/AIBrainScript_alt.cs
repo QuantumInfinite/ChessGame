@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class AIBrainScript_alt : MonoBehaviour {
+public class AIBrainScript_alt : MonoBehaviour
+{
 
     //List<Move_alt> movesQueue;   
 
@@ -16,7 +17,7 @@ public class AIBrainScript_alt : MonoBehaviour {
     int numThinks;
     enum ThinkingStage
     {
-        Not, 
+        Not,
         Thinking,
         Done
     }
@@ -27,7 +28,8 @@ public class AIBrainScript_alt : MonoBehaviour {
         rootMoves = new List<Move_alt>();
     }
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         List<Move_alt> movesQueue = rootMoves;
         if (!TurnManager.Instance.IsPlayerTurn())
         {
@@ -61,7 +63,7 @@ public class AIBrainScript_alt : MonoBehaviour {
         thinkingStage = ThinkingStage.Done;
     }
 
-    List<Move_alt> DeepThink( char[] currentBoard, int thinkIndex, bool AiTurn)
+    List<Move_alt> DeepThink(char[] currentBoard, int thinkIndex, bool AiTurn)
     {
         List<Move_alt> movesQueue = new List<Move_alt>();
 
@@ -79,7 +81,7 @@ public class AIBrainScript_alt : MonoBehaviour {
         {
             numThinks++;
             List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, currentBoard);
-            
+
             if (possibleMoves.Count > 0)
             {
                 foreach (int move in possibleMoves)
@@ -92,6 +94,7 @@ public class AIBrainScript_alt : MonoBehaviour {
 
 
         //Do alpha-beta prune here
+        int best = (AiTurn) ? int.MinValue : int.MaxValue;
 
 
         if (thinkIndex >= maxThinkDepth)
@@ -126,7 +129,7 @@ public class AIBrainScript_alt : MonoBehaviour {
                     t += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " " + move.self_fitness + " " + move.totalFitness + "\n";
                 }
                 print(t);
-                
+
                 MakeMove(movesQueue[0]);
             }
             else
@@ -134,7 +137,7 @@ public class AIBrainScript_alt : MonoBehaviour {
                 Debug.LogAssertion("AI has no valid moves");
             }
             thinkingStage = ThinkingStage.Not;
-            
+
             movesQueue.Clear();
         }
     }
@@ -175,7 +178,7 @@ internal class Move_alt
         this.oldBoard = oldBoard;
         from = pieceToMove;
         to = squareToMoveTo;
-        
+
         newBoard = new char[oldBoard.Length];
         for (int i = 0; i < newBoard.Length; i++)
         {

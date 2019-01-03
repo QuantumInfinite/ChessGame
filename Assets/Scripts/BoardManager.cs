@@ -65,9 +65,7 @@ public class BoardManager : MonoBehaviour
             {
                 continue;
             }
-
-            char c = board[i];
-
+            
             if ((team == GameManager.Instance.playerTeam && char.IsUpper(board[i])) ||
                 (team == GameManager.Instance.aiTeam && char.IsLower(board[i])))
             {

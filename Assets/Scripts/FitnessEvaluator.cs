@@ -7,7 +7,7 @@ public class FitnessEvaluator : MonoBehaviour {
     public static float rawPieceValue = 1;
 
     public int pawnValue = 10, knightValue = 30, bishopValue = 30, rookValue = 50, queenValue = 90, kingValue = 900;
-    public static int pawn, knight, bishop, rook, queen, king;
+    static int pawn, knight, bishop, rook, queen, king;
 
     public static float Evaluate(char[] board)
     {
