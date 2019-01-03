@@ -615,8 +615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 2
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &200925006
@@ -1889,7 +1889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 1
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -3067,8 +3067,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &895665599
@@ -3883,7 +3883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 6
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -3985,8 +3985,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1272996317
@@ -4088,7 +4088,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 0
-  startingPieceType: 0
+  startingPieceType: 1
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1273185651
@@ -4189,8 +4189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1290704731
@@ -5091,8 +5091,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 2
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1530614405
@@ -5357,8 +5357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1625619378
@@ -7166,7 +7166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 6
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
