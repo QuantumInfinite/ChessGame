@@ -13,9 +13,6 @@ public class AIBrainScript_alt : MonoBehaviour
             return GameManager.Instance.movesAheadToSimulate;
         }
     }
-
-    int numThinks;
-    int numThinks1;
     enum ThinkingStage
     {
         Not,
@@ -44,79 +41,42 @@ public class AIBrainScript_alt : MonoBehaviour
             }
         }
     }
-    float thinkTime = 0.0f;
+
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-
-        thinkTime = 0.0f;
-        numThinks = 0;
-        numThinks1 = 0;
-
+        
         //MiniMax
         float start = Time.realtimeSinceStartup;
-
         char[] currentBoard = BoardManager.Instance.boardChars;
 
         List<Move_alt> movesQueue = MiniMax(currentBoard, 0, true);
+        OutputPaths("MiniMax", movesQueue, Time.realtimeSinceStartup - start);
         rootMoves = Prioritize(movesQueue, true);
-
-        thinkTime = Time.realtimeSinceStartup - start;
-        print("MiniMax took " + thinkTime + ", analysed " + numThinks + " moves, and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to));
 
         //AlphaBeta
         float start1 = Time.realtimeSinceStartup;
-
         char[] currentBoard1 = BoardManager.Instance.boardChars;
 
         List<Move_alt> movesQueue1 = AlphaBetaPrune(currentBoard1, 0, true, float.MinValue, float.MaxValue);
+        OutputPaths("Alpha-Beta", movesQueue1, Time.realtimeSinceStartup - start1);
         //rootMoves = Prioritize(movesQueue, true);
-
-        thinkTime = Time.realtimeSinceStartup - start1;
-        print("AlphaBeta took " + thinkTime + ", analysed " + numThinks1 + " moves, and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue1[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue1[0].to));
-
+        
+        if (movesQueue[0].pathFitness != movesQueue1[0].pathFitness)
+        {
+            Debug.LogError("Minimax and Alpha-Beta produced fitness different results");
+        }
 
         thinkingStage = ThinkingStage.Done;
     }
 
     List<Move_alt> MiniMax(char[] currentBoard, int thinkIndex, bool AiTurn)
     {
-        List<Move_alt> movesQueue = new List<Move_alt>();
-
-        List<int> myPieces;
-        if (AiTurn)
-        {
-            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.aiTeam);
-        }
-        else
-        {
-            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.playerTeam);
-        }
-
-        foreach (int pieceIndex in myPieces)
-        {
-            List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, currentBoard);
-
-            if (possibleMoves.Count > 0)
-            {
-                foreach (int move in possibleMoves)
-                {
-                    numThinks++;
-                    movesQueue.Add(new Move_alt(currentBoard, pieceIndex, move));
-
-                }
-            }
-        }
-        movesQueue = Prioritize(movesQueue, AiTurn);
-
-
-        //Do alpha-beta prune here
-        int best = (AiTurn) ? int.MinValue : int.MaxValue;
-
-
+        List<Move_alt> movesQueue = GenerateNextMoves(currentBoard, AiTurn);
+        
         if (thinkIndex >= maxThinkDepth)
         {
-            return movesQueue;
+            return Prioritize(movesQueue, AiTurn);
         }
 
         //Recursive part
@@ -125,10 +85,11 @@ public class AIBrainScript_alt : MonoBehaviour
             List<Move_alt> nextMoves = MiniMax(move.newBoard, thinkIndex + 1, !AiTurn);
             if (nextMoves.Count > 0)
             {
+                move.nextMove = nextMoves[0];
                 move.pathFitness = nextMoves[0].pathFitness;
             }
         }
-        return movesQueue;
+        return Prioritize(movesQueue, AiTurn);
 
     }
 
@@ -138,7 +99,7 @@ public class AIBrainScript_alt : MonoBehaviour
 
         if (thinkIndex >= maxThinkDepth)
         {
-            return children;
+            return Prioritize(children, AiTurn);
         }        
         
         float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
@@ -148,8 +109,9 @@ public class AIBrainScript_alt : MonoBehaviour
             List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
             if (childrensMoves.Count > 0)
             {
-                child.pathFitness = childrensMoves[0].pathFitness;
-                float value = childrensMoves[0].pathFitness;
+                child.nextMove = childrensMoves[0];
+                child.pathFitness = child.nextMove.pathFitness;
+                float value = child.pathFitness;
                 if (AiTurn)
                 {
                     bestVal = Mathf.Max(bestVal, value);
@@ -188,7 +150,6 @@ public class AIBrainScript_alt : MonoBehaviour
 
         foreach (int pieceIndex in myPieces)
         {
-            numThinks1++;
             List<int> possibleMoves = MoveValidator_alt.FindValidMoves(pieceIndex, currentBoard);
 
             if (possibleMoves.Count > 0)
@@ -208,15 +169,6 @@ public class AIBrainScript_alt : MonoBehaviour
         {
             if (movesQueue.Count > 0)
             {
-                //print("AI has " + movesQueue.Count + " possible moves");
-
-                string t = numThinks + " moves analysed in " + thinkTime + " seconds \n";
-                foreach (Move_alt move in movesQueue)
-                {
-                    t += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " " + move.self_fitness + " " + move.pathFitness + "\n";
-                }
-                print(t);
-
                 MakeMove(movesQueue[0]);
             }
             else
@@ -264,6 +216,24 @@ public class AIBrainScript_alt : MonoBehaviour
     {
         BoardManager.Instance.MakeMove(nextMove.from, nextMove.to);
     }
+
+    void OutputPaths(string funcName, List<Move_alt> movesQueue, float exeTime)
+    {
+        string output = (funcName + " took " + exeTime + " and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to) + "\n");
+        foreach (Move_alt move in movesQueue)
+        {
+            output += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " ";
+            Move_alt ptr = move;
+            while (ptr.nextMove != null)
+            {
+                ptr = ptr.nextMove;
+                output += ", " + BoardManager.BoardIndexToCoordinate(ptr.from) + " -> " + BoardManager.BoardIndexToCoordinate(ptr.to);
+            }
+            output += " : " + move.self_fitness + " " + move.pathFitness + "\n";
+        }
+        print(output);
+    }
+
 }
 
 internal class Move_alt
@@ -277,6 +247,9 @@ internal class Move_alt
     public int from;
 
     public int to;
+
+    public Move_alt nextMove;
+    //public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo) : this(oldBoard, pieceToMove, squareToMoveTo, null) { }
 
     public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
@@ -306,36 +279,5 @@ internal class Move_alt
         self_fitness = FitnessEvaluator.Evaluate(newBoard);
 
         pathFitness = self_fitness;
-    }
-
-    public char ConvertToLetter(PieceScript piece)
-    {
-        char letter = new char();
-        switch (piece.type)
-        {
-            case PieceScript.Type.Pawn:
-                letter = 'p';
-                break;
-            case PieceScript.Type.Rook:
-                letter = 'r';
-                break;
-            case PieceScript.Type.Bishop:
-                letter = 'b';
-                break;
-            case PieceScript.Type.Knight:
-                letter = 'n';
-                break;
-            case PieceScript.Type.Queen:
-                letter = 'q';
-                break;
-            case PieceScript.Type.King:
-                letter = 'k';
-                break;
-        }
-        if (piece.team == GameManager.Instance.playerTeam)
-        {
-            letter = char.ToUpper(letter);
-        }
-        return letter;
-    }
+    }  
 }
