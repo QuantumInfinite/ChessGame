@@ -111,8 +111,28 @@ public class BoardManager : MonoBehaviour
     }
 
     public void MakeMove(int from, int to)
-    {        
-        if (from >= 0 && from < board.Length && to >= 0 && to < board.Length) 
+    {
+        if (from == 4 && to == 6)
+        {
+            Castle(4, 7, true);
+        }
+
+        else if (from == 4 && to == 1)
+        {
+            Castle(4, 0, false);
+        }
+
+        else if (from == 60 && to == 62)
+        {
+            Castle(60, 63, true);
+        }
+
+        else if (from == 60 && to == 57)
+        {
+            Castle(60, 56, false);
+        }
+
+        else if (from >= 0 && from < board.Length && to >= 0 && to < board.Length) 
         {
             //Physical
             GameManager.Instance.Output(board[from].name + "->" + board[to].name);
@@ -122,6 +142,7 @@ public class BoardManager : MonoBehaviour
             int x = boardChars.Length;
             boardChars[to] = boardChars[from];
             boardChars[from] = '\0';
+
 
             TurnManager.Instance.EndTurn();
         }
@@ -146,6 +167,7 @@ public class BoardManager : MonoBehaviour
             }
 
             //Physical
+            /*
             SquareScript s1 = board[piece1Index];
             PieceScript p1 = s1.LinkedPiece;
             SquareScript s2 = board[piece2Index];
@@ -159,8 +181,28 @@ public class BoardManager : MonoBehaviour
             p2.SetSquare(s1);
 
             s1.SetPiece(p2);
-            s2.SetPiece(p1);
+            s2.SetPiece(p1);*/
 
+            if (piece2Index == 7)
+            {
+                board[4].LinkedPiece.MoveToSquare(board[6]);
+                board[7].LinkedPiece.MoveToSquare(board[5]);
+            }
+            else if (piece2Index == 0)
+            {
+                board[4].LinkedPiece.MoveToSquare(board[2]);
+                board[0].LinkedPiece.MoveToSquare(board[3]);
+            }
+            else if (piece2Index == 63)
+            {
+                board[60].LinkedPiece.MoveToSquare(board[62]);
+                board[63].LinkedPiece.MoveToSquare(board[61]);
+            }
+            else if (piece2Index == 56)
+            {
+                board[60].LinkedPiece.MoveToSquare(board[58]);
+                board[56].LinkedPiece.MoveToSquare(board[59]);
+            }
 
             //Virtual
             char c1 = boardChars[piece1Index];

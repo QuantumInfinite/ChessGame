@@ -16,11 +16,13 @@ public class MoveValidator_alt : MonoBehaviour {
         List<int> validMoves = new List<int>();
         //SquareScript[] currentBoard = BoardManager.Instance.board;
         currentPiece = pieceIndex;
+        
         switch (char.ToUpper(board[pieceIndex]))
         {
             case 'P':
                 if (char.IsLower(board[pieceIndex]))
                 {
+
                     //one space forward
                     if (pieceIndex - 8 > 0 && board[pieceIndex - 8] == '\0')
                     {
@@ -524,7 +526,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     MarkMove(validMoves, board,pieceIndex - 1);
                     MarkMove(validMoves, board,pieceIndex + 7);
-                    MarkMove(validMoves, board,pieceIndex - 9);
+                    MarkMove(validMoves, board,pieceIndex - 9); 
                 }
                 //right movement
                 if ((pieceIndex + 1) % 8 != 0)
@@ -537,6 +539,17 @@ public class MoveValidator_alt : MonoBehaviour {
                 MarkMove(validMoves, board,pieceIndex + 8);
                 //one space down
                 MarkMove(validMoves, board,pieceIndex - 8);
+                if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex])
+                {
+                    if (board[pieceIndex + 1] == '\0' && board[pieceIndex+2] == '\0')
+                    {
+                        MarkMove(validMoves, board, pieceIndex + 2);
+                    }
+                    if (board[pieceIndex - 1] == '\0' && board[pieceIndex - 2] == '\0' && board[pieceIndex - 3] == '\0')
+                    {
+                        MarkMove(validMoves, board, pieceIndex -3);
+                    }
+                }
                 canPlace = true;
                 break;
         }
