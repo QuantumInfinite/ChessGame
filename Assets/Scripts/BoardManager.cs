@@ -112,27 +112,27 @@ public class BoardManager : MonoBehaviour
 
     public void MakeMove(int from, int to)
     {
-        if (from == 4 && to == 6)
+        if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 6)
         {
             Castle(4, 7, true);
         }
 
-        else if (from == 4 && to == 1)
+        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 1)
         {
             Castle(4, 0, false);
         }
 
-        else if (from == 60 && to == 62)
+        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 60 && to == 62)
         {
             Castle(60, 63, true);
         }
 
-        else if (from == 60 && to == 57)
+        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 60 && to == 57)
         {
             Castle(60, 56, false);
         }
 
-        else if (from >= 0 && from < board.Length && to >= 0 && to < board.Length) 
+        else if (from >= 0 && from < board.Length && to >= 0 && to < board.Length)
         {
             //Physical
             GameManager.Instance.Output(board[from].name + "->" + board[to].name);
