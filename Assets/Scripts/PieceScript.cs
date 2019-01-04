@@ -98,7 +98,7 @@ public class PieceScript : MonoBehaviour {
             square.SetPiece(this);
         }
     }
-
+    
     public bool HasMoved() {
         return moves != 0;
     }

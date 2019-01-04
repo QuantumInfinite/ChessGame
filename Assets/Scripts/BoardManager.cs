@@ -125,6 +125,54 @@ public class BoardManager : MonoBehaviour
 
             TurnManager.Instance.EndTurn();
         }
+        else
+        {
+            Debug.LogError("Invalid move " + from + "->" + to);
+        }
+    }
+
+    public void Castle(int piece1Index, int piece2Index, bool kingSide)
+    {
+        if (piece1Index >= 0 && piece1Index < board.Length && piece2Index >= 0 && piece2Index < board.Length)
+        {
+            //Log
+            if (kingSide)
+            {
+                GameManager.Instance.Output("0-0");
+            }
+            else
+            {
+                GameManager.Instance.Output("0-0-0");
+            }
+
+            //Physical
+            SquareScript s1 = board[piece1Index];
+            PieceScript p1 = s1.LinkedPiece;
+            SquareScript s2 = board[piece2Index];
+            PieceScript p2 = s2.LinkedPiece;
+
+            Vector2 p1Pos = p1.transform.position;
+            p1.transform.position = p2.transform.position;
+            p2.transform.position = p1Pos;
+
+            p1.SetSquare(s2);
+            p2.SetSquare(s1);
+
+            s1.SetPiece(p2);
+            s2.SetPiece(p1);
+
+
+            //Virtual
+            char c1 = boardChars[piece1Index];
+            boardChars[piece1Index] = boardChars[piece2Index];
+            boardChars[piece2Index] = c1;
+
+            TurnManager.Instance.EndTurn();
+        }
+        else
+        {
+            Debug.LogError("Invalid swap " + piece1Index + "->" + piece2Index);
+        }
     }
 
     //Public static Functions

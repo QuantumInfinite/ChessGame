@@ -139,50 +139,34 @@ public class AIBrainScript_alt : MonoBehaviour
         if (thinkIndex >= maxThinkDepth)
         {
             return children;
-        }
+        }        
+        
+        float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
 
-        if (AiTurn)
+        foreach (Move_alt child in children)
         {
-            float bestVal = float.MinValue;
-
-            foreach (Move_alt child in children)
+            List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
+            if (childrensMoves.Count > 0)
             {
-                List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
-                if (childrensMoves.Count > 0)
+                child.pathFitness = childrensMoves[0].pathFitness;
+                float value = childrensMoves[0].pathFitness;
+                if (AiTurn)
                 {
-                    child.pathFitness = childrensMoves[0].pathFitness;
-                    float value = childrensMoves[0].pathFitness;
-
                     bestVal = Mathf.Max(bestVal, value);
                     alpha = Mathf.Max(alpha, bestVal);
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
                 }
-            }
-        }
-        else
-        {
-            float bestVal = float.MaxValue;
-
-            foreach (Move_alt child in children)
-            {
-                List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
-                if (childrensMoves.Count > 0)
+                else
                 {
-                    child.pathFitness = childrensMoves[0].pathFitness;
-                    float value = childrensMoves[0].pathFitness;
-
                     bestVal = Mathf.Min(bestVal, value);
                     beta = Mathf.Min(beta, bestVal);
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
+                }
+
+                if (beta <= alpha)
+                {
+                    break;
                 }
             }
-        }
+        }        
 
         return Prioritize(children, AiTurn);
     }
@@ -212,7 +196,6 @@ public class AIBrainScript_alt : MonoBehaviour
                 foreach (int move in possibleMoves)
                 {
                     movesQueue.Add(new Move_alt(currentBoard, pieceIndex, move));
-
                 }
             }
         }
@@ -245,16 +228,34 @@ public class AIBrainScript_alt : MonoBehaviour
             movesQueue.Clear();
         }
     }
-
+    /// <summary>
+    /// Sorts the given list max to min if maximise, min to max if !maximise
+    /// Sort function ensures that 
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="maximise"></param>
+    /// <returns></returns>
     List<Move_alt> Prioritize(List<Move_alt> list, bool maximise)
     {
         if (maximise)
         {
-            list.Sort((y, x) => (x.pathFitness + x.self_fitness).CompareTo(y.pathFitness + y.self_fitness));
+            list.Sort(
+                (y, x) => (
+                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                ).CompareTo(
+                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                )
+            );
         }
         else
         {
-            list.Sort((x, y) => (x.pathFitness + x.self_fitness).CompareTo(y.pathFitness + y.self_fitness));
+            list.Sort(
+                (x,y) => (
+                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                ).CompareTo(
+                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                )
+            );
         }
         return list;
     }
