@@ -6,6 +6,9 @@ public class MoveValidator_alt : MonoBehaviour {
 
     private static int currentPiece;
     private static bool canPlace = true;
+    private static int whiteKingIndex;
+    private static int blackKingIndex;
+    private static bool isPlayer;
 
     public static List<int> FindValidMoves(int pieceIndex, char[] board)
     {
@@ -16,7 +19,31 @@ public class MoveValidator_alt : MonoBehaviour {
         List<int> validMoves = new List<int>();
         //SquareScript[] currentBoard = BoardManager.Instance.board;
         currentPiece = pieceIndex;
-        
+        whiteKingIndex = 0;
+        blackKingIndex = 0;
+
+        isPlayer = char.IsUpper(board[pieceIndex]);
+
+        for (int i = 0; i < board.Length; i++)
+        {
+            if (board[i] == 'K')
+            {
+                whiteKingIndex = i;
+            }
+            else if (board[i] == 'k')
+            {
+                blackKingIndex = i;
+            }
+        }
+        if (isPlayer == true)
+        {
+            InCheck(validMoves, board, whiteKingIndex);
+        }
+        else
+        {
+            InCheck(validMoves, board, blackKingIndex);
+        }
+
         switch (char.ToUpper(board[pieceIndex]))
         {
             case 'P':
@@ -26,25 +53,25 @@ public class MoveValidator_alt : MonoBehaviour {
                     //one space forward
                     if (pieceIndex - 8 > 0 && board[pieceIndex - 8] == '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex - 8);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 8);
                     }
                     //two spaces if first turn
                     if (pieceIndex - 16 > 0 && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex - 16] == '\0')
                     {
                         if (board[pieceIndex - 8] == '\0')
                         {
-                            MarkMove(validMoves, board, pieceIndex - 16);
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 16);
                         }
                     }
                     //attack right 
                     if (pieceIndex - 7 < board.Length && (pieceIndex + 1) % 8 != 0 && board[pieceIndex - 7] != '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex - 7);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 7);
                     }
                     //attack left
                     if (pieceIndex - 9 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex - 9] != '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex - 9);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 9);
                     }
                 }
                 else
@@ -52,25 +79,25 @@ public class MoveValidator_alt : MonoBehaviour {
                     //one space forward
                     if (pieceIndex + 8 < board.Length && board[pieceIndex + 8] == '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex + 8);
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 8);
                     }
                     //two spaces if first turn
                     if (pieceIndex + 16 < board.Length && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex + 16] == '\0')
                     {
                         if (board[pieceIndex + 8] == '\0')
                         {
-                            MarkMove(validMoves, board, pieceIndex + 16);
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 16);
                         }
                     }
                     //attack left
                     if (pieceIndex + 7 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex + 7] != '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex + 7);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 7);
                     }
                     //attack right
                     if (pieceIndex + 9 < board.Length && (pieceIndex+1) % 8 != 0 && board[pieceIndex + 9] != '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex + 9);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 9);
                     }
                 }
                 canPlace = true;
@@ -79,7 +106,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
-                    MarkMove(validMoves, board,pieceIndex + i);
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     if (canPlace == false)
                     {
                         break;
@@ -89,7 +116,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //backward column
-                    MarkMove(validMoves, board, pieceIndex - i);
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     if (canPlace == false)
                     {
                         break;
@@ -101,7 +128,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if ((pieceIndex + 1) % 8 != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                         if ((pieceIndex + i + 1) % 8 == 0)
                         {
                             break;
@@ -118,7 +145,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (pieceIndex % 8 != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex - i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                         if ((pieceIndex - i) % 8 == 0)
                         {
                             break;
@@ -137,9 +164,9 @@ public class MoveValidator_alt : MonoBehaviour {
                 //up-left diagonal
                 for (int i = 0; i < board.Length; i = i + 7)
                 {
-                    if (canPlace == true && i != 0)
+                    if (canPlace == true && i != 0 && (pieceIndex+i) < board.Length)
                     {
-                        MarkMove(validMoves, board, pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     }
                     if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
                     {
@@ -157,7 +184,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex - i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     }
                     if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
                     {
@@ -170,7 +197,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     }
                     if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
                     {
@@ -183,7 +210,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex - i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     }
                     if ((pieceIndex - i) % 8 == 0 || canPlace == false)
                     {
@@ -213,7 +240,7 @@ public class MoveValidator_alt : MonoBehaviour {
                         {
                             rowsThrough++;
                         }
-                        MarkMove(validMoves, board,pieceIndex - 6);
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 6);
                         if (canPlace == false)
                         {
                             break;
@@ -234,7 +261,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 5 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,pieceIndex + 6);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 6);
                         if (canPlace == false)
                         {
                             break;
@@ -263,7 +290,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,pieceIndex + 10);
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 10);
                         if (canPlace == false)
                         {
                             break;
@@ -288,7 +315,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 9 && rowsThrough == 1)
                     {
-                        MarkMove(validMoves, board,pieceIndex - 10);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 10);
                         if (canPlace == false)
                         {
                             break;
@@ -313,7 +340,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,pieceIndex + 15);
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 15);
                         if (canPlace == false)
                         {
                             break;
@@ -325,7 +352,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (pieceIndex == j)
                     {
-                        MarkMove(validMoves, board, pieceIndex + 15);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 15);
                     }
                     if (canPlace == false)
                     {
@@ -346,7 +373,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 14 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,pieceIndex - 15);
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 15);
                         if (canPlace == false)
                         {
                             break;
@@ -375,7 +402,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,pieceIndex + 17);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 17);
                         if (canPlace == false)
                         {
                             break;
@@ -396,7 +423,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     }
                     if (i == 16 && rowsThrough == 2)
                     {
-                        MarkMove(validMoves, board,pieceIndex - 17);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 17);
                         if (canPlace == false)
                         {
                             break;
@@ -410,7 +437,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //forward column
-                    MarkMove(validMoves, board, pieceIndex + i);
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     if (canPlace == false)
                     {
                         break;
@@ -420,7 +447,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 for (int i = 8; i < board.Length; i = i + 8)
                 {
                     //backward column
-                    MarkMove(validMoves, board, pieceIndex - i);
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     if (canPlace == false)
                     {
                         break;
@@ -432,7 +459,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if ((pieceIndex + 1) % 8 != 0)
                     {
-                        MarkMove(validMoves, board,pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                         if ((pieceIndex + i + 1) % 8 == 0)
                         {
                             break;
@@ -466,7 +493,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     }
                     if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
                     {
@@ -484,7 +511,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex - i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     }
                     if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
                     {
@@ -497,7 +524,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
                     }
                     if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
                     {
@@ -510,7 +537,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 {
                     if (canPlace == true && i != 0)
                     {
-                        MarkMove(validMoves, board, pieceIndex - i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
                     }
                     if ((pieceIndex - i) % 8 == 0 || canPlace == false)
                     {
@@ -536,7 +563,7 @@ public class MoveValidator_alt : MonoBehaviour {
                     MarkMove(validMoves, board,pieceIndex + 9);
                 }
                 //one space up
-                MarkMove(validMoves, board,pieceIndex + 8);
+                MarkMove(validMoves, board, pieceIndex + 8);
                 //one space down
                 MarkMove(validMoves, board,pieceIndex - 8);
                 if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex])
@@ -571,7 +598,7 @@ public class MoveValidator_alt : MonoBehaviour {
                 }
                 else if (!(char.IsUpper(board[index]) == char.IsUpper(board[currentPiece])))
                 {
-	                validMoves.Add(index);
+                    validMoves.Add(index);
                 }
                 canPlace = false;
             }
@@ -579,6 +606,48 @@ public class MoveValidator_alt : MonoBehaviour {
         return validMoves;
     }
                     
+    private static void MarkMoveCheck(List<int> validMoves, char[] board, int index1, int index2)
+    {
+        if (index2 < board.Length && index2 > -1)
+        {
+            char tempHolder;
+            tempHolder = board[index1];
+            board[index1] = board[index2];
+            board[index2] = tempHolder;
+            if (isPlayer == true)
+            {
+                if (InCheck(validMoves, board, whiteKingIndex) == false)
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                    MarkMove(validMoves, board, index2);
+                }
+                else
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                }
+            }
+            else
+            {
+                if (InCheck(validMoves, board, blackKingIndex) == false)
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                    MarkMove(validMoves, board, index2);
+                }
+                else
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                }
+            }
+        }
+    }
 
     private static List<int> UnmarkMove(List<int> validMoves, char[] board, int index)
     {
@@ -587,5 +656,368 @@ public class MoveValidator_alt : MonoBehaviour {
             validMoves.RemoveAll(item => item == index);
         }
         return validMoves;
+    }
+
+    private static bool InCheck (List<int> validMoves, char[] board, int kingIndex)
+    {
+        //check for attacking pawns
+        if (isPlayer == false)
+        {
+            if ((kingIndex + 1) % 8 != 0 && (kingIndex-7) >= 0 && board[kingIndex-7] == 'P')
+            {
+                //Debug.Log("In Check from " + (kingIndex - 7));
+                return true;
+            }
+            else if (kingIndex % 8 != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
+            {
+                //Debug.Log("In Check from " + (kingIndex - 9));
+                return true;
+            }
+        }
+        else
+        {
+            if (kingIndex % 8 != 0 && (kingIndex + 7) < board.Length && board[kingIndex + 7] == 'p')
+            {
+                return true;
+                //Debug.Log("In Check from " + (kingIndex + 7));
+            }
+            else if ((kingIndex + 1) % 8 != 0 && (kingIndex + 9) < board.Length && board[kingIndex + 9] == 'p')
+            {
+                return true;
+                //Debug.Log("In Check from " + (kingIndex + 9));
+            }
+        }
+
+        //check for attacking rooks
+
+        //forward column
+        for (int i = 8; i < board.Length; i = i + 8)
+        {
+            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        //backward column
+        for (int i = 8; i < board.Length; i = i + 8)
+        {
+            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        // right row
+        for (int i = 1; i < board.Length; i++)
+        {
+            if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //left row
+        for (int i = 1; i < board.Length; i++)
+        {
+            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                break;
+            }
+        }
+
+        //check for attacking bishops
+
+        //up-left diagonal
+        for (int i = 0; i < board.Length; i = i + 7)
+        {
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
+            {
+                break;
+            }
+        }
+        //up-right diagonal
+        for (int i = 0; i < board.Length; i = i + 9)
+        {
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //down-right diagonal
+        for (int i = 0; i < board.Length; i = i + 7)
+        {
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //down-left diagonal
+        for (int i = 0; i < board.Length; i = i + 9)
+        {
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                break;
+            }
+        }
+
+        //check for attacking queens
+
+        //forward column
+        for (int i = 8; i < board.Length; i = i + 8)
+        {
+            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        //backward column
+        for (int i = 8; i < board.Length; i = i + 8)
+        {
+            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        // right row
+        for (int i = 1; i < board.Length; i++)
+        {
+            if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //left row
+        for (int i = 1; i < board.Length; i++)
+        {
+            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                break;
+            }
+        }
+
+        //up-left diagonal
+        for (int i = 0; i < board.Length; i = i + 7)
+        {
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
+            {
+                break;
+            }
+        }
+        //up-right diagonal
+        for (int i = 0; i < board.Length; i = i + 9)
+        {
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) == char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //down-right diagonal
+        for (int i = 0; i < board.Length; i = i + 7)
+        {
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i + 1) % 8 == 0)
+            {
+                break;
+            }
+        }
+        //down-left diagonal
+        for (int i = 0; i < board.Length; i = i + 9)
+        {
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            {
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                {
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                break;
+            }
+        }
+
+        return false;
     }
 }
