@@ -7,6 +7,7 @@ public class FitnessEvaluator : MonoBehaviour {
     public static float rawPieceValue = 1;
 
     public int pawnValue = 10, knightValue = 30, bishopValue = 30, rookValue = 50, queenValue = 90, kingValue = 900;
+
     static int pawn, knight, bishop, rook, queen, king;
 
     public static float Evaluate(char[] board)
@@ -46,8 +47,10 @@ public class FitnessEvaluator : MonoBehaviour {
                 val = king;
                 break;
         }
+        //1 is added so that the ai does not make equal trades, and always tries to get the upper hand
         return char.IsLower(piece) ? val : -val;
     }
+
     static char GetChar(PieceScript.Type piece)
     {
         switch (piece)

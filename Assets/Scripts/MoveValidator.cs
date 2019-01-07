@@ -4,577 +4,601 @@ using UnityEngine;
 
 public class MoveValidator : MonoBehaviour {
 
-    private static PieceScript currentPiece;
+    private static int currentPiece;
     private static bool canPlace = true;
+    private static int whiteKingIndex;
+    private static int blackKingIndex;
+    private static bool isPlayer;
 
-    public static List<SquareScript> FindValidMoves(PieceScript piece, SquareScript[] board)
+    public static List<int> FindValidMoves(int pieceIndex, char[] board)
     {
-        List<SquareScript> validMoves = new List<SquareScript>();
+        if (pieceIndex >= board.Length)
+        {
+            Debug.LogError("Piece Index Out of Range");
+        }
+        List<int> validMoves = new List<int>();
         //SquareScript[] currentBoard = BoardManager.Instance.board;
-        currentPiece = piece;
-        PieceScript.Team currentTeam = piece.team;
-        PieceScript currentKing = null;
-        int kingPos = 0;
-        bool inCheck;
+        currentPiece = pieceIndex;
+        whiteKingIndex = 0;
+        blackKingIndex = 0;
+
+        isPlayer = char.IsUpper(board[pieceIndex]);
+
         for (int i = 0; i < board.Length; i++)
         {
-            if (board[i].LinkedPiece != null)
+            if (board[i] == 'K')
             {
-                if (board[i].LinkedPiece.type == PieceScript.Type.King && board[i].LinkedPiece.team == currentTeam)
-                {
-                    currentKing = board[i].LinkedPiece;
-                    kingPos = i;
-                }
+                whiteKingIndex = i;
+            }
+            else if (board[i] == 'k')
+            {
+                blackKingIndex = i;
             }
         }
-
-        inCheck = CheckForCheck(validMoves, board, currentKing, kingPos);
-
-        int initPos = BoardManager.PositionToBoardIndex(piece.LastValidSquare.position);
-        if (inCheck == false)
+        if (isPlayer == true)
         {
-            switch (piece.type)
-            {
-                case PieceScript.Type.Pawn:
-                    switch (piece.team)
-                    {
-                        case PieceScript.Team.Black:
-                            //one space forward
-                            if (board[initPos - 8].LinkedPiece == null)
-                            {
-                                MarkMove(validMoves, board, initPos - 8);
-                            }
-                            //two spaces if first turn
-                            if (!piece.HasMoved() && board[initPos - 16].LinkedPiece == null)
-                            {
-                                if (board[initPos - 8].LinkedPiece == null)
-                                {
-                                    MarkMove(validMoves, board, initPos - 16);
-                                }
-                            }
-                            //Attack left
-                            if ((initPos + 1) % 8 != 0 && board[initPos - 7].LinkedPiece != null)
-                            {
-                                MarkMove(validMoves, board, initPos - 7);
-                            }
-                            //Attack right
-                            if (initPos % 8 != 0 && board[initPos - 9].LinkedPiece != null)
-                            {
-                                MarkMove(validMoves, board, initPos - 9);
-                            }
-                            break;
-                        case PieceScript.Team.White:
-                            //one space forward
-                            if (board[initPos + 8].LinkedPiece == null)
-                            {
-                                MarkMove(validMoves, board, initPos + 8);
-                            }
-                            //two spaces if first turn
-                            if (!piece.HasMoved() && board[initPos + 16].LinkedPiece == null)
-                            {
-                                if (board[initPos + 8].LinkedPiece == null)
-                                {
-                                    MarkMove(validMoves, board, initPos + 16);
-                                }
-                            }
-                            //Attack left
-                            if (initPos % 8 != 0 && board[initPos + 7].LinkedPiece != null)
-                            {
-                                MarkMove(validMoves, board, initPos + 7);
-                            }
-                            //Attack Right
-                            if ((initPos + 1) % 8 != 0 && board[initPos + 9].LinkedPiece != null)
-                            {
-                                MarkMove(validMoves, board, initPos + 9);
-                            }
-                            break;
-                    }
-                    canPlace = true;
-                    break;
-                case PieceScript.Type.Rook:
-                    for (int i = 8; i < board.Length; i = i + 8)
-                    {
-                        //forward column
-                        MarkMove(validMoves, board, initPos + i);
-                        if (canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    for (int i = 8; i < board.Length; i = i + 8)
-                    {
-                        //backward column
-                        MarkMove(validMoves, board, initPos - i);
-                        if (canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    //right row
-                    for (int i = 1; i < board.Length; i++)
-                    {
-                        if ((initPos + 1) % 8 != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                            if ((initPos + i + 1) % 8 == 0)
-                            {
-                                break;
-                            }
-                        }
-                        if (canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    //left row
-                    for (int i = 1; i < board.Length; i++)
-                    {
-                        if (initPos % 8 != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                            if ((initPos - i) % 8 == 0)
-                            {
-                                break;
-                            }
-                        }
-                        if (canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    UnmarkMove(validMoves, board, initPos);
-                    canPlace = true;
-                    break;
-                case PieceScript.Type.Bishop:
+            InCheck(validMoves, board, whiteKingIndex);
+        }
+        else
+        {
+            InCheck(validMoves, board, blackKingIndex);
+        }
 
-                    //up-left diagonal
-                    for (int i = 0; i < board.Length; i = i + 7)
-                    {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                        }
-                        if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
-                        {
-                            UnmarkMove(validMoves, board, initPos + i);
-                            break;
-                        }
-                        if (canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    //up-right diagonal
-                    for (int i = 0; i < board.Length; i = i + 9)
-                    {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                        }
-                        if ((initPos + i + 1) % 8 == 0 || canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    //down-right diagonal
-                    for (int i = 0; i < board.Length; i = i + 7)
-                    {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                        }
-                        if ((initPos - i + 1) % 8 == 0 || canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    //down-left diagonal
-                    for (int i = 0; i < board.Length; i = i + 9)
-                    {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                        }
-                        if ((initPos - i) % 8 == 0 || canPlace == false)
-                        {
-                            break;
-                        }
-                    }
-                    canPlace = true;
-                    UnmarkMove(validMoves, board, initPos);
-                    break;
-                case PieceScript.Type.Knight:
-                    int rowsThrough = 0;
+        switch (char.ToUpper(board[pieceIndex]))
+        {
+            case 'P':
+                if (char.IsLower(board[pieceIndex]))
+                {
 
-                    //one down two right
-                    for (int i = 0; i < 6; i++)
+                    //one space forward
+                    if (pieceIndex - 8 > 0 && board[pieceIndex - 8] == '\0')
                     {
-                        if (i == 0)
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 8);
+                    }
+                    //two spaces if first turn
+                    if (pieceIndex - 16 > 0 && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex - 16] == '\0')
+                    {
+                        if (board[pieceIndex - 8] == '\0')
                         {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos - i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 5 && rowsThrough == 1)
-                        {
-                            if (initPos % 8 == 0)
-                            {
-                                rowsThrough++;
-                            }
-                            MarkMove(validMoves, board, initPos - 6);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 16);
                         }
                     }
-                    canPlace = true;
-                    //one up two left
-                    for (int i = 0; i < 6; i++)
+                    //attack right 
+                    if (pieceIndex - 7 < board.Length && (pieceIndex + 1) % 8 != 0 && board[pieceIndex - 7] != '\0')
                     {
-                        if (i == 0)
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 7);
+                    }
+                    //attack left
+                    if (pieceIndex - 9 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex - 9] != '\0')
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 9);
+                    }
+                }
+                else
+                {
+                    //one space forward
+                    if (pieceIndex + 8 < board.Length && board[pieceIndex + 8] == '\0')
+                    {
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 8);
+                    }
+                    //two spaces if first turn
+                    if (pieceIndex + 16 < board.Length && BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex] && board[pieceIndex + 16] == '\0')
+                    {
+                        if (board[pieceIndex + 8] == '\0')
                         {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos + i + 1) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 5 && rowsThrough == 1)
-                        {
-                            MarkMove(validMoves, board, initPos + 6);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
+                            MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 16);
                         }
                     }
-                    canPlace = true;
-                    //one up two right
-                    for (int i = 0; i < 10; i++)
+                    //attack left
+                    if (pieceIndex + 7 < board.Length && pieceIndex % 8 != 0 && board[pieceIndex + 7] != '\0')
                     {
-                        if (i == 0)
-                        {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos + i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 9 && (initPos + 2) % 8 == 0)
-                        {
-                            rowsThrough = rowsThrough + 6;
-                        }
-                        else if (i == 9 && initPos % 8 == 0)
-                        {
-                            rowsThrough = 1;
-                        }
-                        if (i == 9 && rowsThrough == 1)
-                        {
-                            MarkMove(validMoves, board, initPos + 10);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
-                        }
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 7);
                     }
-                    canPlace = true;
-                    //one down two left
-                    for (int i = 0; i < 10; i++)
+                    //attack right
+                    if (pieceIndex + 9 < board.Length && (pieceIndex+1) % 8 != 0 && board[pieceIndex + 9] != '\0')
                     {
-                        if (i == 0)
-                        {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos - i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 9 && (initPos + 1) % 8 == 0)
-                        {
-                            rowsThrough = 1;
-                        }
-                        if (i == 9 && rowsThrough == 1)
-                        {
-                            MarkMove(validMoves, board, initPos - 10);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
-                        }
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 9);
                     }
-                    canPlace = true;
-                    //two up one left
-                    for (int i = 0; i < 15; i++)
+                }
+                canPlace = true;
+                break;
+            case 'R':
+                for (int i = 8; i < board.Length; i = i + 8)
+                {
+                    //forward column
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    if (canPlace == false)
                     {
-                        if (i == 0)
-                        {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos + i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 14 && initPos % 8 == 0)
-                        {
-                            rowsThrough = 1;
-                        }
-                        if (i == 14 && rowsThrough == 2)
-                        {
-                            MarkMove(validMoves, board, initPos + 15);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
-                        }
+                        break;
                     }
-                    canPlace = true;
-                    for (int j = 1; j < board.Length; j = j + 8)
+                }
+                canPlace = true;
+                for (int i = 8; i < board.Length; i = i + 8)
+                {
+                    //backward column
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    if (canPlace == false)
                     {
-                        if (initPos == j)
-                        {
-                            MarkMove(validMoves, board, initPos + 15);
-                        }
-                        if (canPlace == false)
+                        break;
+                    }
+                }
+                canPlace = true;
+                //right row
+                for (int i = 1; i < board.Length; i++)
+                {
+                    if ((pieceIndex + 1) % 8 != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                        if ((pieceIndex + i + 1) % 8 == 0)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //two down one right
-                    for (int i = 0; i < 15; i++)
+                    if (canPlace == false)
                     {
-                        if (i == 0)
+                        break;
+                    }
+                }
+                canPlace = true;
+                //left row
+                for (int i = 1; i < board.Length; i++)
+                {
+                    if (pieceIndex % 8 != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                        if ((pieceIndex - i) % 8 == 0)
                         {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos - i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 14 && rowsThrough == 2)
-                        {
-                            MarkMove(validMoves, board, initPos - 15);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
-                    canPlace = true;
-                    //two up one right
-                    for (int i = 0; i < 17; i++)
+                    if (canPlace == false)
                     {
-                        if (i == 0)
-                        {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos + i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 16 && (initPos + 1) % 8 == 0)
-                        {
-                            rowsThrough = rowsThrough + 6;
-                        }
-                        else if (i == 16 && initPos % 8 == 0)
-                        {
-                            rowsThrough = 2;
-                        }
-                        if (i == 16 && rowsThrough == 2)
-                        {
-                            MarkMove(validMoves, board, initPos + 17);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
-                        }
+                        break;
                     }
-                    canPlace = true;
-                    //two down one left
-                    for (int i = 0; i < 17; i++)
-                    {
-                        if (i == 0)
-                        {
-                            rowsThrough = 0;
-                        }
-                        if ((initPos - i) % 8 == 0)
-                        {
-                            rowsThrough++;
-                        }
-                        if (i == 16 && rowsThrough == 2)
-                        {
-                            MarkMove(validMoves, board, initPos - 17);
-                            if (canPlace == false)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    canPlace = true;
-                    break;
-                case PieceScript.Type.Queen:
+                }
+                UnmarkMove(validMoves, board, pieceIndex);
+                canPlace = true;
+                break;
+            case 'B':
 
-                    for (int i = 8; i < board.Length; i = i + 8)
+                //up-left diagonal
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    if (canPlace == true && i != 0 && (pieceIndex+i) < board.Length)
                     {
-                        //forward column
-                        MarkMove(validMoves, board, initPos + i);
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    }
+                    if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
+                    {
+                        UnmarkMove(validMoves, board, pieceIndex + i);
+                        break;
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //down-right diagonal
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    }
+                    if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //up-right diagonal
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    }
+                    if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //down-left diagonal
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    }
+                    if ((pieceIndex - i) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                UnmarkMove(validMoves, board, pieceIndex);
+                break;
+            case 'N':
+                int rowsThrough = 0;
+
+                //one down two right
+                for (int i = 0; i < 6; i++)
+                {
+                    if (i == 0)
+                    {
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex - i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 5 && rowsThrough == 1)
+                    {
+                        if (pieceIndex % 8 == 0)
+                        {
+                            rowsThrough++;
+                        }
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 6);
                         if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    for (int i = 8; i < board.Length; i = i + 8)
+                }
+                canPlace = true;
+                //one up two left
+                for (int i = 0; i < 6; i++)
+                {
+                    if (i == 0)
                     {
-                        //backward column
-                        MarkMove(validMoves, board, initPos - i);
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex + i + 1) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 5 && rowsThrough == 1)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 6);
                         if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //right row
-                    for (int i = 1; i < board.Length; i++)
+                }
+                canPlace = true;
+                //one up two right
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i == 0)
                     {
-                        if ((initPos + 1) % 8 != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                            if ((initPos + i + 1) % 8 == 0)
-                            {
-                                break;
-                            }
-                        }
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex + i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 9 && (pieceIndex + 2) % 8 == 0)
+                    {
+                        rowsThrough = rowsThrough + 6;
+                    }
+                    else if (i == 9 && pieceIndex % 8 == 0)
+                    {
+                        rowsThrough = 1;
+                    }
+                    if (i == 9 && rowsThrough == 1)
+                    {
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 10);
                         if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //left row
-                    for (int i = 1; i < board.Length; i++)
+                }
+                canPlace = true;
+                //one down two left
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i == 0)
                     {
-                        if (initPos % 8 != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                            if ((initPos - i) % 8 == 0)
-                            {
-                                break;
-                            }
-                        }
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex - i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 9 && (pieceIndex + 1) % 8 == 0)
+                    {
+                        rowsThrough = 1;
+                    }
+                    if (i == 9 && rowsThrough == 1)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 10);
                         if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //up left diagonal
-                    for (int i = 0; i < board.Length; i = i + 7)
+                }
+                canPlace = true;
+                //two up one left
+                for (int i = 0; i < 15; i++)
+                {
+                    if (i == 0)
                     {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                        }
-                        if ((initPos + i + 1) % 8 == 0 && (initPos + 1) % 8 != 0)
-                        {
-                            UnmarkMove(validMoves, board, initPos + i);
-                            break;
-                        }
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex + i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 14 && pieceIndex % 8 == 0)
+                    {
+                        rowsThrough = 1;
+                    }
+                    if (i == 14 && rowsThrough == 2)
+                    {
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 15);
                         if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //down right diagonal
-                    for (int i = 0; i < board.Length; i = i + 7)
+                }
+                canPlace = true;
+                for (int j = 1; j < board.Length; j = j + 8)
+                {
+                    if (pieceIndex == j)
                     {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                        }
-                        if ((initPos - i + 1) % 8 == 0 || canPlace == false)
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 15);
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //two down one right
+                for (int i = 0; i < 15; i++)
+                {
+                    if (i == 0)
+                    {
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex - i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 14 && rowsThrough == 2)
+                    {
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 15);
+                        if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //up right diagonal
-                    for (int i = 0; i < board.Length; i = i + 9)
+                }
+                canPlace = true;
+                //two up one right
+                for (int i = 0; i < 17; i++)
+                {
+                    if (i == 0)
                     {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos + i);
-                        }
-                        if ((initPos + i + 1) % 8 == 0 || canPlace == false)
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex + i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 16 && (pieceIndex + 1) % 8 == 0)
+                    {
+                        rowsThrough = rowsThrough + 6;
+                    }
+                    else if (i == 16 && pieceIndex % 8 == 0)
+                    {
+                        rowsThrough = 2;
+                    }
+                    if (i == 16 && rowsThrough == 2)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 17);
+                        if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    canPlace = true;
-                    //down left diagonal
-                    for (int i = 0; i < board.Length; i = i + 9)
+                }
+                canPlace = true;
+                //two down one left
+                for (int i = 0; i < 17; i++)
+                {
+                    if (i == 0)
                     {
-                        if (canPlace == true && i != 0)
-                        {
-                            MarkMove(validMoves, board, initPos - i);
-                        }
-                        if ((initPos - i) % 8 == 0 || canPlace == false)
+                        rowsThrough = 0;
+                    }
+                    if ((pieceIndex - i) % 8 == 0)
+                    {
+                        rowsThrough++;
+                    }
+                    if (i == 16 && rowsThrough == 2)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - 17);
+                        if (canPlace == false)
                         {
                             break;
                         }
                     }
-                    UnmarkMove(validMoves, board, initPos);
-                    canPlace = true;
-                    break;
-                case PieceScript.Type.King:
-                    //left movement
-                    if (initPos % 8 != 0)
+                }
+                canPlace = true;
+                break;
+            case 'Q':
+
+                for (int i = 8; i < board.Length; i = i + 8)
+                {
+                    //forward column
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    if (canPlace == false)
                     {
-                        MarkMove(validMoves, board, initPos - 1);
-                        MarkMove(validMoves, board, initPos + 7);
-                        MarkMove(validMoves, board, initPos - 9);
+                        break;
                     }
-                    //right movement
-                    if ((initPos + 1) % 8 != 0)
+                }
+                canPlace = true;
+                for (int i = 8; i < board.Length; i = i + 8)
+                {
+                    //backward column
+                    MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    if (canPlace == false)
                     {
-                        MarkMove(validMoves, board, initPos + 1);
-                        MarkMove(validMoves, board, initPos - 7);
-                        MarkMove(validMoves, board, initPos + 9);
+                        break;
                     }
-                    //one space up
-                    MarkMove(validMoves, board, initPos + 8);
-                    //one space down
-                    MarkMove(validMoves, board, initPos - 8);
-                    canPlace = true;
-                    break;
-            }
+                }
+                canPlace = true;
+                //right row
+                for (int i = 1; i < board.Length; i++)
+                {
+                    if ((pieceIndex + 1) % 8 != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                        if ((pieceIndex + i + 1) % 8 == 0)
+                        {
+                            break;
+                        }
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //left row
+                for (int i = 1; i < board.Length; i++)
+                {
+                    if (pieceIndex % 8 != 0)
+                    {
+                        MarkMove(validMoves, board,pieceIndex - i);
+                        if ((pieceIndex - i) % 8 == 0)
+                        {
+                            break;
+                        }
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //up left diagonal
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    }
+                    if ((pieceIndex + i + 1) % 8 == 0 && (pieceIndex + 1) % 8 != 0)
+                    {
+                        UnmarkMove(validMoves, board, pieceIndex + i);
+                        break;
+                    }
+                    if (canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //down right diagonal
+                for (int i = 0; i < board.Length; i = i + 7)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    }
+                    if ((pieceIndex - i + 1) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //up right diagonal
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + i);
+                    }
+                    if ((pieceIndex + i + 1) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                canPlace = true;
+                //down left diagonal
+                for (int i = 0; i < board.Length; i = i + 9)
+                {
+                    if (canPlace == true && i != 0)
+                    {
+                        MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex - i);
+                    }
+                    if ((pieceIndex - i) % 8 == 0 || canPlace == false)
+                    {
+                        break;
+                    }
+                }
+                UnmarkMove(validMoves, board, pieceIndex);
+                canPlace = true;
+                break;
+            case 'K':
+                //left movement
+                if (pieceIndex % 8 != 0)
+                {
+                    MarkMove(validMoves, board,pieceIndex - 1);
+                    MarkMove(validMoves, board,pieceIndex + 7);
+                    MarkMove(validMoves, board,pieceIndex - 9); 
+                }
+                //right movement
+                if ((pieceIndex + 1) % 8 != 0)
+                {
+                    MarkMove(validMoves, board,pieceIndex + 1);
+                    MarkMove(validMoves, board,pieceIndex - 7);
+                    MarkMove(validMoves, board,pieceIndex + 9);
+                }
+                //one space up
+                MarkMove(validMoves, board, pieceIndex + 8);
+                //one space down
+                MarkMove(validMoves, board,pieceIndex - 8);
+                if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex])
+                {
+                    if (board[pieceIndex + 1] == '\0' && board[pieceIndex+2] == '\0')
+                    {
+                        MarkMove(validMoves, board, pieceIndex + 2);
+                    }
+                    if (board[pieceIndex - 1] == '\0' && board[pieceIndex - 2] == '\0' && board[pieceIndex - 3] == '\0')
+                    {
+                        MarkMove(validMoves, board, pieceIndex -3);
+                    }
+                }
+                canPlace = true;
+                break;
         }
         return validMoves;
     }
 
-    private static List<SquareScript> MarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<int> MarkMove(List<int> validMoves, char[] board, int index)
     {
-        if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
+        if (index >= 0 && index < board.Length && !validMoves.Contains(index))
         {
-            if (board[index].LinkedPiece == null)
+            if (board[index] == '\0')
             {
-                validMoves.Add(board[index]);
+                validMoves.Add(index);
             }
-            else
-            {
-                if (board[index].LinkedPiece.team != currentPiece.team)
+            else {
+                if (char.ToUpper(board[index]) == 'X')
                 {
-	                validMoves.Add(board[index]);
+                    //Do nothing
+                }
+                else if (!(char.IsUpper(board[index]) == char.IsUpper(board[currentPiece])))
+                {
+                    validMoves.Add(index);
                 }
                 canPlace = false;
             }
@@ -582,53 +606,85 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
                     
+    private static void MarkMoveCheck(List<int> validMoves, char[] board, int index1, int index2)
+    {
+        if (index2 < board.Length && index2 > -1)
+        {
+            char tempHolder;
+            tempHolder = board[index1];
+            board[index1] = board[index2];
+            board[index2] = tempHolder;
+            if (isPlayer == true)
+            {
+                if (InCheck(validMoves, board, whiteKingIndex) == false)
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                    MarkMove(validMoves, board, index2);
+                }
+                else
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                }
+            }
+            else
+            {
+                if (InCheck(validMoves, board, blackKingIndex) == false)
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                    MarkMove(validMoves, board, index2);
+                }
+                else
+                {
+                    tempHolder = board[index1];
+                    board[index1] = board[index2];
+                    board[index2] = tempHolder;
+                }
+            }
+        }
+    }
 
-    private static List<SquareScript> UnmarkMove(List<SquareScript> validMoves, SquareScript[] board, int index)
+    private static List<int> UnmarkMove(List<int> validMoves, char[] board, int index)
     {
         if (index >= 0 && index < board.Length)
         {
-            validMoves.RemoveAll(x => x.position == board[index].position);
+            validMoves.RemoveAll(item => item == index);
         }
         return validMoves;
     }
 
-    private static bool CheckForCheck(List<SquareScript> validMoves, SquareScript[] board, PieceScript currentKing, int index)
+    private static bool InCheck (List<int> validMoves, char[] board, int kingIndex)
     {
         //check for attacking pawns
-        if (currentKing.team == PieceScript.Team.Black)
+        if (isPlayer == false)
         {
-            if ((index + 1) % 8 != 0 && board[index - 7].LinkedPiece != null)
+            if ((kingIndex + 1) % 8 != 0 && (kingIndex-7) >= 0 && board[kingIndex-7] == 'P')
             {
-                if (board[index - 7].LinkedPiece.type == PieceScript.Type.Pawn && board[index - 7].LinkedPiece.team == PieceScript.Team.White)
-                {
-                    Debug.Log("In Check from " + board[index - 7]);
-                    return false;
-                }
+                //Debug.Log("In Check from " + (kingIndex - 7));
+                return true;
             }
-            else if (index % 8 != 0 && board[index - 9].LinkedPiece != null)
+            else if (kingIndex % 8 != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
             {
-                if (board[index - 9].LinkedPiece.type == PieceScript.Type.Pawn && board[index - 9].LinkedPiece.team == PieceScript.Team.White)
-                {
-                    Debug.Log("In Check from " + board[index - 9]);
-                    return false;
-                }
+                //Debug.Log("In Check from " + (kingIndex - 9));
+                return true;
             }
         }
-        else if (currentKing.team == PieceScript.Team.White)
+        else
         {
-            if (index % 8 != 0 && board[index + 7].LinkedPiece != null)
+            if (kingIndex % 8 != 0 && (kingIndex + 7) < board.Length && board[kingIndex + 7] == 'p')
             {
-                if (board[index + 7].LinkedPiece.type == PieceScript.Type.Pawn && board[index + 7].LinkedPiece.team == PieceScript.Team.Black)
-                {
-                    Debug.Log("In Check from " + board[index + 7]);
-                }
+                return true;
+                //Debug.Log("In Check from " + (kingIndex + 7));
             }
-            if ((index + 1) % 8 != 0 && board[index + 9].LinkedPiece != null)
+            else if ((kingIndex + 1) % 8 != 0 && (kingIndex + 9) < board.Length && board[kingIndex + 9] == 'p')
             {
-                if (board[index + 9].LinkedPiece.type == PieceScript.Type.Pawn && board[index + 9].LinkedPiece.team == PieceScript.Team.Black)
-                {
-                    Debug.Log("In Check from " + board[index + 9]);
-                }
+                return true;
+                //Debug.Log("In Check from " + (kingIndex + 9));
             }
         }
 
@@ -637,11 +693,12 @@ public class MoveValidator : MonoBehaviour {
         //forward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (index + i < 64 && board[index + i].LinkedPiece != null)
+            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Rook && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -653,11 +710,12 @@ public class MoveValidator : MonoBehaviour {
         //backward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (index - i > -1 && board[index - i].LinkedPiece != null)
+            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Rook && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -669,11 +727,12 @@ public class MoveValidator : MonoBehaviour {
         // right row
         for (int i = 1; i < board.Length; i++)
         {
-            if ((index + 1) % 8 != 0 && board[index + i].LinkedPiece != null)
+            if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Rook && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
                     break;
                 }
                 else
@@ -681,7 +740,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0)
+            if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
             }
@@ -689,11 +748,12 @@ public class MoveValidator : MonoBehaviour {
         //left row
         for (int i = 1; i < board.Length; i++)
         {
-            if (index % 8 != 0 && board[index - i].LinkedPiece!= null)
+            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Rook && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -701,7 +761,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i) % 8 == 0)
+            if ((kingIndex - i) % 8 == 0)
             {
                 break;
             }
@@ -712,11 +772,12 @@ public class MoveValidator : MonoBehaviour {
         //up-left diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && index + i < board.Length + 1 && board[index + i].LinkedPiece != null)
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Bishop && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -724,7 +785,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0 && (index + 1) % 8 != 0)
+            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
             {
                 break;
             }
@@ -732,11 +793,12 @@ public class MoveValidator : MonoBehaviour {
         //up-right diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && index + i < board.Length+1 && board[index + i].LinkedPiece != null)
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Bishop && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -744,7 +806,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0)
+            if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
             }
@@ -752,11 +814,12 @@ public class MoveValidator : MonoBehaviour {
         //down-right diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && index - i > -1 && board[index - i].LinkedPiece != null)
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Bishop && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -764,7 +827,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i + 1) % 8 == 0)
+            if ((kingIndex - i + 1) % 8 == 0)
             {
                 break;
             }
@@ -772,11 +835,12 @@ public class MoveValidator : MonoBehaviour {
         //down-left diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && index - i > -1 && board[index - i].LinkedPiece != null)
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Bishop && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -784,7 +848,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i) % 8 == 0)
+            if ((kingIndex - i) % 8 == 0)
             {
                 break;
             }
@@ -795,11 +859,12 @@ public class MoveValidator : MonoBehaviour {
         //forward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (index + i < 64 && board[index + i].LinkedPiece != null)
+            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Queen && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -811,11 +876,12 @@ public class MoveValidator : MonoBehaviour {
         //backward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (index - i > -1 && board[index - i].LinkedPiece != null)
+            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Queen && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -827,11 +893,12 @@ public class MoveValidator : MonoBehaviour {
         // right row
         for (int i = 1; i < board.Length; i++)
         {
-            if ((index + 1) % 8 != 0 && board[index + i].LinkedPiece != null)
+            if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Queen && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -839,7 +906,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0)
+            if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
             }
@@ -847,11 +914,12 @@ public class MoveValidator : MonoBehaviour {
         //left row
         for (int i = 1; i < board.Length; i++)
         {
-            if (index % 8 != 0 && board[index - i].LinkedPiece != null)
+            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Queen && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -859,19 +927,21 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i) % 8 == 0)
+            if ((kingIndex - i) % 8 == 0)
             {
                 break;
             }
         }
+
         //up-left diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && index + i < board.Length + 1 && board[index + i].LinkedPiece != null)
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Queen && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -879,7 +949,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0 && (index + 1) % 8 != 0)
+            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
             {
                 break;
             }
@@ -887,11 +957,12 @@ public class MoveValidator : MonoBehaviour {
         //up-right diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && index + i < board.Length + 1 && board[index + i].LinkedPiece != null)
+            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
             {
-                if (board[index + i].LinkedPiece.type == PieceScript.Type.Queen && board[index + i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) == char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index + i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex + i));
                     break;
                 }
                 else
@@ -899,7 +970,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index + i + 1) % 8 == 0)
+            if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
             }
@@ -907,11 +978,12 @@ public class MoveValidator : MonoBehaviour {
         //down-right diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && index - i > -1 && board[index - i].LinkedPiece != null)
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Queen && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -919,7 +991,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i + 1) % 8 == 0)
+            if ((kingIndex - i + 1) % 8 == 0)
             {
                 break;
             }
@@ -927,11 +999,12 @@ public class MoveValidator : MonoBehaviour {
         //down-left diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && index - i > -1 && board[index - i].LinkedPiece != null)
+            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
             {
-                if (board[index - i].LinkedPiece.type == PieceScript.Type.Queen && board[index - i].LinkedPiece.team != currentKing.team)
+                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    Debug.Log("In Check from " + board[index - i]);
+                    return true;
+                    //Debug.Log("In Check from " + (kingIndex - i));
                     break;
                 }
                 else
@@ -939,79 +1012,12 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            if ((index - i) % 8 == 0)
+            if ((kingIndex - i) % 8 == 0)
             {
                 break;
             }
         }
 
-        //check for attacking kings
-        //left movement
-        if (index % 8 != 0)
-        {
-            if (index -1 > -1 && board[index - 1].LinkedPiece != null)
-            {
-                if (board[index - 1].LinkedPiece.type == PieceScript.Type.King && board[index - 1].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index - 1]);
-                }
-            }
-            if (index + 1 < board.Length + 1 && board[index + 7].LinkedPiece != null)
-            {
-                if (board[index + 7].LinkedPiece.type == PieceScript.Type.King && board[index + 7].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index + 7]);
-                }
-            }
-            if (index-9 > -1 && board[index - 9].LinkedPiece != null)
-            {
-                if (board[index - 9].LinkedPiece.type == PieceScript.Type.King && board[index - 9].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index - 9]);
-                }
-            }
-        }
-        //right movement
-        if ((index + 1) % 8 != 0)
-        {
-            if (index + 1 < board.Length + 1 && board[index + 1].LinkedPiece != null)
-            {
-                if (board[index + 1].LinkedPiece.type == PieceScript.Type.King && board[index + 1].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index + 1]);
-                }
-            }
-            if (index - 7 > -1 && board[index - 7].LinkedPiece != null)
-            {
-                if (board[index - 7].LinkedPiece.type == PieceScript.Type.King && board[index - 7].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index - 7]);
-                }
-            }
-            if (index + 9 < board.Length + 1 && board[index + 9].LinkedPiece != null)
-            {
-                if (board[index + 9].LinkedPiece.type == PieceScript.Type.King && board[index + 9].LinkedPiece.team != currentKing.team)
-                {
-                    Debug.Log("In Check from " + board[index + 9]);
-                }
-            }
-        }
-        //one space up
-        if (index + 8 < board.Length + 1 && board[index + 8].LinkedPiece != null)
-        {
-            if (board[index + 8].LinkedPiece.type == PieceScript.Type.King && board[index + 8].LinkedPiece.team != currentKing.team)
-            {
-                Debug.Log("In Check from " + board[index + 8]);
-            }
-        }
-        //one space down
-        if (index - 8 > -1 && board[index - 8].LinkedPiece != null)
-        {
-            if (board[index - 8].LinkedPiece.type == PieceScript.Type.King && board[index - 8].LinkedPiece.team != currentKing.team)
-            {
-                Debug.Log("In Check from " + board[index - 8]);
-            }
-        }
         return false;
     }
 }

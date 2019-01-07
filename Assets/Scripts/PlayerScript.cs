@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour {
                 if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
                 {
                     ClearValidMoves();
-                    List<int> moves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
+                    List<int> moves = MoveValidator.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
                     for (int i = 0; i < moves.Count; i++)
                     {
                         validMoves.Add(board[moves[i]]);
@@ -88,7 +88,7 @@ public class PlayerScript : MonoBehaviour {
             if (heldPiece.team == GameManager.Instance.playerTeam)
             {
                 ClearValidMoves();
-                List<int> moves = MoveValidator_alt.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
+                List<int> moves = MoveValidator.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
                 for (int i = 0; i < moves.Count; i++)
                 {
                     validMoves.Add(board[moves[i]]);

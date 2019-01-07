@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class AIBrainScript : MonoBehaviour {
+public class AIBrainScript : MonoBehaviour
+{
 
-    List<Move> movesQueue;
+    //List<Move_alt> movesQueue;   
 
-    List<PieceScript> myPieces;
-
-
-    public int thinkDepth;
-    int numThinks = 0;
-	// Use this for initialization
-	void Start () {
-        movesQueue = new List<Move>();
+    int maxThinkDepth {
+        get {
+            return GameManager.Instance.movesAheadToSimulate;
+        }
     }
-
     enum ThinkingStage
     {
-        Not, 
+        Not,
         Thinking,
         Done
     }
     ThinkingStage thinkingStage = ThinkingStage.Not;
-
-	// Update is called once per frame
-	void Update () {
+    List<Move_alt> rootMoves;
+    private void Start()
+    {
+        rootMoves = new List<Move_alt>();
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        List<Move_alt> movesQueue = rootMoves;
         if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
@@ -35,130 +37,248 @@ public class AIBrainScript : MonoBehaviour {
             }
             else if (thinkingStage == ThinkingStage.Done)
             {
-                Act();
+                Act(movesQueue);
             }
         }
     }
+
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        myPieces = BoardManager.Instance.GetActiveAIPieces();
-        foreach (PieceScript piece in myPieces)
+        
+        //MiniMax
+        
+        //float start = Time.realtimeSinceStartup;
+        //char[] currentBoard = BoardManager.Instance.boardChars;
+
+        //List<Move_alt> movesQueue = MiniMax(currentBoard, 0, true);
+        //OutputPaths("MiniMax", movesQueue, Time.realtimeSinceStartup - start);
+        //rootMoves = Prioritize(movesQueue, true);
+        
+        //AlphaBeta
+        float start1 = Time.realtimeSinceStartup;
+        char[] currentBoard1 = BoardManager.Instance.boardChars;
+
+        List<Move_alt> movesQueue1 = AlphaBetaPrune(currentBoard1, 0, true, float.MinValue, float.MaxValue);
+        OutputPaths("Alpha-Beta", movesQueue1, Time.realtimeSinceStartup - start1);
+        rootMoves = Prioritize(movesQueue1, true);
+        
+        //if (movesQueue[0].pathFitness != movesQueue1[0].pathFitness)
+        //{
+        //    Debug.LogError("Minimax and Alpha-Beta produced fitness different results");
+        //}
+
+        thinkingStage = ThinkingStage.Done;
+    }
+
+    List<Move_alt> MiniMax(char[] currentBoard, int thinkIndex, bool AiTurn)
+    {
+        List<Move_alt> movesQueue = GenerateNextMoves(currentBoard, AiTurn);
+        
+        if (thinkIndex >= maxThinkDepth)
         {
-            List<SquareScript> possibleMoves = MoveValidator.FindValidMoves(piece, BoardManager.Instance.board);
+            return Prioritize(movesQueue, AiTurn);
+        }
+
+        //Recursive part
+        foreach (Move_alt move in movesQueue)
+        {
+            List<Move_alt> nextMoves = MiniMax(move.newBoard, thinkIndex + 1, !AiTurn);
+            if (nextMoves.Count > 0)
+            {
+                move.nextMove = nextMoves[0];
+                move.pathFitness = nextMoves[0].pathFitness;
+            }
+        }
+        return Prioritize(movesQueue, AiTurn);
+
+    }
+
+    List<Move_alt> AlphaBetaPrune(char[] currentBoard, int thinkIndex, bool AiTurn, float alpha, float beta)
+    {
+        List<Move_alt> children = GenerateNextMoves(currentBoard, AiTurn);
+
+        if (thinkIndex >= maxThinkDepth)
+        {
+            return Prioritize(children, AiTurn);
+        }        
+        
+        float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
+
+        foreach (Move_alt child in children)
+        {
+            List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
+            if (childrensMoves.Count > 0)
+            {
+                child.nextMove = childrensMoves[0];
+                child.pathFitness = child.nextMove.pathFitness;
+                float value = child.pathFitness;
+                if (AiTurn)
+                {
+                    bestVal = Mathf.Max(bestVal, value);
+                    alpha = Mathf.Max(alpha, bestVal);
+                }
+                else
+                {
+                    bestVal = Mathf.Min(bestVal, value);
+                    beta = Mathf.Min(beta, bestVal);
+                }
+
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+        }        
+
+        return Prioritize(children, AiTurn);
+    }
+
+    List<Move_alt> GenerateNextMoves(char[] currentBoard, bool AiTurn)
+    {
+        List<Move_alt> movesQueue = new List<Move_alt>();
+
+        List<int> myPieces;
+
+        if (AiTurn)
+        {
+            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.aiTeam);
+        }
+        else
+        {
+            myPieces = BoardManager.GetTeamPieceIndexes(currentBoard, GameManager.Instance.playerTeam);
+        }
+
+        foreach (int pieceIndex in myPieces)
+        {
+            List<int> possibleMoves = MoveValidator.FindValidMoves(pieceIndex, currentBoard);
+
             if (possibleMoves.Count > 0)
             {
-                foreach (SquareScript square in possibleMoves)
+                foreach (int move in possibleMoves)
                 {
-                    movesQueue.Add(new Move(BoardManager.Instance.board, piece, square));
+                    movesQueue.Add(new Move_alt(currentBoard, pieceIndex, move));
                 }
             }
         }
-        Prioritize();
-        thinkingStage = ThinkingStage.Done;
+        return movesQueue = Prioritize(movesQueue, AiTurn);
     }
-    void Act()
+
+    void Act(List<Move_alt> movesQueue)
     {
         if (thinkingStage == ThinkingStage.Done)
         {
             if (movesQueue.Count > 0)
             {
-                //print("AI has " + movesQueue.Count + " possible moves");
                 MakeMove(movesQueue[0]);
             }
-            numThinks = 0;
+            else
+            {
+                Debug.LogAssertion("AI has no valid moves");
+            }
             thinkingStage = ThinkingStage.Not;
+
             movesQueue.Clear();
-            TurnManager.Instance.EndTurn();
         }
     }
-    void Prioritize()
+    /// <summary>
+    /// Sorts the given list max to min if maximise, min to max if !maximise
+    /// Sort function ensures that 
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="maximise"></param>
+    /// <returns></returns>
+    List<Move_alt> Prioritize(List<Move_alt> list, bool maximise)
     {
-        movesQueue.Sort((x, y) => x.fitness.CompareTo(y.fitness));
-    }
-
-    void MakeMove(Move nextMove)
-    {
-        //print("moving " + nextMove.piece.team + " " + nextMove.piece.type + " from " + nextMove.piece.LinkedSquare.name + " to " + nextMove.square.name);
-
-        string t = "";
-        foreach (Move move in movesQueue)
+        if (maximise)
         {
-            t += " " + move.fitness; 
+            list.Sort(
+                (y, x) => (
+                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                ).CompareTo(
+                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                )
+            );
         }
-        print(t);
-        nextMove.piece.MoveToSquare(nextMove.square);
+        else
+        {
+            list.Sort(
+                (x,y) => (
+                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                ).CompareTo(
+                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                )
+            );
+        }
+        return list;
     }
+
+    void MakeMove(Move_alt nextMove)
+    {
+        BoardManager.Instance.MakeMove(nextMove.from, nextMove.to);
+    }
+
+    void OutputPaths(string funcName, List<Move_alt> movesQueue, float exeTime)
+    {
+        string output = (funcName + " took " + exeTime + " and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to) + "\n");
+        foreach (Move_alt move in movesQueue)
+        {
+            output += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " ";
+            Move_alt ptr = move;
+            while (ptr.nextMove != null)
+            {
+                ptr = ptr.nextMove;
+                output += ", " + BoardManager.BoardIndexToCoordinate(ptr.from) + " -> " + BoardManager.BoardIndexToCoordinate(ptr.to);
+            }
+            output += " : " + move.self_fitness + " " + move.pathFitness + "\n";
+        }
+        print(output);
+    }
+
 }
 
-internal class Move
+internal class Move_alt
 {
-    public float fitness = 0;
+    public float self_fitness = 0;
+    public float pathFitness = 0;
 
-    SquareScript[] oldBoard;
-    char[] newBoard;
+    public char[] oldBoard;
+    public char[] newBoard;
 
-    public PieceScript piece;
+    public int from;
 
-    public SquareScript square;
+    public int to;
 
-    public Move(SquareScript[] oldBoard, PieceScript pieceToMove, SquareScript squareToMoveTo)
+    public Move_alt nextMove;
+    //public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo) : this(oldBoard, pieceToMove, squareToMoveTo, null) { }
+
+    public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
         this.oldBoard = oldBoard;
-        piece = pieceToMove;
-        square = squareToMoveTo;
-
-        int pieceIndex = BoardManager.PositionToBoardIndex(piece.LinkedSquare.position);
-        int squareIndex = BoardManager.PositionToBoardIndex(square.position);
+        from = pieceToMove;
+        to = squareToMoveTo;
 
         newBoard = new char[oldBoard.Length];
         for (int i = 0; i < newBoard.Length; i++)
         {
-            if (i == squareIndex)
+            if (i == squareToMoveTo)
             {
-                newBoard[i] = ConvertToLetter(pieceToMove);
-            }
-            else if (i == pieceIndex || oldBoard[i].LinkedPiece == null)
-            {
-                newBoard[i] = '\0';
+                //moves piece to new place
+                newBoard[i] = oldBoard[pieceToMove];
             }
             else
             {
-                newBoard[i] = ConvertToLetter(oldBoard[i].LinkedPiece);
+                //Just copy it over
+                newBoard[i] = oldBoard[i];
             }
         }
 
-        fitness = FitnessEvaluator.Evaluate(newBoard);
-    }
+        //Remove old piece
+        newBoard[pieceToMove] = '\0';
 
-    public char ConvertToLetter(PieceScript piece)
-    {
-        char letter = new char();
-        switch (piece.type)
-        {
-            case PieceScript.Type.Pawn:
-                letter = 'p';
-                break;
-            case PieceScript.Type.Rook:
-                letter = 'r';
-                break;
-            case PieceScript.Type.Bishop:
-                letter = 'b';
-                break;
-            case PieceScript.Type.Knight:
-                letter = 'n';
-                break;
-            case PieceScript.Type.Queen:
-                letter = 'q';
-                break;
-            case PieceScript.Type.King:
-                letter = 'k';
-                break;
-        }
-        if (piece.team == GameManager.Instance.playerTeam)
-        {
-            letter = char.ToUpper(letter);
-        }
-        return letter;
-    }
+        //Set Self Fitness
+        self_fitness = FitnessEvaluator.Evaluate(newBoard);
+
+        pathFitness = self_fitness;
+    }  
 }
