@@ -513,7 +513,7 @@ MonoBehaviour:
   playerTeam: 0
   playerOnlyTurns: 0
   aiTeam: 0
-  movesAheadToSimulate: 3
+  movesAheadToSimulate: 4
   outputBox: {fileID: 1585849924}
 --- !u!114 &49494338
 MonoBehaviour:

@@ -20,15 +20,17 @@ public class AIBrainScript : MonoBehaviour
         Done
     }
     ThinkingStage thinkingStage = ThinkingStage.Not;
-    List<Move_alt> rootMoves;
+    List<Move> rootMoves;
+
+    // Called once
     private void Start()
     {
-        rootMoves = new List<Move_alt>();
+        rootMoves = new List<Move>();
     }
+
     // Update is called once per frame
     void Update()
     {
-        List<Move_alt> movesQueue = rootMoves;
         if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
@@ -37,11 +39,13 @@ public class AIBrainScript : MonoBehaviour
             }
             else if (thinkingStage == ThinkingStage.Done)
             {
-                Act(movesQueue);
+                Act(rootMoves);
             }
         }
     }
-
+    /// <summary>
+    /// Thinks about what moves to make
+    /// </summary>
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
@@ -56,12 +60,10 @@ public class AIBrainScript : MonoBehaviour
         //rootMoves = Prioritize(movesQueue, true);
         
         //AlphaBeta
-        float start1 = Time.realtimeSinceStartup;
-        char[] currentBoard1 = BoardManager.Instance.boardChars;
+        float startTime = Time.realtimeSinceStartup;
 
-        List<Move_alt> movesQueue1 = AlphaBetaPrune(currentBoard1, 0, true, float.MinValue, float.MaxValue);
-        OutputPaths("Alpha-Beta", movesQueue1, Time.realtimeSinceStartup - start1);
-        rootMoves = Prioritize(movesQueue1, true);
+        rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, 0, true, float.MinValue, float.MaxValue);
+        DEBUG_OutputPaths("Alpha-Beta", rootMoves, Time.realtimeSinceStartup - startTime);
         
         //if (movesQueue[0].pathFitness != movesQueue1[0].pathFitness)
         //{
@@ -71,9 +73,9 @@ public class AIBrainScript : MonoBehaviour
         thinkingStage = ThinkingStage.Done;
     }
 
-    List<Move_alt> MiniMax(char[] currentBoard, int thinkIndex, bool AiTurn)
+    List<Move> MiniMax(char[] currentBoard, int thinkIndex, bool AiTurn)
     {
-        List<Move_alt> movesQueue = GenerateNextMoves(currentBoard, AiTurn);
+        List<Move> movesQueue = GenerateNextMoves(currentBoard, AiTurn);
         
         if (thinkIndex >= maxThinkDepth)
         {
@@ -81,9 +83,9 @@ public class AIBrainScript : MonoBehaviour
         }
 
         //Recursive part
-        foreach (Move_alt move in movesQueue)
+        foreach (Move move in movesQueue)
         {
-            List<Move_alt> nextMoves = MiniMax(move.newBoard, thinkIndex + 1, !AiTurn);
+            List<Move> nextMoves = MiniMax(move.newBoard, thinkIndex + 1, !AiTurn);
             if (nextMoves.Count > 0)
             {
                 move.nextMove = nextMoves[0];
@@ -94,9 +96,9 @@ public class AIBrainScript : MonoBehaviour
 
     }
 
-    List<Move_alt> AlphaBetaPrune(char[] currentBoard, int thinkIndex, bool AiTurn, float alpha, float beta)
+    List<Move> AlphaBetaPrune(char[] currentBoard, int thinkIndex, bool AiTurn, float alpha, float beta)
     {
-        List<Move_alt> children = GenerateNextMoves(currentBoard, AiTurn);
+        List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
 
         if (thinkIndex >= maxThinkDepth)
         {
@@ -105,9 +107,9 @@ public class AIBrainScript : MonoBehaviour
         
         float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
 
-        foreach (Move_alt child in children)
+        foreach (Move child in children)
         {
-            List<Move_alt> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
+            List<Move> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
             if (childrensMoves.Count > 0)
             {
                 child.nextMove = childrensMoves[0];
@@ -134,9 +136,9 @@ public class AIBrainScript : MonoBehaviour
         return Prioritize(children, AiTurn);
     }
 
-    List<Move_alt> GenerateNextMoves(char[] currentBoard, bool AiTurn)
+    List<Move> GenerateNextMoves(char[] currentBoard, bool AiTurn)
     {
-        List<Move_alt> movesQueue = new List<Move_alt>();
+        List<Move> movesQueue = new List<Move>();
 
         List<int> myPieces;
 
@@ -152,19 +154,16 @@ public class AIBrainScript : MonoBehaviour
         foreach (int pieceIndex in myPieces)
         {
             List<int> possibleMoves = MoveValidator.FindValidMoves(pieceIndex, currentBoard);
-
-            if (possibleMoves.Count > 0)
+            
+            foreach (int move in possibleMoves)
             {
-                foreach (int move in possibleMoves)
-                {
-                    movesQueue.Add(new Move_alt(currentBoard, pieceIndex, move));
-                }
-            }
+                movesQueue.Add(new Move(currentBoard, pieceIndex, move));
+            }            
         }
         return movesQueue = Prioritize(movesQueue, AiTurn);
     }
 
-    void Act(List<Move_alt> movesQueue)
+    void Act(List<Move> movesQueue)
     {
         if (thinkingStage == ThinkingStage.Done)
         {
@@ -183,20 +182,21 @@ public class AIBrainScript : MonoBehaviour
     }
     /// <summary>
     /// Sorts the given list max to min if maximise, min to max if !maximise
-    /// Sort function ensures that 
+    /// Sort function ensures that the moves are in the correct order.
+    /// (x.from + x.to) / 100 just adds a small amount to each to help with ordering
     /// </summary>
     /// <param name="list"></param>
     /// <param name="maximise"></param>
     /// <returns></returns>
-    List<Move_alt> Prioritize(List<Move_alt> list, bool maximise)
+    List<Move> Prioritize(List<Move> list, bool maximise)
     {
         if (maximise)
         {
             list.Sort(
                 (y, x) => (
-                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                    x.pathFitness + x.self_fitness
                 ).CompareTo(
-                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                    y.pathFitness + y.self_fitness
                 )
             );
         }
@@ -204,27 +204,35 @@ public class AIBrainScript : MonoBehaviour
         {
             list.Sort(
                 (x,y) => (
-                    x.pathFitness + x.self_fitness + ((x.from + x.to) / 100)
+                    x.pathFitness + x.self_fitness
                 ).CompareTo(
-                    y.pathFitness + y.self_fitness + ((y.from + y.to) / 100)
+                    y.pathFitness + y.self_fitness
                 )
             );
         }
         return list;
     }
-
-    void MakeMove(Move_alt nextMove)
+    /// <summary>
+    /// Instructs the board manager to make the given move
+    /// </summary>
+    /// <param name="nextMove">Move to make</param>
+    void MakeMove(Move nextMove)
     {
         BoardManager.Instance.MakeMove(nextMove.from, nextMove.to);
     }
-
-    void OutputPaths(string funcName, List<Move_alt> movesQueue, float exeTime)
+    /// <summary>
+    /// Outputs paths for debugging
+    /// </summary>
+    /// <param name="funcName">the name of the algorthm</param>
+    /// <param name="movesQueue">the list of moves</param>
+    /// <param name="exeTime">time it took to execute</param>
+    void DEBUG_OutputPaths(string funcName, List<Move> movesQueue, float exeTime)
     {
         string output = (funcName + " took " + exeTime + " and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to) + "\n");
-        foreach (Move_alt move in movesQueue)
+        foreach (Move move in movesQueue)
         {
             output += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " ";
-            Move_alt ptr = move;
+            Move ptr = move;
             while (ptr.nextMove != null)
             {
                 ptr = ptr.nextMove;
@@ -237,24 +245,24 @@ public class AIBrainScript : MonoBehaviour
 
 }
 
-internal class Move_alt
+internal class Move
 {
     public float self_fitness = 0;
     public float pathFitness = 0;
 
-    public char[] oldBoard;
+    //public char[] oldBoard;
     public char[] newBoard;
 
     public int from;
 
     public int to;
 
-    public Move_alt nextMove;
+    public Move nextMove;
     //public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo) : this(oldBoard, pieceToMove, squareToMoveTo, null) { }
 
-    public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo)
+    public Move(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
-        this.oldBoard = oldBoard;
+        //this.oldBoard = oldBoard;
         from = pieceToMove;
         to = squareToMoveTo;
 
@@ -280,5 +288,5 @@ internal class Move_alt
         self_fitness = FitnessEvaluator.Evaluate(newBoard);
 
         pathFitness = self_fitness;
-    }  
+    }
 }
