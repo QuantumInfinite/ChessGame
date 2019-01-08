@@ -688,22 +688,19 @@ public class MoveValidator : MonoBehaviour {
             }
         }
 
-        //check for attacking rooks
+        //check for attacking rows & columns
 
         //forward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
             if ((kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex + i]) == 'R' || char.ToUpper(board[kingIndex + i]) == 'Q') && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
         }
         //backward column
@@ -711,15 +708,12 @@ public class MoveValidator : MonoBehaviour {
         {
             if ((kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex - i]) == 'R' || char.ToUpper(board[kingIndex - i]) == 'Q') && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
         }
         // right row
@@ -727,17 +721,13 @@ public class MoveValidator : MonoBehaviour {
         {
             if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex + i]) == 'R' || char.ToUpper(board[kingIndex + i]) == 'Q') && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
                     //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
-
             if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
@@ -748,15 +738,12 @@ public class MoveValidator : MonoBehaviour {
         {
             if ((kingIndex % 8) != 0 && board[kingIndex - i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex - i]) == 'R' || char.ToUpper(board[kingIndex - i]) == 'Q') && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
-                    return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
+                    return true;
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
             if ((kingIndex - i) % 8 == 0)
             {
@@ -764,24 +751,21 @@ public class MoveValidator : MonoBehaviour {
             }
         }
 
-        //check for attacking bishops
+        //check for attacking diagonals
 
         //up-left diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
             if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex + i]) == 'B' || char.ToUpper(board[kingIndex + i]) == 'Q') && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
-            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
+            if ((kingIndex + i) % 8 == 0)
             {
                 break;
             }
@@ -791,17 +775,14 @@ public class MoveValidator : MonoBehaviour {
         {
             if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex + i]) == 'B' || char.ToUpper(board[kingIndex + i]) == 'Q') && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
-            if ((kingIndex + i + 1) % 8 == 0)
+            if ((kingIndex + i) % 8 == 0)
             {
                 break;
             }
@@ -811,15 +792,12 @@ public class MoveValidator : MonoBehaviour {
         {
             if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex - i]) == 'B' || char.ToUpper(board[kingIndex - i]) == 'Q') && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
             if ((kingIndex - i + 1) % 8 == 0)
             {
@@ -831,178 +809,18 @@ public class MoveValidator : MonoBehaviour {
         {
             if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
-                if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
+                if ((char.ToUpper(board[kingIndex - i]) == 'B' || char.ToUpper(board[kingIndex - i]) == 'Q') && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
             if ((kingIndex - i) % 8 == 0)
             {
                 break;
             }
         }
-
-        //check for attacking queens
-
-        //forward column
-        for (int i = 8; i < board.Length; i = i + 8)
-        {
-            if ((kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        //backward column
-        for (int i = 8; i < board.Length; i = i + 8)
-        {
-            if ((kingIndex - i) > -1 && board[kingIndex - i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        // right row
-        for (int i = 1; i < board.Length; i++)
-        {
-            if ((kingIndex + 1) % 8 != 0 && board[kingIndex + i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex + i + 1) % 8 == 0)
-            {
-                break;
-            }
-        }
-        //left row
-        for (int i = 1; i < board.Length; i++)
-        {
-            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex - i) % 8 == 0)
-            {
-                break;
-            }
-        }
-
-        //up-left diagonal
-        for (int i = 0; i < board.Length; i = i + 7)
-        {
-            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex + i + 1) % 8 == 0 && (kingIndex + 1) % 8 != 0)
-            {
-                break;
-            }
-        }
-        //up-right diagonal
-        for (int i = 0; i < board.Length; i = i + 9)
-        {
-            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) == char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex + i + 1) % 8 == 0)
-            {
-                break;
-            }
-        }
-        //down-right diagonal
-        for (int i = 0; i < board.Length; i = i + 7)
-        {
-            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex - i + 1) % 8 == 0)
-            {
-                break;
-            }
-        }
-        //down-left diagonal
-        for (int i = 0; i < board.Length; i = i + 9)
-        {
-            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
-            {
-                if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
-                {
-                    return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if ((kingIndex - i) % 8 == 0)
-            {
-                break;
-            }
-        }
-
         return false;
     }
 }
