@@ -117,7 +117,7 @@ public class BoardManager : MonoBehaviour
             Castle(4, 7, true);
         }
 
-        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 1)
+        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 2)
         {
             Castle(4, 0, false);
         }

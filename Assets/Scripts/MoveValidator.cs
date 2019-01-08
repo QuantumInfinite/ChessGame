@@ -574,7 +574,7 @@ public class MoveValidator : MonoBehaviour {
                     }
                     if (board[pieceIndex - 1] == '\0' && board[pieceIndex - 2] == '\0' && board[pieceIndex - 3] == '\0')
                     {
-                        MarkMove(validMoves, board, pieceIndex -3);
+                        MarkMove(validMoves, board, pieceIndex -2);
                     }
                 }
                 canPlace = true;
@@ -699,7 +699,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -716,7 +715,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -733,7 +731,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
-                    break;
                 }
                 else
                 {
@@ -754,7 +751,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -778,7 +774,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -799,7 +794,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -820,7 +814,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -841,7 +834,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -865,7 +857,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -882,7 +873,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -899,7 +889,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -920,7 +909,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -942,7 +930,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -963,7 +950,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex + i));
-                    break;
                 }
                 else
                 {
@@ -984,7 +970,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
@@ -1005,7 +990,6 @@ public class MoveValidator : MonoBehaviour {
                 {
                     return true;
                     //Debug.Log("In Check from " + (kingIndex - i));
-                    break;
                 }
                 else
                 {
