@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour {
 
     [Header("AI Settings")]
     public int movesAheadToSimulate = 0;
+
+    public bool limitThinkTime;
+    [ConditionalHide("limitThinkTime", true)]
+    public float maxThinkTime = 1.0f;
+
     public bool usePositionalScore = false;
 
     [Header("Stuff ill move at some point")]

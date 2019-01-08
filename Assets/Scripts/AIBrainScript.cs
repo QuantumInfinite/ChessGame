@@ -21,7 +21,7 @@ public class AIBrainScript : MonoBehaviour
     }
     ThinkingStage thinkingStage = ThinkingStage.Not;
     List<Move> rootMoves;
-
+    float thinkStartTime = 0.0f;
     // Called once
     private void Start()
     {
@@ -49,7 +49,7 @@ public class AIBrainScript : MonoBehaviour
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        
+        thinkStartTime = Time.realtimeSinceStartup;
         //MiniMax
         
         //float start = Time.realtimeSinceStartup;
@@ -62,13 +62,27 @@ public class AIBrainScript : MonoBehaviour
         //AlphaBeta
         float startTime = Time.realtimeSinceStartup;
 
-        rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, 0, true, float.MinValue, float.MaxValue);
-        DEBUG_OutputPaths("Alpha-Beta", rootMoves, Time.realtimeSinceStartup - startTime);
-        
-        //if (movesQueue[0].pathFitness != movesQueue1[0].pathFitness)
-        //{
-        //    Debug.LogError("Minimax and Alpha-Beta produced fitness different results");
-        //}
+        if (GameManager.Instance.limitThinkTime)
+        {
+            int index = 0;
+            while (Time.realtimeSinceStartup - thinkStartTime < 0.95f * GameManager.Instance.maxThinkTime && index <= maxThinkDepth)
+            {
+                rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, index, true, float.MinValue, float.MaxValue);
+                index++;
+            }
+            DEBUG_OutputPaths("Alpha-Beta", rootMoves, Time.realtimeSinceStartup - startTime, index - 1);
+        }
+        else
+        {
+            rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
+            DEBUG_OutputPaths("Alpha-Beta", rootMoves, Time.realtimeSinceStartup - startTime, maxThinkDepth);
+        }
+        startTime = Time.realtimeSinceStartup;
+        List<Move> rootMoves1 = AlphaBetaPrune1(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
+        DEBUG_OutputPaths("Alpha-Beta1", rootMoves, Time.realtimeSinceStartup - startTime, maxThinkDepth);
+
+
+
 
         thinkingStage = ThinkingStage.Done;
     }
@@ -96,11 +110,13 @@ public class AIBrainScript : MonoBehaviour
 
     }
 
-    List<Move> AlphaBetaPrune(char[] currentBoard, int thinkIndex, bool AiTurn, float alpha, float beta)
+    List<Move> AlphaBetaPrune(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
 
-        if (thinkIndex >= maxThinkDepth)
+
+
+        if (depth <= 0 || (GameManager.Instance.limitThinkTime && Time.realtimeSinceStartup - thinkStartTime > 0.95f * GameManager.Instance.maxThinkTime))
         {
             return Prioritize(children, AiTurn);
         }        
@@ -109,7 +125,7 @@ public class AIBrainScript : MonoBehaviour
 
         foreach (Move child in children)
         {
-            List<Move> childrensMoves = AlphaBetaPrune(child.newBoard, thinkIndex + 1, !AiTurn, alpha, beta);
+            List<Move> childrensMoves = AlphaBetaPrune(child.newBoard, depth - 1, !AiTurn, alpha, beta);
             if (childrensMoves.Count > 0)
             {
                 child.nextMove = childrensMoves[0];
@@ -132,6 +148,48 @@ public class AIBrainScript : MonoBehaviour
                 }
             }
         }        
+
+        return Prioritize(children, AiTurn);
+    }
+
+    List<Move> AlphaBetaPrune1(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
+    {
+        List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
+
+
+
+        if (depth <= 0 || (GameManager.Instance.limitThinkTime && Time.realtimeSinceStartup - thinkStartTime > 0.95f * GameManager.Instance.maxThinkTime))
+        {
+            return Prioritize(children, AiTurn);
+        }
+
+        float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
+
+        foreach (Move child in children)
+        {
+            List<Move> childrensMoves = AlphaBetaPrune1(child.newBoard, depth - 1, !AiTurn, alpha, beta);
+            if (childrensMoves.Count > 0)
+            {
+                child.nextMove = childrensMoves[0];
+                child.pathFitness = child.nextMove.pathFitness;
+                float value = child.pathFitness;
+                if (AiTurn)
+                {
+                    bestVal = Mathf.Max(bestVal, value);
+                    alpha = Mathf.Max(alpha, bestVal);
+                }
+                else
+                {
+                    bestVal = Mathf.Min(bestVal, value);
+                    beta = Mathf.Min(beta, bestVal);
+                }
+
+                if (beta <= alpha)
+                {
+                    break;
+                }
+            }
+        }
 
         return Prioritize(children, AiTurn);
     }
@@ -226,9 +284,9 @@ public class AIBrainScript : MonoBehaviour
     /// <param name="funcName">the name of the algorthm</param>
     /// <param name="movesQueue">the list of moves</param>
     /// <param name="exeTime">time it took to execute</param>
-    void DEBUG_OutputPaths(string funcName, List<Move> movesQueue, float exeTime)
+    void DEBUG_OutputPaths(string funcName, List<Move> movesQueue, float exeTime, int depthReached)
     {
-        string output = (funcName + " took " + exeTime + " and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to) + "\n");
+        string output = (funcName + " took " + exeTime + " to reach depth " + depthReached + " and decided on " + BoardManager.BoardIndexToCoordinate(movesQueue[0].from) + " -> " + BoardManager.BoardIndexToCoordinate(movesQueue[0].to) + "\n");
         foreach (Move move in movesQueue)
         {
             output += BoardManager.BoardIndexToCoordinate(move.from) + " -> " + BoardManager.BoardIndexToCoordinate(move.to) + " ";
