@@ -84,8 +84,14 @@ public class FitnessEvaluator : MonoBehaviour {
         {
             if (board[i] != '\0')
             {
-                //score += GetValue(board[i]);        
-                score += GetValuePositional(board[i], i);
+                if (GameManager.Instance.usePositionalScore)
+                {
+                    score += GetValuePositional(board[i], i);
+                }
+                else
+                {
+                    score += GetValue(board[i]);   
+                }
             }
         }
         return score;

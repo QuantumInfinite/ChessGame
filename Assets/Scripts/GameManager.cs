@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
         public Material black;
         public Material highlight;
     }
+
     [System.Serializable]
     public struct PieceMaterials
     {
@@ -76,6 +77,7 @@ public class GameManager : MonoBehaviour {
 
     [Header("AI Settings")]
     public int movesAheadToSimulate = 0;
+    public bool usePositionalScore = false;
 
     [Header("Stuff ill move at some point")]
     public TextMesh outputBox;
