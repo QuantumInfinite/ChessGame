@@ -155,9 +155,7 @@ public class AIBrainScript : MonoBehaviour
     List<Move> AlphaBetaPrune1(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
-
-
-
+        
         if (depth <= 0 || (GameManager.Instance.limitThinkTime && Time.realtimeSinceStartup - thinkStartTime > 0.95f * GameManager.Instance.maxThinkTime))
         {
             return Prioritize(children, AiTurn);
