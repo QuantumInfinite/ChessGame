@@ -668,7 +668,7 @@ public class MoveValidator : MonoBehaviour {
                 //Debug.Log("In Check from " + (kingIndex - 7));
                 return true;
             }
-            else if (kingIndex % 8 != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
+            else if ((kingIndex % 8) != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
             {
                 //Debug.Log("In Check from " + (kingIndex - 9));
                 return true;
@@ -676,7 +676,7 @@ public class MoveValidator : MonoBehaviour {
         }
         else
         {
-            if (kingIndex % 8 != 0 && (kingIndex + 7) < board.Length && board[kingIndex + 7] == 'p')
+            if ((kingIndex % 8) != 0 && (kingIndex + 7) < board.Length && board[kingIndex + 7] == 'p')
             {
                 return true;
                 //Debug.Log("In Check from " + (kingIndex + 7));
@@ -693,7 +693,7 @@ public class MoveValidator : MonoBehaviour {
         //forward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
+            if ((kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'R' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -709,7 +709,7 @@ public class MoveValidator : MonoBehaviour {
         //backward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if ((kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -737,6 +737,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
+            Debug.Log(kingIndex + i);
             if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
@@ -745,7 +746,7 @@ public class MoveValidator : MonoBehaviour {
         //left row
         for (int i = 1; i < board.Length; i++)
         {
-            if (kingIndex % 8 != 0 && board[kingIndex - i] != '\0')
+            if ((kingIndex % 8) != 0 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'R' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -768,7 +769,7 @@ public class MoveValidator : MonoBehaviour {
         //up-left diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -788,7 +789,7 @@ public class MoveValidator : MonoBehaviour {
         //up-right diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'B' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -808,7 +809,7 @@ public class MoveValidator : MonoBehaviour {
         //down-right diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -828,7 +829,7 @@ public class MoveValidator : MonoBehaviour {
         //down-left diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'B' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -851,7 +852,7 @@ public class MoveValidator : MonoBehaviour {
         //forward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (kingIndex + i < 64 && board[kingIndex + i] != '\0')
+            if ((kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -867,7 +868,7 @@ public class MoveValidator : MonoBehaviour {
         //backward column
         for (int i = 8; i < board.Length; i = i + 8)
         {
-            if (kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if ((kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -924,7 +925,7 @@ public class MoveValidator : MonoBehaviour {
         //up-left diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -944,7 +945,7 @@ public class MoveValidator : MonoBehaviour {
         //up-right diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && kingIndex + i < board.Length + 1 && board[kingIndex + i] != '\0')
+            if (i != 0 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex + i]) == 'Q' && char.IsUpper(board[kingIndex + i]) == char.IsUpper(board[kingIndex]))
                 {
@@ -964,7 +965,7 @@ public class MoveValidator : MonoBehaviour {
         //down-right diagonal
         for (int i = 0; i < board.Length; i = i + 7)
         {
-            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
@@ -984,7 +985,7 @@ public class MoveValidator : MonoBehaviour {
         //down-left diagonal
         for (int i = 0; i < board.Length; i = i + 9)
         {
-            if (i != 0 && kingIndex - i > -1 && board[kingIndex - i] != '\0')
+            if (i != 0 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
             {
                 if (char.ToUpper(board[kingIndex - i]) == 'Q' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex]))
                 {
