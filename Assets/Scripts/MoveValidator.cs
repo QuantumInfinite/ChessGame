@@ -737,7 +737,7 @@ public class MoveValidator : MonoBehaviour {
                     break;
                 }
             }
-            Debug.Log(kingIndex + i);
+
             if ((kingIndex + i + 1) % 8 == 0)
             {
                 break;
