@@ -178,26 +178,6 @@ public class FitnessEvaluator : MonoBehaviour {
         return val;
     }
 
-    static char GetChar(PieceScript.Type piece)
-    {
-        switch (piece)
-        {
-            case PieceScript.Type.Pawn:
-                return  'p';
-            case PieceScript.Type.Rook:
-                return  'r';
-            case PieceScript.Type.Bishop:
-                return  'b';
-            case PieceScript.Type.Knight:
-                return  'n';
-            case PieceScript.Type.Queen:
-                return  'q';
-            case PieceScript.Type.King:
-                return  'k';
-        }
-        return '\0';
-    }
-
     private void Awake()
     {
         pawn = pawnValue;

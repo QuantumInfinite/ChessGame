@@ -606,44 +606,44 @@ public class MoveValidator : MonoBehaviour {
         return validMoves;
     }
                     
-    private static void MarkMoveCheck(List<int> validMoves, char[] board, int index1, int index2)
+    private static void MarkMoveCheck(List<int> validMoves, char[] board, int fromPosition, int toPosition)
     {
-        if (index2 < board.Length && index2 > -1)
+        if (toPosition < board.Length && toPosition > -1)
         {
             char tempHolder;
-            tempHolder = board[index1];
-            board[index1] = board[index2];
-            board[index2] = tempHolder;
+            tempHolder = board[fromPosition];
+            board[fromPosition] = board[toPosition];
+            board[toPosition] = tempHolder;
             if (isPlayer == true)
             {
                 if (InCheck(validMoves, board, whiteKingIndex) == false)
                 {
-                    tempHolder = board[index1];
-                    board[index1] = board[index2];
-                    board[index2] = tempHolder;
-                    MarkMove(validMoves, board, index2);
+                    tempHolder = board[fromPosition];
+                    board[fromPosition] = board[toPosition];
+                    board[toPosition] = tempHolder;
+                    MarkMove(validMoves, board, toPosition);
                 }
                 else
                 {
-                    tempHolder = board[index1];
-                    board[index1] = board[index2];
-                    board[index2] = tempHolder;
+                    tempHolder = board[fromPosition];
+                    board[fromPosition] = board[toPosition];
+                    board[toPosition] = tempHolder;
                 }
             }
             else
             {
                 if (InCheck(validMoves, board, blackKingIndex) == false)
                 {
-                    tempHolder = board[index1];
-                    board[index1] = board[index2];
-                    board[index2] = tempHolder;
-                    MarkMove(validMoves, board, index2);
+                    tempHolder = board[fromPosition];
+                    board[fromPosition] = board[toPosition];
+                    board[toPosition] = tempHolder;
+                    MarkMove(validMoves, board, toPosition);
                 }
                 else
                 {
-                    tempHolder = board[index1];
-                    board[index1] = board[index2];
-                    board[index2] = tempHolder;
+                    tempHolder = board[fromPosition];
+                    board[fromPosition] = board[toPosition];
+                    board[toPosition] = tempHolder;
                 }
             }
         }
