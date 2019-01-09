@@ -568,11 +568,11 @@ public class MoveValidator : MonoBehaviour {
                 MarkMove(validMoves, board,pieceIndex - 8);
                 if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex])
                 {
-                    if (board[pieceIndex + 1] == '\0' && board[pieceIndex+2] == '\0')
+                    if (pieceIndex == 4 && board[pieceIndex + 1] == '\0' && board[pieceIndex+2] == '\0' && board[pieceIndex + 3] == char.ToUpper('R'))
                     {
                         MarkMove(validMoves, board, pieceIndex + 2);
                     }
-                    if (board[pieceIndex - 1] == '\0' && board[pieceIndex - 2] == '\0' && board[pieceIndex - 3] == '\0')
+                    if (pieceIndex == 4 && board[pieceIndex - 1] == '\0' && board[pieceIndex - 2] == '\0' && board[pieceIndex - 3] == '\0' && board[pieceIndex - 4] == char.ToUpper('R'))
                     {
                         MarkMove(validMoves, board, pieceIndex -2);
                     }
@@ -819,6 +819,204 @@ public class MoveValidator : MonoBehaviour {
             if ((kingIndex - i) % 8 == 0)
             {
                 break;
+            }
+        }
+        int rowsThrough = 0;
+        //two up one left
+        for (int i = 0; i < 16; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if ((kingIndex + i) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 14 && kingIndex % 8 == 0)
+            {
+                rowsThrough = 1;
+            }
+            if (i == 15 && rowsThrough == 2 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex + i]) == 'N' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //two up one right
+        for (int i = 0; i < 18; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if ((kingIndex + i) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 17 && (kingIndex + 1) % 8 == 0)
+            {
+                rowsThrough = rowsThrough + 6;
+            }
+            else if (i == 17 && kingIndex % 8 == 0)
+            {
+                rowsThrough = 2;
+            }
+            if (i == 17 && rowsThrough == 2 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex + i]) == 'N' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //one up two left
+        for (int i = 0; i < 7; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 6 && rowsThrough == 1 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex + i]) == 'N' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //one up two right
+        for (int i = 0; i < 11; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if ((kingIndex + i + 1) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 10 && rowsThrough == 1 && (kingIndex + i) < board.Length && board[kingIndex + i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex + i]) == 'N' && char.IsUpper(board[kingIndex + i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex + i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //two down one right
+        for (int i = 0; i < 16; i++)
+        {
+            if ((kingIndex - i) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if (i==0 && (kingIndex+1) % 8 == 0)
+            {
+                rowsThrough--;
+            }
+            if (i == 15 && rowsThrough == 2 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex - i]) == 'N' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //two down one left
+        for (int i = 0; i < 18; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+            if (i == 17 && (kingIndex - i) % 8 == 0)
+            {
+                rowsThrough--;
+            }
+            if (i == 17 && rowsThrough == 2 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex - i]) == 'N' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    return true;
+                }
+                break;
+            }
+        }
+        //one down two right
+        for (int i = 0; i < 7; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            
+            if (i == 6 && rowsThrough == 1 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
+            {
+                if (kingIndex % 8 == 0)
+                {
+                    rowsThrough++;
+                }
+                if ((char.ToUpper(board[kingIndex - i]) == 'N' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    return true;
+                }
+                break;
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                rowsThrough++;
+            }
+        }
+        //one down two left
+        for (int i = 0; i < 11; i++)
+        {
+            if (i == 0)
+            {
+                rowsThrough = 0;
+            }
+            if (i == 9 && (kingIndex + 1) % 8 == 0)
+            {
+                rowsThrough = 1;
+            }
+            if (i == 10 && rowsThrough == 1 && (kingIndex - i) > -1 && board[kingIndex - i] != '\0')
+            {
+                if ((char.ToUpper(board[kingIndex - i]) == 'N' && char.IsUpper(board[kingIndex - i]) != char.IsUpper(board[kingIndex])))
+                {
+                    //Debug.Log("In Check from " + (kingIndex - i));
+                    return true;
+                }
+                break;
+            }
+            if ((kingIndex - i) % 8 == 0)
+            {
+                rowsThrough++;
             }
         }
         return false;
