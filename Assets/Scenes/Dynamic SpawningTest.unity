@@ -513,7 +513,7 @@ MonoBehaviour:
   playerTeam: 0
   playerOnlyTurns: 0
   aiTeam: 0
-  movesAheadToSimulate: 4
+  movesAheadToSimulate: 5
   limitThinkTime: 1
   maxThinkTime: 1
   usePositionalScore: 0
