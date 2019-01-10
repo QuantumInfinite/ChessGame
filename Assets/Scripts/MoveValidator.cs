@@ -24,7 +24,7 @@ public class MoveValidator : MonoBehaviour {
 
         isPlayer = char.IsUpper(board[pieceIndex]);
 
-        for (int i = 0; i < board.Length; i++)
+        /*for (int i = 0; i < board.Length; i++)
         {
             if (board[i] == 'K')
             {
@@ -34,7 +34,8 @@ public class MoveValidator : MonoBehaviour {
             {
                 blackKingIndex = i;
             }
-        }
+        }*/
+        FindKingIndexes(board);
         if (isPlayer == true)
         {
             InCheck(validMoves, board, whiteKingIndex);
@@ -476,7 +477,7 @@ public class MoveValidator : MonoBehaviour {
                 {
                     if (pieceIndex % 8 != 0)
                     {
-                        MarkMove(validMoves, board,pieceIndex - i);
+                        MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - i);
                         if ((pieceIndex - i) % 8 == 0)
                         {
                             break;
@@ -551,21 +552,21 @@ public class MoveValidator : MonoBehaviour {
                 //left movement
                 if (pieceIndex % 8 != 0)
                 {
-                    MarkMove(validMoves, board,pieceIndex - 1);
-                    MarkMove(validMoves, board,pieceIndex + 7);
-                    MarkMove(validMoves, board,pieceIndex - 9); 
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 1);
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 7);
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 9); 
                 }
                 //right movement
                 if ((pieceIndex + 1) % 8 != 0)
                 {
-                    MarkMoveCheck(validMoves, board,pieceIndex,pieceIndex + 1);
-                    MarkMove(validMoves, board,pieceIndex - 7);
-                    MarkMove(validMoves, board,pieceIndex + 9);
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 1);
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 7);
+                    MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex + 9);
                 }
                 //one space up
-                MarkMove(validMoves, board, pieceIndex + 8);
+                MarkMoveCheck(validMoves, board, pieceIndex, pieceIndex + 8);
                 //one space down
-                MarkMove(validMoves, board,pieceIndex - 8);
+                MarkMoveCheck(validMoves, board,pieceIndex, pieceIndex - 8);
                 if (BoardManager.Instance.InitialBoard[pieceIndex] == board[pieceIndex])
                 {
                     if (pieceIndex == 4 && board[pieceIndex + 1] == '\0' && board[pieceIndex+2] == '\0' && board[pieceIndex + 3] == char.ToUpper('R'))
@@ -614,6 +615,7 @@ public class MoveValidator : MonoBehaviour {
             tempHolder = board[fromPosition];
             board[fromPosition] = board[toPosition];
             board[toPosition] = tempHolder;
+            FindKingIndexes(board);
             if (isPlayer == true)
             {
                 if (InCheck(validMoves, board, whiteKingIndex) == false)
@@ -655,6 +657,7 @@ public class MoveValidator : MonoBehaviour {
                     }
                 }
             }
+            FindKingIndexes(board);
         }
     }
 
@@ -1029,5 +1032,20 @@ public class MoveValidator : MonoBehaviour {
             }
         }
         return false;
+    }
+
+    private static void FindKingIndexes(char[] board)
+    {
+        for (int i = 0; i < board.Length; i++)
+        {
+            if (board[i] == 'K')
+            {
+                whiteKingIndex = i;
+            }
+            else if (board[i] == 'k')
+            {
+                blackKingIndex = i;
+            }
+        }
     }
 }
