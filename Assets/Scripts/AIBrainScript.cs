@@ -63,17 +63,20 @@ public class AIBrainScript : MonoBehaviour
 
         if (GameManager.Instance.limitThinkTime)
         {
-            int index = 0;
-            while (Time.realtimeSinceStartup - thinkStartTime < 0.95f * GameManager.Instance.maxThinkTime && index <= maxThinkDepth)
-            {
-                rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, index, true, float.MinValue, float.MaxValue);
-                index++;
-            }
-            DEBUG_OutputPaths("Iterative timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, index - 1);
+            //int index = 0;
+            //while (Time.realtimeSinceStartup - thinkStartTime < 0.95f * GameManager.Instance.maxThinkTime && index <= maxThinkDepth)
+            //{
+            //    rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, index, true, float.MinValue, float.MaxValue);
+                
+            //    index++;
+            //}
 
-            thinkStartTime = Time.realtimeSinceStartup;
-            List<Move> timedMoves = AlphaBetaPruneTimed(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
-            DEBUG_OutputPaths("regular timed Alpha-Beta", timedMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
+
+            //DEBUG_OutputPaths("Iterative timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, index - 1);
+
+            //thinkStartTime = Time.realtimeSinceStartup;
+            rootMoves = AlphaBetaPruneTimed(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
+            DEBUG_OutputPaths("regular timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
         }
         else
         {
@@ -126,7 +129,7 @@ public class AIBrainScript : MonoBehaviour
 
         return Prioritize(children, AiTurn);
     }
-
+    
     List<Move> AlphaBetaPruneTimed(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
@@ -292,6 +295,7 @@ internal class Move
     public int to;
 
     public Move nextMove;
+    public Move prevMove;
     //public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo) : this(oldBoard, pieceToMove, squareToMoveTo, null) { }
 
     public Move(char[] oldBoard, int pieceToMove, int squareToMoveTo)
