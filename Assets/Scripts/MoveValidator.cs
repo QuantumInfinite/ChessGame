@@ -558,7 +558,7 @@ public class MoveValidator : MonoBehaviour {
                 //right movement
                 if ((pieceIndex + 1) % 8 != 0)
                 {
-                    MarkMove(validMoves, board,pieceIndex + 1);
+                    MarkMoveCheck(validMoves, board,pieceIndex,pieceIndex + 1);
                     MarkMove(validMoves, board,pieceIndex - 7);
                     MarkMove(validMoves, board,pieceIndex + 9);
                 }
@@ -628,6 +628,10 @@ public class MoveValidator : MonoBehaviour {
                     tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
                     board[toPosition] = tempHolder;
+                    if (board[toPosition] != '\0')
+                    {
+                        canPlace = false;
+                    }
                 }
             }
             else
@@ -640,10 +644,15 @@ public class MoveValidator : MonoBehaviour {
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
+
                 {
                     tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
                     board[toPosition] = tempHolder;
+                    if (board[toPosition] != '\0')
+                    {
+                        canPlace = false;
+                    }
                 }
             }
         }
