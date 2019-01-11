@@ -614,19 +614,22 @@ public class MoveValidator : MonoBehaviour {
     {
         if (toPosition < board.Length && toPosition > -1)
         {
-            char[] tempBoard = board;
-            board = MovePiece(board, fromPosition, toPosition);
+            /*char tempHolder;
+            tempHolder = board[fromPosition];
+            board[fromPosition] = board[toPosition];
+            board[toPosition] = tempHolder;*/
+            board = SwapPieces(board, fromPosition, toPosition);
             FindKingIndexes(board);
             if (isPlayer == true)
             {
                 if (InCheck(board, whiteKingIndex) == false)
                 {
-                    board = tempBoard;
+                    board = SwapPieces(board, fromPosition, toPosition);
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
                 {
-                    board = tempBoard;
+                    board = SwapPieces(board, fromPosition, toPosition);
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -637,13 +640,13 @@ public class MoveValidator : MonoBehaviour {
             {
                 if (InCheck( board, blackKingIndex) == false)
                 {
-                    board = tempBoard;
+                    board = SwapPieces(board, fromPosition, toPosition);
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
 
                 {
-                    board = tempBoard;
+                    board = SwapPieces(board, fromPosition, toPosition);
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -1039,13 +1042,13 @@ public class MoveValidator : MonoBehaviour {
         return result;
     }
 
-    private static char[] MovePiece(char[]board, int toPosition, int fromPosition)
+    private static char[] SwapPieces(char[]board, int toPosition, int fromPosition)
     {
         char[] tb = board;
         char tempHolder;
         tempHolder = tb[fromPosition];
         tb[fromPosition] = tb[toPosition];
-        tb[toPosition] = '\0';
+        tb[toPosition] = tempHolder;
         return tb;
     }
 }
