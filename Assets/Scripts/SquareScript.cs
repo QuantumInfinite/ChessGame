@@ -19,12 +19,18 @@ public class SquareScript : MonoBehaviour
     [ReadOnly]
     PieceScript linkedPiece;
 
+    /// <summary>
+    /// Gets the piece linked to the script
+    /// </summary>
     public PieceScript LinkedPiece {
         get {
             return linkedPiece;
         }
     }
 
+    /// <summary>
+    /// Runs once before Start
+    /// </summary>
     void Awake()
     {
         rend = GetComponent<Renderer>();
@@ -32,6 +38,9 @@ public class SquareScript : MonoBehaviour
         position = transform.position;
     }
 
+    /// <summary>
+    /// Runs once when the game begins
+    /// </summary>
     private void Start()
     {
         if (!GameManager.Instance.useStringForBoardInput && spawnPieceAtStart)
@@ -40,11 +49,20 @@ public class SquareScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Links a square to a piece
+    /// </summary>
+    /// <param name="piece"> the piece to link to the square </param>
     public void SetPiece(PieceScript piece)
     {
         linkedPiece = piece;
     }
 
+    /// <summary>
+    /// Spawn a piece and put it on the square
+    /// </summary>
+    /// <param name="type"> which type of piece should be spawned </param>
+    /// <param name="team"> which team the spawned piece should be on </param>
     public void SpawnPiece(PieceScript.Type type, PieceScript.Team team)
     {
         GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
@@ -57,11 +75,18 @@ public class SquareScript : MonoBehaviour
         BoardManager.Instance.RegisterPiece(linkedPiece);
     }
 
+    /// <summary>
+    /// Sets the material of the square
+    /// </summary>
+    /// <param name="mat"> the material to set to the square </param>
     public void SetMaterial(Material mat)
     {
         rend.material = mat;
     }
 
+    /// <summary>
+    /// Resets the material of the board to its default
+    /// </summary>
     public void ResetMaterial()
     {
         rend.material = baseMaterial;

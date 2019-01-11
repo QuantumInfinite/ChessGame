@@ -32,24 +32,6 @@ public class PlayerScript : MonoBehaviour
                     DropPiece();
                 }
             }
-            //Remove this after debugging
-            if (!heldPiece && Input.GetAxis("Fire2") != 0)
-            {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out hit) && hit.transform.tag == "chessPiece")
-                {
-                    ClearValidMoves();
-                    List<int> moves = MoveValidator.FindValidMoves(BoardManager.PositionToBoardIndex(hit.transform.position), BoardManager.BoardToCharArray(board));
-                    for (int i = 0; i < moves.Count; i++)
-                    {
-                        validMoves.Add(board[moves[i]]);
-                    }
-                    ApplyHighlight();
-                }
-            }
-            //END REMOVE
         }
     }
 

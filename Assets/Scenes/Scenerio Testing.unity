@@ -396,7 +396,7 @@ MonoBehaviour:
   playerTeam: 0
   playerOnlyTurns: 0
   aiTeam: 0
-  movesAheadToSimulate: 3
+  movesAheadToSimulate: 4
   limitThinkTime: 0
   maxThinkTime: 1
   usePositionalScore: 0
@@ -721,7 +721,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 5
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -1408,8 +1408,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 5
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &305067788
@@ -4091,9 +4091,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 5
-  startingPieceTeam: 0
+  spawnPieceAtStart: 1
+  startingPieceType: 0
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1273185651
 GameObject:
@@ -4585,7 +4585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -4789,7 +4789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 3
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -6049,7 +6049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 1
-  startingPieceType: 0
+  startingPieceType: 4
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1884753844
@@ -6558,7 +6558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}

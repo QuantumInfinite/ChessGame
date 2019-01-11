@@ -11,6 +11,12 @@ public class MoveValidator : MonoBehaviour
     private static int blackKingIndex;
     private static bool isPlayer;
 
+    /// <summary>
+    /// Finds each of the valid moves for a held piece
+    /// </summary>
+    /// <param name="pieceIndex"> the piece to find the held moves for </param>
+    /// <param name="board"> the board to find the moves on </param>
+    /// <returns> the list of valid moves the player can make with that piece </returns>
     public static List<int> FindValidMoves(int pieceIndex, char[] board)
     {
         if (pieceIndex >= board.Length)
@@ -26,14 +32,6 @@ public class MoveValidator : MonoBehaviour
         isPlayer = char.IsUpper(board[pieceIndex]);
 
         FindKingIndexes(board);
-        //if (isPlayer == true)
-        //{
-        //    InCheck(board, whiteKingIndex);
-        //}
-        //else
-        //{
-        //    InCheck(board, blackKingIndex);
-        //}
 
         switch (char.ToUpper(board[pieceIndex]))
         {
@@ -588,6 +586,13 @@ public class MoveValidator : MonoBehaviour
         return validMoves;
     }
 
+    /// <summary>
+    /// Adds a move to the valid move list
+    /// </summary>
+    /// <param name="validMoves"> the list of valid moves </param>
+    /// <param name="board"> the board to find the moves on </param>
+    /// <param name="index"> the index of the piece to add </param>
+    /// <returns> the list of moves with the move added </returns>
     private static List<int> MarkMove(List<int> validMoves, char[] board, int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(index))
@@ -612,6 +617,13 @@ public class MoveValidator : MonoBehaviour
         return validMoves;
     }
 
+    /// <summary>
+    /// Marks a move after checking to see if the resulting board is in check
+    /// </summary>
+    /// <param name="validMoves"> the list of valid moves the player can make </param>
+    /// <param name="board"> the board to find the moves on </param>
+    /// <param name="fromPosition"> the position the piece is moving from </param>
+    /// <param name="toPosition"> the position the piece is moving to </param>
     private static void MarkMoveCheck(List<int> validMoves, char[] board, int fromPosition, int toPosition)
     {
         if (toPosition < board.Length && toPosition > -1)
@@ -670,6 +682,13 @@ public class MoveValidator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes a move from the list of valid moves
+    /// </summary>
+    /// <param name="validMoves"> the list of valid moves the player can make </param>
+    /// <param name="board"> the board to find the moves on </param>
+    /// <param name="index"> the index of the move to be removed </param>
+    /// <returns> the list without the move to be removed </returns>
     private static List<int> UnmarkMove(List<int> validMoves, char[] board, int index)
     {
         if (index >= 0 && index < board.Length)
@@ -679,6 +698,12 @@ public class MoveValidator : MonoBehaviour
         return validMoves;
     }
 
+    /// <summary>
+    /// Determines if the board is in check
+    /// </summary>
+    /// <param name="board"> the board to find check on </param>
+    /// <param name="kingIndex"> the location of the king to determine check on </param>
+    /// <returns> if the board is in check or not </returns>
     private static bool InCheck(char[] board, int kingIndex)
     {
         //check for attacking pawns
@@ -1024,6 +1049,10 @@ public class MoveValidator : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Finds the location of the two kings
+    /// </summary>
+    /// <param name="board"> the board to find the kings on</param>
     private static void FindKingIndexes(char[] board)
     {
         for (int i = 0; i < board.Length; i++)
@@ -1039,6 +1068,13 @@ public class MoveValidator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines if two pieces are on the same team
+    /// </summary>
+    /// <param name="board"> the board that the pieces are on </param>
+    /// <param name="piece1"> the first piece to compare </param>
+    /// <param name="piece2"> the second piece to compare </param>
+    /// <returns> if the two pieces are on the same team or not </returns>
     private static bool IsOtherTeam(char[] board, int piece1, int piece2)
     {
         bool result;

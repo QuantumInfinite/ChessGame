@@ -24,7 +24,12 @@ public class Move
         }
     }
 
-
+    /// <summary>
+    /// Moves a piece to another place on the board
+    /// </summary>
+    /// <param name="oldBoard"> the board before the piece is moved </param>
+    /// <param name="pieceToMove"> the piece to be moved on the board </param>
+    /// <param name="squareToMoveTo"> yhe square to move the piece to </param>
     public Move(char[] oldBoard, int pieceToMove, int squareToMoveTo)
     {
         from = pieceToMove;
