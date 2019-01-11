@@ -197,7 +197,6 @@ public class AIBrainScript : MonoBehaviour
     /// <summary>
     /// Sorts the given list max to min if maximise, min to max if !maximise
     /// Sort function ensures that the moves are in the correct order.
-    /// (x.from + x.to) / 100 just adds a small amount to each to help with ordering
     /// </summary>
     /// <param name="list"></param>
     /// <param name="maximise"></param>

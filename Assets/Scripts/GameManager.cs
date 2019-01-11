@@ -72,9 +72,13 @@ public class GameManager : MonoBehaviour
     public BoardMaterials boardMaterials;
     public PieceMaterials pieceMaterials;
     public GameObject basePiecePrefab;
+
+    [Header("Menus")]
     public GameObject MainMenu;
     public InputField inputField;
     public Text winOutput;
+    public Text timerInput;
+    public Text plyInput;
 
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
@@ -156,6 +160,19 @@ public class GameManager : MonoBehaviour
         if (useStringForBoardInput && inputField.text.Length == 127)
         {
             inputString = inputField.text;
+        }
+        if (int.Parse(timerInput.text) >= 1)
+        {
+            limitThinkTime = true;
+            maxThinkTime = int.Parse(timerInput.text);
+        }
+        else
+        {
+            limitThinkTime = false;
+        }
+        if(int.Parse(plyInput.text) > 0)
+        {
+            movesAheadToSimulate = int.Parse(plyInput.text);
         }
         ApplyInput();
         MainMenu.SetActive(false);
