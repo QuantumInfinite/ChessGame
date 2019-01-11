@@ -9,7 +9,7 @@ public class PlayerScript : MonoBehaviour
     PieceScript heldPiece;
 
     SquareScript[] board;
-
+    bool checkedIfCheckmateThisTurn;
     private void Start()
     {
         board = BoardManager.Instance.board;
@@ -17,8 +17,30 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.Instance.ReadyToPlay)
+        {
+            return;
+        }
         if (TurnManager.Instance.IsPlayerTurn() || GameManager.Instance.playerOnlyTurns)
         {
+            if (!checkedIfCheckmateThisTurn )
+            {
+                int kingIndex = -1;
+                for (int i  = 0; i  < BoardManager.Instance.boardChars.Length; i ++)
+                {
+                    if (BoardManager.Instance.boardChars[i] == 'K')
+                    {
+                        kingIndex = i;
+                    }
+                }
+                List<Move> moves = AIBrainScript.GenerateNextMoves(BoardManager.Instance.boardChars, false);
+                if (moves.Count == 0)
+                {
+                    GameManager.Instance.AIWin();
+                }
+                
+                checkedIfCheckmateThisTurn = true;
+            }
             if (!heldPiece && Input.GetAxis("Fire1") != 0)
             {
                 TryPickup();
@@ -32,6 +54,10 @@ public class PlayerScript : MonoBehaviour
                     DropPiece();
                 }
             }
+        }
+        if (checkedIfCheckmateThisTurn)
+        {
+            checkedIfCheckmateThisTurn = false;
         }
     }
 

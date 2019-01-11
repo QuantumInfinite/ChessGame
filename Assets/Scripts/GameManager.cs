@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
     public GameObject basePiecePrefab;
     public GameObject MainMenu;
     public InputField inputField;
+    public Text winOutput;
 
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
@@ -84,6 +86,8 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public PieceScript.Team aiTeam;
+    [HideInInspector]
+    public bool ReadyToPlay;
 
     [Header("AI Settings")]
     public int movesAheadToSimulate = 0;
@@ -101,6 +105,17 @@ public class GameManager : MonoBehaviour
     //Static Functions
 
     //Public Functions
+    public void AILose()
+    {
+        winOutput.gameObject.transform.parent.gameObject.SetActive(true);
+        winOutput.text = "Player Has Won";
+    }
+    public void AIWin()
+    {
+        winOutput.gameObject.transform.parent.gameObject.SetActive(true);
+        winOutput.text = "AI Has Won";
+    }
+
     public static void Output(string s)
     {
         output.text += TurnManager.Instance.CurrentTurn() + s + "\n";
@@ -144,6 +159,18 @@ public class GameManager : MonoBehaviour
         }
         ApplyInput();
         MainMenu.SetActive(false);
+        ReadyToPlay = true;
+    }
+
+    public void End()
+    {
+        Application.Quit();
+        #if UNITY_EDITOR
+        if (EditorApplication.isPlaying)
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        #endif
     }
     //Private functions
 
@@ -154,6 +181,7 @@ public class GameManager : MonoBehaviour
         output.text = "";
         MainMenu.SetActive(true);
         inputField.gameObject.SetActive(useStringForBoardInput);
+        winOutput.gameObject.transform.parent.gameObject.SetActive(false);
     }
 
 

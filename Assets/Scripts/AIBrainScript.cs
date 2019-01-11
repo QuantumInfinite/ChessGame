@@ -31,6 +31,10 @@ public class AIBrainScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.Instance.ReadyToPlay)
+        {
+            return;
+        }
         if (!TurnManager.Instance.IsPlayerTurn())
         {
             if (thinkingStage == ThinkingStage.Not)
@@ -49,32 +53,12 @@ public class AIBrainScript : MonoBehaviour
     void Think()
     {
         thinkingStage = ThinkingStage.Thinking;
-        //MiniMax
-
-        //float start = Time.realtimeSinceStartup;
-        //char[] currentBoard = BoardManager.Instance.boardChars;
-
-        //List<Move_alt> movesQueue = MiniMax(currentBoard, 0, true);
-        //OutputPaths("MiniMax", movesQueue, Time.realtimeSinceStartup - start);
-        //rootMoves = Prioritize(movesQueue, true);
 
         //AlphaBeta
         thinkStartTime = Time.realtimeSinceStartup;
 
         if (GameManager.Instance.limitThinkTime)
         {
-            //int index = 0;
-            //while (Time.realtimeSinceStartup - thinkStartTime < 0.95f * GameManager.Instance.maxThinkTime && index <= maxThinkDepth)
-            //{
-            //    rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, index, true, float.MinValue, float.MaxValue);
-
-            //    index++;
-            //}
-
-
-            //DEBUG_OutputPaths("Iterative timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, index - 1);
-
-            //thinkStartTime = Time.realtimeSinceStartup;
             rootMoves = AlphaBetaPruneTimed(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
             DEBUG_OutputPaths("Timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
         }
@@ -83,9 +67,6 @@ public class AIBrainScript : MonoBehaviour
             rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
             DEBUG_OutputPaths("Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
         }
-
-
-
 
         thinkingStage = ThinkingStage.Done;
     }
@@ -169,7 +150,7 @@ public class AIBrainScript : MonoBehaviour
         return Prioritize(children, AiTurn);
     }
 
-    List<Move> GenerateNextMoves(char[] currentBoard, bool AiTurn)
+    public static List<Move> GenerateNextMoves(char[] currentBoard, bool AiTurn)
     {
         List<Move> movesQueue = new List<Move>();
 
@@ -206,7 +187,7 @@ public class AIBrainScript : MonoBehaviour
             }
             else
             {
-                Debug.LogAssertion("AI has no valid moves");
+                GameManager.Instance.AILose();
             }
             thinkingStage = ThinkingStage.Not;
 
@@ -221,7 +202,7 @@ public class AIBrainScript : MonoBehaviour
     /// <param name="list"></param>
     /// <param name="maximise"></param>
     /// <returns></returns>
-    List<Move> Prioritize(List<Move> list, bool maximise)
+    static List<Move> Prioritize(List<Move> list, bool maximise)
     {
         if (maximise)
         {
