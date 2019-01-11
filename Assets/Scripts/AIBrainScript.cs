@@ -70,7 +70,15 @@ public class AIBrainScript : MonoBehaviour
 
         thinkingStage = ThinkingStage.Done;
     }
-
+    /// <summary>
+    /// Runs the alpha-beta prune algorthm on the supplied board
+    /// </summary>
+    /// <param name="currentBoard">board to analyise</param>
+    /// <param name="depth">The number of depths left before a root node</param>
+    /// <param name="AiTurn">Whether it is currently the AI turn (maximizing) or player turn (Minimizing)</param>
+    /// <param name="alpha">current alpha value</param>
+    /// <param name="beta">current beta value</param>
+    /// <returns>sorted list of moves available at the current depth</returns>
     List<Move> AlphaBetaPrune(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
@@ -110,7 +118,9 @@ public class AIBrainScript : MonoBehaviour
 
         return Prioritize(children, AiTurn);
     }
-
+    /// <summary>
+    /// A timed version of the above algorthm
+    /// </summary>
     List<Move> AlphaBetaPruneTimed(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
@@ -149,7 +159,12 @@ public class AIBrainScript : MonoBehaviour
 
         return Prioritize(children, AiTurn);
     }
-
+    /// <summary>
+    /// Generates the next possible moves on the current board. There is no depth or ply to these moves
+    /// </summary>
+    /// <param name="currentBoard">board to analize</param>
+    /// <param name="AiTurn">Whether it is the AI's turn or the players</param>
+    /// <returns>A list of moves which are possible this turn</returns>
     public static List<Move> GenerateNextMoves(char[] currentBoard, bool AiTurn)
     {
         List<Move> movesQueue = new List<Move>();
@@ -176,7 +191,10 @@ public class AIBrainScript : MonoBehaviour
         }
         return movesQueue = Prioritize(movesQueue, AiTurn);
     }
-
+    /// <summary>
+    /// Makes the best move in the queue
+    /// </summary>
+    /// <param name="movesQueue">queue of moves</param>
     void Act(List<Move> movesQueue)
     {
         if (thinkingStage == ThinkingStage.Done)
