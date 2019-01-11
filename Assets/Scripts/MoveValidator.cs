@@ -614,28 +614,19 @@ public class MoveValidator : MonoBehaviour {
     {
         if (toPosition < board.Length && toPosition > -1)
         {
-            /*char tempHolder;
-            tempHolder = board[fromPosition];
-            board[fromPosition] = board[toPosition];
-            board[toPosition] = tempHolder;*/
-            board = SwapPieces(board, fromPosition, toPosition);
+            char[] tempBoard = board;
+            board = MovePiece(board, fromPosition, toPosition);
             FindKingIndexes(board);
             if (isPlayer == true)
             {
                 if (InCheck(board, whiteKingIndex) == false)
                 {
-                    /*tempHolder = board[fromPosition];
-                    board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;*/
-                    board = SwapPieces(board, fromPosition, toPosition);
+                    board = tempBoard;
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
                 {
-                    /*tempHolder = board[fromPosition];
-                    board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;*/
-                    board = SwapPieces(board, fromPosition, toPosition);
+                    board = tempBoard;
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -646,19 +637,13 @@ public class MoveValidator : MonoBehaviour {
             {
                 if (InCheck( board, blackKingIndex) == false)
                 {
-                    /*tempHolder = board[fromPosition];
-                    board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;*/
-                    board = SwapPieces(board, fromPosition, toPosition);
+                    board = tempBoard;
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
 
                 {
-                    /*tempHolder = board[fromPosition];
-                    board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;*/
-                    board = SwapPieces(board, fromPosition, toPosition);
+                    board = tempBoard;
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -1054,13 +1039,13 @@ public class MoveValidator : MonoBehaviour {
         return result;
     }
 
-    private static char[] SwapPieces(char[]board, int toPosition, int fromPosition)
+    private static char[] MovePiece(char[]board, int toPosition, int fromPosition)
     {
         char[] tb = board;
         char tempHolder;
         tempHolder = tb[fromPosition];
         tb[fromPosition] = tb[toPosition];
-        tb[toPosition] = tempHolder;
+        tb[toPosition] = '\0';
         return tb;
     }
 }
