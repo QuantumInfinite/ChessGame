@@ -21,18 +21,22 @@ public class TurnManager : MonoBehaviour {
         return GameManager.Instance.playerTeam == currentTurn;
     }
 
+    public string CurrentTurn() {
+        if (IsPlayerTurn())
+        {
+            return "Player: ";
+        }
+        else
+        {
+            return "A.I.:     ";
+        }
+
+    }
     public void EndTurn()
     {
         turnCounter++;
         currentTurn = (currentTurn == PieceScript.Team.White) ? PieceScript.Team.Black : PieceScript.Team.White;
     }
-    /*
-    public void MakeMove(int fromIndex, int toIndex)
-    {
-
-        EndTurn();
-    }
-    */
     private void Awake()
     {
         if (instance == null)

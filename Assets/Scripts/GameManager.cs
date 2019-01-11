@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text.RegularExpressions;
+using System.Linq;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     private static GameManager instance;
@@ -67,10 +70,16 @@ public class GameManager : MonoBehaviour {
     public BoardMaterials boardMaterials;
     public PieceMaterials pieceMaterials;
     public GameObject basePiecePrefab;
+    public GameObject MainMenu;
+    public InputField inputField;
 
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
     public bool playerOnlyTurns = false;
+    public bool inputBoard = true;
+    [ConditionalHide("inputBoard", true)]
+    public string input = "";
+
 
     [HideInInspector]
     public PieceScript.Team aiTeam;
@@ -84,7 +93,7 @@ public class GameManager : MonoBehaviour {
 
     public bool usePositionalScore = false;
 
-    [Header("Stuff ill move at some point")]
+    [Header("Output")]
     public TextMesh outputBox;
     static TextMesh output;
 
@@ -93,9 +102,45 @@ public class GameManager : MonoBehaviour {
     //Public Functions
     public static void Output(string s)
     {
-        output.text += s + "\n";
+        output.text += TurnManager.Instance.CurrentTurn() +  s + "\n";
     }
+    public void ApplyInput()
+    {
+        if (inputBoard && input.Length != 0)
+        {
+            List<char> chars = new List<char>();
 
+            List<string> inputParse = input.Split(',').ToList();
+
+            inputParse.RemoveAll(x => x == ",");
+
+            List<char> inputAsChars = inputParse.SelectMany(item => item.ToCharArray()).ToList();
+
+            Regex rx = new Regex("[kqnbrpKQNBRP]");
+            foreach (char c in inputAsChars)
+            {
+                if (rx.IsMatch(c.ToString()))
+                {
+                    chars.Add(c);
+                }
+                else
+                {
+                    chars.Add('\0');
+                }
+            }
+            if (chars.Count == BoardManager.Instance.boardChars.Length)
+            {
+                BoardManager.Instance.OverrideBoard(chars.ToArray());
+            }
+
+        }
+    }
+    public void Begin()
+    {
+        MainMenu.SetActive(false);
+        string basic = "R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r";
+        print(inputField.text);
+    }
     //Private functions
 
     //Keyword functions
@@ -103,7 +148,10 @@ public class GameManager : MonoBehaviour {
     {
         output = outputBox;
         output.text = "";
+        
     }
+
+
     private void Awake()
     {
         if (instance == null)

@@ -16,6 +16,7 @@ public class Move
     public Move nextMove;
 
     public int enpassentIndex = -1;
+    public PieceScript.Type promotionType = PieceScript.Type.Pawn;
     
     public char movedPiece {
         get {
@@ -31,8 +32,6 @@ public class Move
         
         newBoard = new char[oldBoard.Length];
 
-
-        
 
         for (int i = 0; i < newBoard.Length; i++)
         {
@@ -65,9 +64,25 @@ public class Move
             }
         }
 
+        //Promotion Check
+        if ((char.ToUpper(movedPiece) == 'P') && (to > 55 || to < 8))
+        {
+            //Promoted
+            if (TurnManager.Instance.IsPlayerTurn())
+            {
+                //Prompt player for which piece they want
+            }
+            else
+            {
+                //Choose queen, as statistcally it is the best choice
+                newBoard[to] = (GameManager.Instance.playerTeam == PieceScript.Team.White) ? 'q' : 'Q';
+                promotionType = PieceScript.Type.Queen;
+            }
+        }
 
         //Remove old piece
         newBoard[pieceToMove] = '\0';
+
 
         //Set Self Fitness
         self_fitness = FitnessEvaluator.Evaluate(newBoard);

@@ -145,18 +145,34 @@ public class BoardManager : MonoBehaviour
 
             //Physical
             board[move.from].LinkedPiece.MoveToSquare(board[move.to]);
-
-            if (move.enpassentIndex >= 0)
+                //en-passant
+            if (move.enpassentIndex >= 0 && board[move.enpassentIndex].LinkedPiece != null)
             {
                 RemovePiece(board[move.enpassentIndex].LinkedPiece);
             }
+                //Promotion
+            if(move.promotionType != PieceScript.Type.Pawn && (move.to > 55 || move.to < 8))
+            {
+                RemovePiece(board[move.to].LinkedPiece);
+                if (char.IsUpper(move.movedPiece))
+                {
+                    board[move.to].SpawnPiece(move.promotionType, GameManager.Instance.playerTeam);
+                }
+                else
+                {
+                    board[move.to].SpawnPiece(move.promotionType, GameManager.Instance.aiTeam);
+                }
 
-            //Virtual
-            boardChars[move.to] = boardChars[move.from];
-            boardChars[move.from] = '\0';
-
-            
-
+                //Virtual
+                boardChars[move.to] = BoardManager.GetCharFromPieceScript(board[move.to].LinkedPiece);
+                boardChars[move.from] = '\0';
+            }
+            else
+            {
+                //Virtual
+                boardChars[move.to] = boardChars[move.from];
+                boardChars[move.from] = '\0';
+            }
             TurnManager.Instance.EndTurn();
         }
         else
@@ -171,10 +187,10 @@ public class BoardManager : MonoBehaviour
         string output = "";
         bool isPawn = false || char.ToUpper(move.movedPiece) == 'P';
 
-        //is not pawn
-        if (!isPawn)
+        //is not pawn and promotion is not happening
+        if (!isPawn && move.promotionType == PieceScript.Type.Pawn)
         {
-            output += PieceTypeToCharacter(board[move.from].LinkedPiece);
+            output += GetCharFromPieceScript(board[move.from].LinkedPiece);
         }
 
         //capture
@@ -195,6 +211,12 @@ public class BoardManager : MonoBehaviour
         if (move.enpassentIndex >= 0)
         {
             output += "e.p.";
+        }
+
+        //Promotion
+        if (move.promotionType != PieceScript.Type.Pawn)
+        {
+            output +=move.newBoard[move.to];
         }
 
 
@@ -249,12 +271,28 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    //Public static Functions
-
-    public static bool EnPassantCheck(char[] currentBoard, int index1, int index2)
+    public void OverrideBoard(char[] newBoard)
     {
-        return false;
+        for (int i = 0; i < Instance.boardChars.Length; i++)
+        {
+            Instance.boardChars[i] = newBoard[i];
+            if(newBoard[i] != '\0')
+            {
+                if (char.IsUpper(newBoard[i]))
+                {
+                    Instance.board[i].SpawnPiece(GetPiecetypeFromChar(newBoard[i]), GameManager.Instance.playerTeam);
+                }
+                else
+                {
+                    Instance.board[i].SpawnPiece(GetPiecetypeFromChar(newBoard[i]), GameManager.Instance.aiTeam);
+                }
+            }
+        }
+
     }
+
+    //Public static Functions
+    
 
     public static int PositionToBoardIndex(Vector2 position)
     {
@@ -279,7 +317,7 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                newB[i] = PieceTypeToCharacter(b[i].LinkedPiece);
+                newB[i] = GetCharFromPieceScript(b[i].LinkedPiece);
                 if (b[i].LinkedPiece.team == GameManager.Instance.playerTeam)
                 {
                     newB[i] = char.ToUpper(newB[i]);
@@ -289,7 +327,7 @@ public class BoardManager : MonoBehaviour
         return newB;
     }
 
-    public static PieceScript.Type CharacterToPieceType(char c)
+    public static PieceScript.Type GetPiecetypeFromChar(char c)
     {
         switch (char.ToUpper(c))
         {
@@ -309,7 +347,7 @@ public class BoardManager : MonoBehaviour
         return PieceScript.Type.BLOCK;
     }
 
-    public static char PieceTypeToCharacter(PieceScript piece)
+    public static char GetCharFromPieceScript(PieceScript piece)
     {
         char t = '\0';
         switch (piece.type)
@@ -339,6 +377,9 @@ public class BoardManager : MonoBehaviour
 
         return (piece.team == GameManager.Instance.playerTeam) ? char.ToUpper(t) : char.ToLower(t);
     }
+
+
+
     private void Awake()
     {
         if (instance == null)

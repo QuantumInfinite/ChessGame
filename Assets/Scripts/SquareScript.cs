@@ -32,16 +32,9 @@ public class SquareScript : MonoBehaviour {
 
     private void Start()
     {
-        if (spawnPieceAtStart)
+        if (!GameManager.Instance.inputBoard && spawnPieceAtStart)
         {
-            GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
-            linkedPiece = startingPiece.GetComponent<PieceScript>();
-            linkedPiece.SetSquare(this);
-            linkedPiece.name = (startingPieceTeam + " " + startingPieceType);
-            linkedPiece.type = startingPieceType;
-            linkedPiece.team = startingPieceTeam;
-            linkedPiece.SetMaterial(startingPieceType, startingPieceTeam);
-            BoardManager.Instance.RegisterPiece(linkedPiece);
+            SpawnPiece(startingPieceType, startingPieceTeam);
         }
     }
 
@@ -50,6 +43,17 @@ public class SquareScript : MonoBehaviour {
         linkedPiece = piece;
     }
     
+    public void SpawnPiece(PieceScript.Type type, PieceScript.Team team)
+    {
+        GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
+        linkedPiece = startingPiece.GetComponent<PieceScript>();
+        linkedPiece.SetSquare(this);
+        linkedPiece.name = (team + " " + type);
+        linkedPiece.type = type;
+        linkedPiece.team = team;
+        linkedPiece.SetMaterial(type, team);
+        BoardManager.Instance.RegisterPiece(linkedPiece);
+    }
 	
 	public void SetMaterial(Material mat)
     {
