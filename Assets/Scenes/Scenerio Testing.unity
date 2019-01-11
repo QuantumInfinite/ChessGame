@@ -3070,9 +3070,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 3
-  startingPieceTeam: 1
+  spawnPieceAtStart: 1
+  startingPieceType: 2
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &895665599
 GameObject:
@@ -3988,7 +3988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 2
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
