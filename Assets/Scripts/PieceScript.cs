@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PieceScript : MonoBehaviour {
+public class PieceScript : MonoBehaviour
+{
 
     public enum Type
     {
@@ -18,12 +19,13 @@ public class PieceScript : MonoBehaviour {
 
     public enum Team
     {
-        White, 
+        White,
         Black
     }
     public Team team;
 
-    [SerializeField][ReadOnly]
+    [SerializeField]
+    [ReadOnly]
     SquareScript linkedSquare;
 
     public SquareScript LinkedSquare {
@@ -33,7 +35,7 @@ public class PieceScript : MonoBehaviour {
     }
 
     private bool isVulnerable = false;
-    public bool IsVulnerable  {
+    public bool IsVulnerable {
         get {
             return isVulnerable;
         }
@@ -98,8 +100,9 @@ public class PieceScript : MonoBehaviour {
             square.SetPiece(this);
         }
     }
-    
-    public bool HasMoved() {
+
+    public bool HasMoved()
+    {
         return moves != 0;
     }
 

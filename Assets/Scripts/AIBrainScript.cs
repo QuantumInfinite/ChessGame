@@ -67,7 +67,7 @@ public class AIBrainScript : MonoBehaviour
             //while (Time.realtimeSinceStartup - thinkStartTime < 0.95f * GameManager.Instance.maxThinkTime && index <= maxThinkDepth)
             //{
             //    rootMoves = AlphaBetaPrune(BoardManager.Instance.boardChars, index, true, float.MinValue, float.MaxValue);
-                
+
             //    index++;
             //}
 
@@ -89,16 +89,16 @@ public class AIBrainScript : MonoBehaviour
 
         thinkingStage = ThinkingStage.Done;
     }
-    
+
     List<Move> AlphaBetaPrune(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
-        
+
         if (depth <= 0)
         {
             return Prioritize(children, AiTurn);
-        }        
-        
+        }
+
         float bestVal = (AiTurn) ? float.MinValue : float.MaxValue;
 
         foreach (Move child in children)
@@ -125,11 +125,11 @@ public class AIBrainScript : MonoBehaviour
                     break;
                 }
             }
-        }        
+        }
 
         return Prioritize(children, AiTurn);
     }
-    
+
     List<Move> AlphaBetaPruneTimed(char[] currentBoard, int depth, bool AiTurn, float alpha, float beta)
     {
         List<Move> children = GenerateNextMoves(currentBoard, AiTurn);
@@ -187,11 +187,11 @@ public class AIBrainScript : MonoBehaviour
         foreach (int pieceIndex in myPieces)
         {
             List<int> possibleMoves = MoveValidator.FindValidMoves(pieceIndex, currentBoard);
-            
+
             foreach (int move in possibleMoves)
             {
                 movesQueue.Add(new Move(currentBoard, pieceIndex, move));
-            }            
+            }
         }
         return movesQueue = Prioritize(movesQueue, AiTurn);
     }
@@ -236,7 +236,7 @@ public class AIBrainScript : MonoBehaviour
         else
         {
             list.Sort(
-                (x,y) => (
+                (x, y) => (
                     x.pathFitness + x.self_fitness
                 ).CompareTo(
                     y.pathFitness + y.self_fitness

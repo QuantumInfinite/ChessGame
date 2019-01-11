@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class PlayerScript : MonoBehaviour {
-    
+public class PlayerScript : MonoBehaviour
+{
+
     List<SquareScript> validMoves = new List<SquareScript>();
 
     PieceScript heldPiece;
@@ -14,7 +15,7 @@ public class PlayerScript : MonoBehaviour {
         board = BoardManager.Instance.board;
     }
 
-    void Update ()
+    void Update()
     {
         if (TurnManager.Instance.IsPlayerTurn() || GameManager.Instance.playerOnlyTurns)
         {
@@ -50,7 +51,7 @@ public class PlayerScript : MonoBehaviour {
             }
             //END REMOVE
         }
-	}
+    }
 
     void DropPiece()
     {
@@ -112,7 +113,7 @@ public class PlayerScript : MonoBehaviour {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         heldPiece.transform.position = new Vector3(newPos.x, newPos.y, heldPiece.transform.position.z);
     }
-    
+
     void MarkMove(int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
@@ -134,7 +135,7 @@ public class PlayerScript : MonoBehaviour {
         foreach (SquareScript space in validMoves)
         {
             space.SetMaterial(GameManager.Instance.boardMaterials.highlight);
-        }        
+        }
     }
 
     void ClearValidMoves()

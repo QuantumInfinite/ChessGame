@@ -5,7 +5,8 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
     private static GameManager instance;
     public static GameManager Instance {
         get {
@@ -102,7 +103,7 @@ public class GameManager : MonoBehaviour {
     //Public Functions
     public static void Output(string s)
     {
-        output.text += TurnManager.Instance.CurrentTurn() +  s + "\n";
+        output.text += TurnManager.Instance.CurrentTurn() + s + "\n";
     }
     public void ApplyInput()
     {
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour {
     }
     public void Begin()
     {
-        if(useStringForBoardInput && inputField.text.Length == 127)
+        if (useStringForBoardInput && inputField.text.Length == 127)
         {
             inputString = inputField.text;
         }
@@ -171,6 +172,6 @@ public class GameManager : MonoBehaviour {
                 aiTeam = PieceScript.Team.White;
                 break;
         }
-        
+
     }
 }

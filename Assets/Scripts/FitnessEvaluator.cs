@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-public class FitnessEvaluator : MonoBehaviour {
+public class FitnessEvaluator : MonoBehaviour
+{
 
     public static float rawPieceValue = 1;
 
@@ -17,7 +18,7 @@ public class FitnessEvaluator : MonoBehaviour {
         {
             if (board[i] != '\0')
             {
-                score += GetValue(board[i]); 
+                score += GetValue(board[i]);
             }
         }
         return score;
@@ -49,9 +50,7 @@ public class FitnessEvaluator : MonoBehaviour {
         }
         return char.IsLower(piece) ? val : -val;
     }
-
-  
-
+        
     private void Awake()
     {
         pawn = pawnValue;

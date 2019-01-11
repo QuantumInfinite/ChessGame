@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour {
+public class TurnManager : MonoBehaviour
+{
     private static TurnManager instance;
     public static TurnManager Instance {
         get {
@@ -17,11 +18,13 @@ public class TurnManager : MonoBehaviour {
 
     int turnCounter;
 
-    public bool IsPlayerTurn() {
+    public bool IsPlayerTurn()
+    {
         return GameManager.Instance.playerTeam == currentTurn;
     }
 
-    public string CurrentTurn() {
+    public string CurrentTurn()
+    {
         if (IsPlayerTurn())
         {
             return "Player: ";

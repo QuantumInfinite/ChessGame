@@ -61,7 +61,7 @@ public class BoardManager : MonoBehaviour
             {
                 continue;
             }
-            
+
             if ((team == GameManager.Instance.playerTeam && char.IsUpper(board[i])) ||
                 (team == GameManager.Instance.aiTeam && char.IsLower(board[i])))
             {
@@ -145,13 +145,13 @@ public class BoardManager : MonoBehaviour
 
             //Physical
             board[move.from].LinkedPiece.MoveToSquare(board[move.to]);
-                //en-passant
+            //en-passant
             if (move.enpassentIndex >= 0 && board[move.enpassentIndex].LinkedPiece != null)
             {
                 RemovePiece(board[move.enpassentIndex].LinkedPiece);
             }
-                //Promotion
-            if(move.promotionType != PieceScript.Type.Pawn && (move.to > 55 || move.to < 8))
+            //Promotion
+            if (move.promotionType != PieceScript.Type.Pawn && (move.to > 55 || move.to < 8))
             {
                 RemovePiece(board[move.to].LinkedPiece);
                 if (char.IsUpper(move.movedPiece))
@@ -216,7 +216,7 @@ public class BoardManager : MonoBehaviour
         //Promotion
         if (move.promotionType != PieceScript.Type.Pawn)
         {
-            output +=move.newBoard[move.to];
+            output += move.newBoard[move.to];
         }
 
 
@@ -276,7 +276,7 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < Instance.boardChars.Length; i++)
         {
             Instance.boardChars[i] = newBoard[i];
-            if(newBoard[i] != '\0')
+            if (newBoard[i] != '\0')
             {
                 if (char.IsUpper(newBoard[i]))
                 {
@@ -292,7 +292,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //Public static Functions
-    
+
 
     public static int PositionToBoardIndex(Vector2 position)
     {
@@ -403,7 +403,7 @@ public class BoardManager : MonoBehaviour
         {
             boardAsChars = BoardToCharArray(board);
         }
-        
+
     }
 
 }

@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SquareScript : MonoBehaviour {
+public class SquareScript : MonoBehaviour
+{
     Material baseMaterial;
     Renderer rend;
-    
+
     [ReadOnly] public Vector2 position;
-    
+
     public bool spawnPieceAtStart;
     [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.Type startingPieceType;
     [ConditionalHide("spawnPieceAtStart", true)]
     public PieceScript.Team startingPieceTeam;
 
-    [SerializeField][ReadOnly]
+    [SerializeField]
+    [ReadOnly]
     PieceScript linkedPiece;
-    
+
     public PieceScript LinkedPiece {
         get {
             return linkedPiece;
@@ -42,7 +44,7 @@ public class SquareScript : MonoBehaviour {
     {
         linkedPiece = piece;
     }
-    
+
     public void SpawnPiece(PieceScript.Type type, PieceScript.Team team)
     {
         GameObject startingPiece = GameObject.Instantiate(GameManager.Instance.basePiecePrefab, new Vector3(position.x, position.y, -1), Quaternion.Euler(0, 0, 180));
@@ -54,8 +56,8 @@ public class SquareScript : MonoBehaviour {
         linkedPiece.SetMaterial(type, team);
         BoardManager.Instance.RegisterPiece(linkedPiece);
     }
-	
-	public void SetMaterial(Material mat)
+
+    public void SetMaterial(Material mat)
     {
         rend.material = mat;
     }
@@ -64,5 +66,5 @@ public class SquareScript : MonoBehaviour {
     {
         rend.material = baseMaterial;
     }
-    
+
 }

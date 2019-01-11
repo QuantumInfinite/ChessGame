@@ -17,7 +17,7 @@ public class Move
 
     public int enpassentIndex = -1;
     public PieceScript.Type promotionType = PieceScript.Type.Pawn;
-    
+
     public char movedPiece {
         get {
             return newBoard[to];
@@ -29,7 +29,7 @@ public class Move
     {
         from = pieceToMove;
         to = squareToMoveTo;
-        
+
         newBoard = new char[oldBoard.Length];
 
 
