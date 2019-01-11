@@ -51,7 +51,12 @@ public class BoardManager : MonoBehaviour
 
     //public functions
 
-
+    /// <summary>
+    /// Gets the indexes of all of the pieces on the team.
+    /// </summary>
+    /// <param name="board"> the board with all of the pieces on it </param>
+    /// <param name="team"> the team to find the indexes for </param>
+    /// <returns> all of the team indexes </returns>
     public static List<int> GetTeamPieceIndexes(char[] board, PieceScript.Team team)
     {
         List<int> pieces = new List<int>();
@@ -106,6 +111,10 @@ public class BoardManager : MonoBehaviour
         piece.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Makes a move
+    /// </summary>
+    /// <param name="move"> the move to make </param>
     public void MakeMove(Move move)
     {
         while (moveHistory.Count > 5)
@@ -182,6 +191,10 @@ public class BoardManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Outputs the moves that the player and the AI make
+    /// </summary>
+    /// <param name="move"> the move to be outputted </param>
     public void LogMove(Move move)
     {
         string output = "";
@@ -223,6 +236,12 @@ public class BoardManager : MonoBehaviour
         GameManager.Output(output);
     }
 
+    /// <summary>
+    /// Castles the king and a rook
+    /// </summary>
+    /// <param name="piece1Index"> the first king to castle </param>
+    /// <param name="piece2Index"> the second king to castle </param>
+    /// <param name="kingSide"> whether the castle is kingside or queenside </param>
     public void Castle(int piece1Index, int piece2Index, bool kingSide)
     {
         if (piece1Index >= 0 && piece1Index < board.Length && piece2Index >= 0 && piece2Index < board.Length)
@@ -271,6 +290,10 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Overrides the current board with a new board
+    /// </summary>
+    /// <param name="newBoard"> the new board </param>
     public void OverrideBoard(char[] newBoard)
     {
         for (int i = 0; i < Instance.boardChars.Length; i++)
@@ -306,6 +329,11 @@ public class BoardManager : MonoBehaviour
     {
         return "" + (char)(65 + index % 8) + (index / 8 + 1);
     }
+    /// <summary>
+    /// Turns the board into an array of chars
+    /// </summary>
+    /// <param name="b"> the board to be converted </param>
+    /// <returns> the board as an array of chars </returns>
     public static char[] BoardToCharArray(SquareScript[] b)
     {
         char[] newB = new char[b.Length];
@@ -327,6 +355,11 @@ public class BoardManager : MonoBehaviour
         return newB;
     }
 
+    /// <summary>
+    /// Gets the piece type of a piece from a  char
+    /// </summary>
+    /// <param name="c"> the piece to get the type of </param>
+    /// <returns> the type of piece </returns>
     public static PieceScript.Type GetPiecetypeFromChar(char c)
     {
         switch (char.ToUpper(c))
@@ -347,6 +380,11 @@ public class BoardManager : MonoBehaviour
         return PieceScript.Type.BLOCK;
     }
 
+    /// <summary>
+    /// Gets the piece type of a piece fom a piece
+    /// </summary>
+    /// <param name="piece"> the piece to get the type of </param>
+    /// <returns> the type of piece </returns>
     public static char GetCharFromPieceScript(PieceScript piece)
     {
         char t = '\0';

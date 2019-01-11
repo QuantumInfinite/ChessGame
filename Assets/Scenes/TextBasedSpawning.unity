@@ -517,7 +517,7 @@ MonoBehaviour:
   plyInput: {fileID: 1434098369}
   playerTeam: 0
   playerOnlyTurns: 0
-  useStringForBoardInput: 1
+  useStringForBoardInput: 0
   inputString: R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , ,
     , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r
   aiTeam: 0

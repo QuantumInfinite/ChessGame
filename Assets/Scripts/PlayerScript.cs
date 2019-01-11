@@ -15,6 +15,9 @@ public class PlayerScript : MonoBehaviour
         board = BoardManager.Instance.board;
     }
 
+    /// <summary>
+    /// Runs every frame
+    /// </summary>
     void Update()
     {
         if (!GameManager.Instance.ReadyToPlay)
@@ -41,6 +44,7 @@ public class PlayerScript : MonoBehaviour
                 
                 checkedIfCheckmateThisTurn = true;
             }
+            //Methods dependent on input
             if (!heldPiece && Input.GetAxis("Fire1") != 0)
             {
                 TryPickup();
@@ -61,6 +65,9 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Lets go of the piece that the player is holding on to
+    /// </summary>
     void DropPiece()
     {
         Vector3 newPos = new Vector3(
@@ -85,6 +92,9 @@ public class PlayerScript : MonoBehaviour
         ClearValidMoves();
     }
 
+    /// <summary>
+    /// Picks up a piece on the board
+    /// </summary>
     void TryPickup()
     {
         RaycastHit hit;
@@ -111,17 +121,29 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if a certain move is valid
+    /// </summary>
+    /// <param name="newPos"> the position of the move to check </param>
+    /// <returns> if the move is valid or not </returns>
     bool MoveIsValid(Vector2 newPos)
     {
         return validMoves.Find(item => item.position == newPos) != null;
     }
 
+    /// <summary>
+    /// Moves the piece the player is holding along with the cursor.
+    /// </summary>
     void MoveToCursor()
     {
         Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         heldPiece.transform.position = new Vector3(newPos.x, newPos.y, heldPiece.transform.position.z);
     }
 
+    /// <summary>
+    /// Marks a move as valid
+    /// </summary>
+    /// <param name="index"> the index of the move to mark </param>
     void MarkMove(int index)
     {
         if (index >= 0 && index < board.Length && !validMoves.Contains(board[index]))
@@ -130,6 +152,10 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Unmarks a move as valid
+    /// </summary>
+    /// <param name="index"> the index of the move to unmark </param>
     void UnmarkMove(int index)
     {
         if (index >= 0 && index < board.Length)
@@ -138,6 +164,9 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Highlights the square of a valid move
+    /// </summary>
     void ApplyHighlight()
     {
         foreach (SquareScript space in validMoves)
@@ -146,6 +175,9 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes all valid moves
+    /// </summary>
     void ClearValidMoves()
     {
         foreach (SquareScript index in validMoves)

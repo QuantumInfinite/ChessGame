@@ -211,9 +211,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 0
-  startingPieceTeam: 0
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &22783517
 GameObject:
@@ -393,8 +393,13 @@ MonoBehaviour:
     BLOCK: {fileID: 0}
   basePiecePrefab: {fileID: 1414994646492900, guid: 6ee8855302b143840a2d0725c14c6f0d,
     type: 2}
+  MainMenu: {fileID: 0}
+  inputField: {fileID: 0}
   playerTeam: 0
   playerOnlyTurns: 0
+  useStringForBoardInput: 0
+  inputString: R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , ,
+    , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r
   aiTeam: 0
   movesAheadToSimulate: 4
   limitThinkTime: 0
@@ -2097,7 +2102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
@@ -4092,8 +4097,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 1
-  startingPieceType: 0
-  startingPieceTeam: 1
+  startingPieceType: 2
+  startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1273185651
 GameObject:
@@ -4789,8 +4794,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 3
+  spawnPieceAtStart: 1
+  startingPieceType: 2
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1439323395
@@ -6048,7 +6053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 4
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
