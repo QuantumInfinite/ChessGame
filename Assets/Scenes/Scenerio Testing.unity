@@ -1689,8 +1689,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
-  startingPieceType: 1
+  spawnPieceAtStart: 0
+  startingPieceType: 4
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &391518613
@@ -6457,8 +6457,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 0
-  startingPieceType: 2
-  startingPieceTeam: 0
+  startingPieceType: 4
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &2045402692
 GameObject:
