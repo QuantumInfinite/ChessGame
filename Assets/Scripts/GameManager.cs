@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour {
     public bool playerOnlyTurns = false;
     public bool inputBoard = true;
     [ConditionalHide("inputBoard", true)]
-    public string input = "";
+    public string input = "R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r";
 
 
     [HideInInspector]
@@ -137,9 +137,12 @@ public class GameManager : MonoBehaviour {
     }
     public void Begin()
     {
+        if(inputBoard && inputField.text.Length == 127)
+        {
+            input = inputField.text;
+        }
+        ApplyInput();
         MainMenu.SetActive(false);
-        string basic = "R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r";
-        print(inputField.text);
     }
     //Private functions
 
@@ -148,7 +151,7 @@ public class GameManager : MonoBehaviour {
     {
         output = outputBox;
         output.text = "";
-        
+        inputField.gameObject.SetActive(inputBoard);
     }
 
 
