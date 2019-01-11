@@ -520,6 +520,7 @@ MonoBehaviour:
   removedBlackPieces: []
   activeWhitePieces: []
   activeBlackPieces: []
+  enPassentIndex: -1
 --- !u!1 &191517125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,7 +1129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -2096,7 +2097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -4382,7 +4383,7 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   spawnPieceAtStart: 0
   startingPieceType: 0
-  startingPieceTeam: 0
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1345921103
 GameObject:
@@ -4482,7 +4483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 1
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -4584,8 +4585,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
-  startingPieceType: 3
+  spawnPieceAtStart: 1
+  startingPieceType: 0
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1373397570
@@ -5945,7 +5946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 1
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
@@ -6048,7 +6049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 1
-  startingPieceType: 3
+  startingPieceType: 0
   startingPieceTeam: 0
   linkedPiece: {fileID: 0}
 --- !u!1 &1884753844
@@ -6252,8 +6253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   spawnPieceAtStart: 0
-  startingPieceType: 5
-  startingPieceTeam: 0
+  startingPieceType: 0
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &1986090922
 GameObject:
@@ -6557,9 +6558,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 0
+  spawnPieceAtStart: 1
   startingPieceType: 0
-  startingPieceTeam: 0
+  startingPieceTeam: 1
   linkedPiece: {fileID: 0}
 --- !u!1 &2058947877
 GameObject:
@@ -6761,7 +6762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  spawnPieceAtStart: 1
+  spawnPieceAtStart: 0
   startingPieceType: 3
   startingPieceTeam: 1
   linkedPiece: {fileID: 0}

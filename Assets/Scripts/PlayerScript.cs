@@ -65,7 +65,7 @@ public class PlayerScript : MonoBehaviour {
         int indexOfThisMove = BoardManager.PositionToBoardIndex(newPos);
         if (indexOfThisMove >= 0 && indexOfThisMove < board.Length && validMoves.Contains(board[indexOfThisMove])) //Move is valid
         {
-            BoardManager.Instance.MakeMove(heldPiece.index, indexOfThisMove);
+            BoardManager.Instance.MakeMove(new Move(BoardManager.Instance.boardChars, heldPiece.index, indexOfThisMove));
         }
         else //Not valid, return to last position
         {

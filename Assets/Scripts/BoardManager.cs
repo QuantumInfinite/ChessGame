@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class BoardManager : MonoBehaviour
 {
@@ -44,18 +45,13 @@ public class BoardManager : MonoBehaviour
             return initialBoard;
         }
     }
+
+    public List<Move> moveHistory = new List<Move>();
+    public int enPassentIndex = -1;
+
     //public functions
-    public List<PieceScript> GetActiveAIPieces()
-    {
-        switch (GameManager.Instance.playerTeam)
-        {
-            case PieceScript.Team.White:
-                return activeBlackPieces;
-            case PieceScript.Team.Black:
-                return activeWhitePieces;
-        }
-        return null;
-    }
+
+
     public static List<int> GetTeamPieceIndexes(char[] board, PieceScript.Team team)
     {
         List<int> pieces = new List<int>();
@@ -110,46 +106,99 @@ public class BoardManager : MonoBehaviour
         piece.gameObject.SetActive(false);
     }
 
-    public void MakeMove(int from, int to)
+    public void MakeMove(Move move)
     {
-        if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 6)
+        while (moveHistory.Count > 5)
+        {
+            moveHistory.RemoveAt(0);
+        }
+        moveHistory.Add(move);
+        if (char.ToUpper(move.movedPiece) == 'P')
+        {
+            enPassentIndex = move.to - 8;
+        }
+        //Castleing checks
+        if (board[move.from].LinkedPiece.type == PieceScript.Type.King && move.from == 4 && move.to == 6)
         {
             Castle(4, 7, true);
         }
 
-        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 4 && to == 2)
+        else if (board[move.from].LinkedPiece.type == PieceScript.Type.King && move.from == 4 && move.to == 2)
         {
             Castle(4, 0, false);
         }
 
-        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 60 && to == 62)
+        else if (board[move.from].LinkedPiece.type == PieceScript.Type.King && move.from == 60 && move.to == 62)
         {
             Castle(60, 63, true);
         }
 
-        else if (board[from].LinkedPiece.type == PieceScript.Type.King && from == 60 && to == 57)
+        else if (board[move.from].LinkedPiece.type == PieceScript.Type.King && move.from == 60 && move.to == 57)
         {
             Castle(60, 56, false);
         }
-
-        else if (from >= 0 && from < board.Length && to >= 0 && to < board.Length)
+        //Not castling
+        else if (move.from >= 0 && move.from < board.Length && move.to >= 0 && move.to < board.Length)
         {
+            //Log
+            LogMove(move);
+
             //Physical
-            GameManager.Instance.Output(board[from].name + "->" + board[to].name);
-            board[from].LinkedPiece.MoveToSquare(board[to]);
+            board[move.from].LinkedPiece.MoveToSquare(board[move.to]);
+
+            if (move.enpassentIndex >= 0)
+            {
+                RemovePiece(board[move.enpassentIndex].LinkedPiece);
+            }
 
             //Virtual
-            int x = boardChars.Length;
-            boardChars[to] = boardChars[from];
-            boardChars[from] = '\0';
+            boardChars[move.to] = boardChars[move.from];
+            boardChars[move.from] = '\0';
 
+            
 
             TurnManager.Instance.EndTurn();
         }
         else
         {
-            Debug.LogError("Invalid move " + from + "->" + to);
+            Debug.LogError("Invalid move " + move.from + "->" + move.to);
         }
+
+    }
+
+    public void LogMove(Move move)
+    {
+        string output = "";
+        bool isPawn = false || char.ToUpper(move.movedPiece) == 'P';
+
+        //is not pawn
+        if (!isPawn)
+        {
+            output += PieceTypeToCharacter(board[move.from].LinkedPiece);
+        }
+
+        //capture
+        if (board[move.to].LinkedPiece != null || move.enpassentIndex >= 0)
+        {
+            //pawn making capture
+            if (isPawn)
+            {
+                output += char.ToLower(board[move.from].name[0]);
+            }
+
+            output += "x";
+        }
+        //position
+        output += board[move.to].name.ToLower();
+
+        //en passant
+        if (move.enpassentIndex >= 0)
+        {
+            output += "e.p.";
+        }
+
+
+        GameManager.Output(output);
     }
 
     public void Castle(int piece1Index, int piece2Index, bool kingSide)
@@ -159,29 +208,12 @@ public class BoardManager : MonoBehaviour
             //Log
             if (kingSide)
             {
-                GameManager.Instance.Output("0-0");
+                GameManager.Output("0-0");
             }
             else
             {
-                GameManager.Instance.Output("0-0-0");
+                GameManager.Output("0-0-0");
             }
-
-            //Physical
-            /*
-            SquareScript s1 = board[piece1Index];
-            PieceScript p1 = s1.LinkedPiece;
-            SquareScript s2 = board[piece2Index];
-            PieceScript p2 = s2.LinkedPiece;
-
-            Vector2 p1Pos = p1.transform.position;
-            p1.transform.position = p2.transform.position;
-            p2.transform.position = p1Pos;
-
-            p1.SetSquare(s2);
-            p2.SetSquare(s1);
-
-            s1.SetPiece(p2);
-            s2.SetPiece(p1);*/
 
             if (piece2Index == 7)
             {
@@ -218,6 +250,12 @@ public class BoardManager : MonoBehaviour
     }
 
     //Public static Functions
+
+    public static bool EnPassantCheck(char[] currentBoard, int index1, int index2)
+    {
+        return false;
+    }
+
     public static int PositionToBoardIndex(Vector2 position)
     {
         return (int)((position.y - 1) * 8 + (position.x - 1));
@@ -241,30 +279,7 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                switch (b[i].LinkedPiece.type)
-                {
-                    case PieceScript.Type.Pawn:
-                        newB[i] = 'p';
-                        break;
-                    case PieceScript.Type.Rook:
-                        newB[i] = 'r';
-                        break;
-                    case PieceScript.Type.Bishop:
-                        newB[i] = 'b';
-                        break;
-                    case PieceScript.Type.Knight:
-                        newB[i] = 'n';
-                        break;
-                    case PieceScript.Type.Queen:
-                        newB[i] = 'q';
-                        break;
-                    case PieceScript.Type.King:
-                        newB[i] = 'k';
-                        break;
-                    case PieceScript.Type.BLOCK:
-                        newB[i] = 'X';
-                        break;
-                }
+                newB[i] = PieceTypeToCharacter(b[i].LinkedPiece);
                 if (b[i].LinkedPiece.team == GameManager.Instance.playerTeam)
                 {
                     newB[i] = char.ToUpper(newB[i]);
@@ -273,7 +288,57 @@ public class BoardManager : MonoBehaviour
         }
         return newB;
     }
-    
+
+    public static PieceScript.Type CharacterToPieceType(char c)
+    {
+        switch (char.ToUpper(c))
+        {
+            case 'P':
+                return PieceScript.Type.Pawn;
+            case 'R':
+                return PieceScript.Type.Rook;
+            case 'B':
+                return PieceScript.Type.Bishop;
+            case 'Q':
+                return PieceScript.Type.Queen;
+            case 'N':
+                return PieceScript.Type.Knight;
+            case 'K':
+                return PieceScript.Type.King;
+        }
+        return PieceScript.Type.BLOCK;
+    }
+
+    public static char PieceTypeToCharacter(PieceScript piece)
+    {
+        char t = '\0';
+        switch (piece.type)
+        {
+            case PieceScript.Type.Pawn:
+                t = 'p';
+                break;
+            case PieceScript.Type.Rook:
+                t = 'r';
+                break;
+            case PieceScript.Type.Bishop:
+                t = 'b';
+                break;
+            case PieceScript.Type.Knight:
+                t = 'n';
+                break;
+            case PieceScript.Type.Queen:
+                t = 'q';
+                break;
+            case PieceScript.Type.King:
+                t = 'k';
+                break;
+            case PieceScript.Type.BLOCK:
+                t = 'X';
+                break;
+        }
+
+        return (piece.team == GameManager.Instance.playerTeam) ? char.ToUpper(t) : char.ToLower(t);
+    }
     private void Awake()
     {
         if (instance == null)

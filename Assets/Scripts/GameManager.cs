@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour {
     //Static Functions
 
     //Public Functions
-    public void Output(string s)
+    public static void Output(string s)
     {
         output.text += s + "\n";
     }

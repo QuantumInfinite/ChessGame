@@ -76,7 +76,7 @@ public class AIBrainScript : MonoBehaviour
 
             //thinkStartTime = Time.realtimeSinceStartup;
             rootMoves = AlphaBetaPruneTimed(BoardManager.Instance.boardChars, maxThinkDepth, true, float.MinValue, float.MaxValue);
-            DEBUG_OutputPaths("regular timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
+            DEBUG_OutputPaths("Timed Alpha-Beta", rootMoves, Time.realtimeSinceStartup - thinkStartTime, maxThinkDepth);
         }
         else
         {
@@ -251,7 +251,7 @@ public class AIBrainScript : MonoBehaviour
     /// <param name="nextMove">Move to make</param>
     void MakeMove(Move nextMove)
     {
-        BoardManager.Instance.MakeMove(nextMove.from, nextMove.to);
+        BoardManager.Instance.MakeMove(nextMove);
     }
     /// <summary>
     /// Outputs paths for debugging
@@ -282,49 +282,4 @@ public class AIBrainScript : MonoBehaviour
 
 }
 
-internal class Move
-{
-    public float self_fitness = 0;
-    public float pathFitness = 0;
 
-    //public char[] oldBoard;
-    public char[] newBoard;
-
-    public int from;
-
-    public int to;
-
-    public Move nextMove;
-    public Move prevMove;
-    //public Move_alt(char[] oldBoard, int pieceToMove, int squareToMoveTo) : this(oldBoard, pieceToMove, squareToMoveTo, null) { }
-
-    public Move(char[] oldBoard, int pieceToMove, int squareToMoveTo)
-    {
-        //this.oldBoard = oldBoard;
-        from = pieceToMove;
-        to = squareToMoveTo;
-
-        newBoard = new char[oldBoard.Length];
-        for (int i = 0; i < newBoard.Length; i++)
-        {
-            if (i == squareToMoveTo)
-            {
-                //moves piece to new place
-                newBoard[i] = oldBoard[pieceToMove];
-            }
-            else
-            {
-                //Just copy it over
-                newBoard[i] = oldBoard[i];
-            }
-        }
-
-        //Remove old piece
-        newBoard[pieceToMove] = '\0';
-
-        //Set Self Fitness
-        self_fitness = FitnessEvaluator.Evaluate(newBoard);
-
-        pathFitness = self_fitness;
-    }
-}
