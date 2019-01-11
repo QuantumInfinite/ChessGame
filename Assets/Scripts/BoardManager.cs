@@ -288,7 +288,7 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-
+        initialBoard = boardAsChars;
     }
 
     //Public static Functions

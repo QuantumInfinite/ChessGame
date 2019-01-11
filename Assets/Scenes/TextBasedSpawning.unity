@@ -514,9 +514,9 @@ MonoBehaviour:
   inputField: {fileID: 1532183424}
   playerTeam: 0
   playerOnlyTurns: 0
-  inputBoard: 1
-  input: R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , ,
-    , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r
+  useStringForBoardInput: 1
+  inputString: R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , ,
+    , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r
   aiTeam: 0
   movesAheadToSimulate: 4
   limitThinkTime: 1
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawnValue: 10
   knightValue: 30
-  bishopValue: 30
+  bishopValue: 31
   rookValue: 50
   queenValue: 90
   kingValue: 900
@@ -4801,7 +4801,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1328073885
 RectTransform:
   m_ObjectHideFlags: 0

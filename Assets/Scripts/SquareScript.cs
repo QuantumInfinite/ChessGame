@@ -32,7 +32,7 @@ public class SquareScript : MonoBehaviour {
 
     private void Start()
     {
-        if (!GameManager.Instance.inputBoard && spawnPieceAtStart)
+        if (!GameManager.Instance.useStringForBoardInput && spawnPieceAtStart)
         {
             SpawnPiece(startingPieceType, startingPieceTeam);
         }

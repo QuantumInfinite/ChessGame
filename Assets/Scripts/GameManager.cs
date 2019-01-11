@@ -76,9 +76,9 @@ public class GameManager : MonoBehaviour {
     [Header("Game Options")]
     public PieceScript.Team playerTeam;
     public bool playerOnlyTurns = false;
-    public bool inputBoard = true;
-    [ConditionalHide("inputBoard", true)]
-    public string input = "R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r";
+    public bool useStringForBoardInput = true;
+    [ConditionalHide("useStringForBoardInput", true)]
+    public string inputString = "R,N,B,Q,K,B,N,R,P,P,P,P,P,P,P,P, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,p,p,p,p,p,p,p,p,r,n,b,q,k,b,n,r";
 
 
     [HideInInspector]
@@ -106,11 +106,11 @@ public class GameManager : MonoBehaviour {
     }
     public void ApplyInput()
     {
-        if (inputBoard && input.Length != 0)
+        if (useStringForBoardInput && inputString.Length != 0)
         {
             List<char> chars = new List<char>();
 
-            List<string> inputParse = input.Split(',').ToList();
+            List<string> inputParse = inputString.Split(',').ToList();
 
             inputParse.RemoveAll(x => x == ",");
 
@@ -137,9 +137,9 @@ public class GameManager : MonoBehaviour {
     }
     public void Begin()
     {
-        if(inputBoard && inputField.text.Length == 127)
+        if(useStringForBoardInput && inputField.text.Length == 127)
         {
-            input = inputField.text;
+            inputString = inputField.text;
         }
         ApplyInput();
         MainMenu.SetActive(false);
@@ -151,7 +151,8 @@ public class GameManager : MonoBehaviour {
     {
         output = outputBox;
         output.text = "";
-        inputField.gameObject.SetActive(inputBoard);
+        MainMenu.SetActive(true);
+        inputField.gameObject.SetActive(useStringForBoardInput);
     }
 
 
