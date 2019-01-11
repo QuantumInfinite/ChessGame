@@ -126,6 +126,10 @@ public class BoardManager : MonoBehaviour
         {
             enPassentIndex = move.to - 8;
         }
+        else
+        {
+            enPassentIndex = -1;
+        }
         //Castleing checks
         if (board[move.from].LinkedPiece.type == PieceScript.Type.King && move.from == 4 && move.to == 6)
         {
@@ -311,7 +315,7 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-        initialBoard = boardAsChars;
+        initialBoard = BoardToCharArray(board);
     }
 
     //Public static Functions
