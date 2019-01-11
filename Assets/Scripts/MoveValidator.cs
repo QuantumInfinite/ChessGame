@@ -614,25 +614,28 @@ public class MoveValidator : MonoBehaviour {
     {
         if (toPosition < board.Length && toPosition > -1)
         {
-            char tempHolder;
+            /*char tempHolder;
             tempHolder = board[fromPosition];
             board[fromPosition] = board[toPosition];
-            board[toPosition] = tempHolder;
+            board[toPosition] = tempHolder;*/
+            board = SwapPieces(board, fromPosition, toPosition);
             FindKingIndexes(board);
             if (isPlayer == true)
             {
                 if (InCheck(board, whiteKingIndex) == false)
                 {
-                    tempHolder = board[fromPosition];
+                    /*tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;
+                    board[toPosition] = tempHolder;*/
+                    board = SwapPieces(board, fromPosition, toPosition);
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
                 {
-                    tempHolder = board[fromPosition];
+                    /*tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;
+                    board[toPosition] = tempHolder;*/
+                    board = SwapPieces(board, fromPosition, toPosition);
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -643,17 +646,19 @@ public class MoveValidator : MonoBehaviour {
             {
                 if (InCheck( board, blackKingIndex) == false)
                 {
-                    tempHolder = board[fromPosition];
+                    /*tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;
+                    board[toPosition] = tempHolder;*/
+                    board = SwapPieces(board, fromPosition, toPosition);
                     MarkMove(validMoves, board, toPosition);
                 }
                 else
 
                 {
-                    tempHolder = board[fromPosition];
+                    /*tempHolder = board[fromPosition];
                     board[fromPosition] = board[toPosition];
-                    board[toPosition] = tempHolder;
+                    board[toPosition] = tempHolder;*/
+                    board = SwapPieces(board, fromPosition, toPosition);
                     if (board[toPosition] != '\0')
                     {
                         canPlace = false;
@@ -683,9 +688,8 @@ public class MoveValidator : MonoBehaviour {
                 //Debug.Log("In Check from " + (kingIndex - 7));
                 return true;
             }
-            else if ((kingIndex % 8) != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
+            if ((kingIndex % 8) != 0 && (kingIndex - 9) >= 0 && board[kingIndex - 9] == 'P')
             {
-                //Debug.Log("In Check from " + (kingIndex - 9));
                 return true;
             }
         }
@@ -694,12 +698,10 @@ public class MoveValidator : MonoBehaviour {
             if ((kingIndex % 8) != 0 && (kingIndex + 7) < board.Length && board[kingIndex + 7] == 'p')
             {
                 return true;
-                //Debug.Log("In Check from " + (kingIndex + 7));
             }
-            else if ((kingIndex + 1) % 8 != 0 && (kingIndex + 9) < board.Length && board[kingIndex + 9] == 'p')
+            if ((kingIndex + 1) % 8 != 0 && (kingIndex + 9) < board.Length && board[kingIndex + 9] == 'p')
             {
                 return true;
-                //Debug.Log("In Check from " + (kingIndex + 9));
             }
         }
 
@@ -713,7 +715,6 @@ public class MoveValidator : MonoBehaviour {
                 if (((char.ToUpper(board[kingIndex + i]) == 'R' || char.ToUpper(board[kingIndex + i]) == 'Q') && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
                     return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
                 }
                 break;
             }
@@ -726,7 +727,6 @@ public class MoveValidator : MonoBehaviour {
                 if (((char.ToUpper(board[kingIndex - i]) == 'R' || char.ToUpper(board[kingIndex - i]) == 'Q') && IsOtherTeam(board, kingIndex-i, kingIndex)))
                 {
                     return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
                 }
                 break;
             }
@@ -738,7 +738,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if (((char.ToUpper(board[kingIndex + i]) == 'R' || char.ToUpper(board[kingIndex + i]) == 'Q') && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
                 break;
@@ -755,7 +754,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if (((char.ToUpper(board[kingIndex - i]) == 'R' || char.ToUpper(board[kingIndex - i]) == 'Q') && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex - i));
                     return true;
                 }
                 break;
@@ -793,7 +791,6 @@ public class MoveValidator : MonoBehaviour {
                 if (((char.ToUpper(board[kingIndex + i]) == 'B' || char.ToUpper(board[kingIndex + i]) == 'Q') && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
                     return true;
-                    //Debug.Log("In Check from " + (kingIndex + i));
                 }
                 break;
             }
@@ -810,7 +807,6 @@ public class MoveValidator : MonoBehaviour {
                 if (((char.ToUpper(board[kingIndex - i]) == 'B' || char.ToUpper(board[kingIndex - i]) == 'Q') && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
                     return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
                 }
                 break;
             }
@@ -827,7 +823,6 @@ public class MoveValidator : MonoBehaviour {
                 if (((char.ToUpper(board[kingIndex - i]) == 'B' || char.ToUpper(board[kingIndex - i]) == 'Q') && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
                     return true;
-                    //Debug.Log("In Check from " + (kingIndex - i));
                 }
                 break;
             }
@@ -856,7 +851,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex + i]) == 'N' && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
                 break;
@@ -885,7 +879,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex + i]) == 'N' && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
                 break;
@@ -906,7 +899,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex + i]) == 'N' && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
                 break;
@@ -927,7 +919,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex + i]) == 'N' && IsOtherTeam(board, kingIndex + i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex + i));
                     return true;
                 }
                 break;
@@ -952,7 +943,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex - i]) == 'N' && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex - i));
                     return true;
                 }
                 break;
@@ -977,7 +967,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex - i]) == 'N' && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex - i));
                     return true;
                 }
                 break;
@@ -999,7 +988,6 @@ public class MoveValidator : MonoBehaviour {
                 }
                 if ((char.ToUpper(board[kingIndex - i]) == 'N' && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex - i));
                     return true;
                 }
                 break;
@@ -1024,7 +1012,6 @@ public class MoveValidator : MonoBehaviour {
             {
                 if ((char.ToUpper(board[kingIndex - i]) == 'N' && IsOtherTeam(board, kingIndex - i, kingIndex)))
                 {
-                    //Debug.Log("In Check from " + (kingIndex - i));
                     return true;
                 }
                 break;
@@ -1065,5 +1052,15 @@ public class MoveValidator : MonoBehaviour {
             result = false;
         }
         return result;
+    }
+
+    private static char[] SwapPieces(char[]board, int toPosition, int fromPosition)
+    {
+        char[] tb = board;
+        char tempHolder;
+        tempHolder = tb[fromPosition];
+        tb[fromPosition] = tb[toPosition];
+        tb[toPosition] = tempHolder;
+        return tb;
     }
 }
