@@ -10,7 +10,7 @@ pawn = 10, knight = 30, bishop = 30, rook = 50, queen = 90, king = 900
 
 
 
-#####The task:
+##### The task:
 ###### Working alone or in a group of two implement a chess-playing program whose system requirements are as follows:
 * The program should respect the rules of chess, for example,
 * the movement of pieces (including castling and en passant),
