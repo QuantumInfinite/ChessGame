@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour
         {
             inputString = inputField.text;
         }
+
         if (int.Parse(timerInput.text) >= 1)
         {
             limitThinkTime = true;
